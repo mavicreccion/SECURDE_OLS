@@ -1,0 +1,49 @@
+#book-search{
+	margin: 15px 10px;
+}
+
+#book-search h1, #book-search h2, #book-search h3{
+	margin-right: 20px;
+    font-size: 1.5em ;
+    font-weight: 300;
+    display: inline-block;
+}
+
+.search-bar, #book-search select, #register select, #register input{
+	background: #eee;
+	padding:10px;
+	 border-radius:5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-o-border-radius: 5px;
+	border:0 none;
+	width: 100%;
+	margin: 10px;
+}
+
+#register select#bday-month{
+	width: 40%;
+}
+
+#register select#bday-day{
+	width: 22%;
+}
+
+#register select#bday-year{
+	width: 22%;
+
+}
+.submit-button{
+	background:#0099ff !important;
+	color: white;
+	font: 'trebuchet ms', trebuchet;
+	padding:10px 20px;
+	border-radius:0 10px 10px 0;
+	-moz-border-radius:0 10px 10px 0;
+	-webkit-border-radius:0 10px 10px 0;
+	-o-border-radius:0 10px 10px 0;
+	border:0 none;
+	font-weight:bold;
+	margin-left: 50px;
+	width: auto !important; 
+}

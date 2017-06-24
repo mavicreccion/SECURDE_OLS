@@ -1,23 +1,6 @@
-body {
-    color: #777;
-}
-
 .pure-img-responsive {
     max-width: 100%;
     height: auto;
-}
-
-/*
-Add transition to containers so they can push in and out.
-*/
-#layout,
-#menu,
-.menu-link {
-    -webkit-transition: all 0.2s ease-out;
-    -moz-transition: all 0.2s ease-out;
-    -ms-transition: all 0.2s ease-out;
-    -o-transition: all 0.2s ease-out;
-    transition: all 0.2s ease-out;
 }
 
 /*
@@ -28,50 +11,6 @@ This is the parent `<div>` that contains the menu and the content area.
     left: 0;
     padding-left: 0;
 }
-    #layout.active #menu {
-        left: 150px;
-        width: 150px;
-    }
-
-    #layout.active .menu-link {
-        left: 150px;
-    }
-/*
-The content `<div>` is where all your content goes.
-*/
-.content {
-    margin: 0 auto;
-    padding: 0 2em;
-    max-width: 800px;
-    margin-bottom: 50px;
-    line-height: 1.6em;
-}
-
-.header {
-     margin: 0;
-     color: #333;
-     text-align: center;
-     padding: 2.5em 2em 0;
-     border-bottom: 1px solid #eee;
- }
-    .header h1 {
-        margin: 0.2em 0;
-        font-size: 3em;
-        font-weight: 300;
-    }
-     .header h2 {
-        font-weight: 300;
-        color: #ccc;
-        padding: 0;
-        margin-top: 0;
-    }
-
-.content-subhead {
-    margin: 50px 0 20px 0;
-    font-weight: 300;
-    color: #888;
-}
-
 
 
 /*
@@ -79,20 +18,38 @@ The `#menu` `<div>` is the parent `<div>` that contains the `.pure-menu` that
 appears on the left side of the page.
 */
 
-#menu-bottom{
+.menu-bottom{
     position: absolute;
     bottom: 0;
     width: 100%;
     padding: 20px 30px;
     box-sizing: border-box;
+    overflow-y: hidden;
 }
 
-    #menu-bottom span{
+.menu-bottom-account{
+    position: relative;
+    display: block;
+}
+
+a.menu-bottom-account-link{
+    display: inline-block;
+    text-decoration: none;
+    color: rgba(0,0,0,.35);
+    transition: color .3s ease;
+    padding: 12px;
+    width: 100%;
+    position: relative;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+    .menu-bottom-account-link span{
         display: inline-block;
         width: 100px;
     }
 
-    #menu-bottom .nextimg{
+    .menu-bottom-account-link .nextimg{
         position: absolute;
         right: 0;
         top: 50%;
@@ -105,11 +62,9 @@ appears on the left side of the page.
         vertical-align: top;
     }
 
-    #menu-bottom img{
-        display: inline-block;
-    }
 
-#menu-logo{
+
+.menu-logo{
     width: 100%;
     max-width: 320px;
     margin: auto;
@@ -136,7 +91,8 @@ appears on the left side of the page.
     #menu a {
         color: #999;
         border: none;
-        padding: 0.6em 0 0.6em 0.6em;
+        padding: 10px 0 20px 0.6em;
+        display: inline-block;
     }
 
     /*
@@ -158,9 +114,14 @@ appears on the left side of the page.
         /*
         Change color of the anchor links on hover/focus.
         */
+        #menu .pure-menu li:hover,
+        #menu .pure-menu li:focus {
+            background: #333;
+        }
+
         #menu .pure-menu li a:hover,
         #menu .pure-menu li a:focus {
-            background: #333;
+            background: transparent;
         }
 
     /*
@@ -188,61 +149,6 @@ appears on the left side of the page.
 
     }
 
-/* -- Dynamic Button For Responsive Menu -------------------------------------*/
-
-/*
-The button to open/close the Menu is custom-made and not part of Pure. Here's
-how it works:
-*/
-
-/*
-`.menu-link` represents the responsive menu toggle that shows/hides on
-small screens.
-*/
-.menu-link {
-    position: fixed;
-    display: block; /* show this only on small screens */
-    top: 0;
-    left: 0; /* "#menu width" */
-    background: #000;
-    background: rgba(0,0,0,0.7);
-    font-size: 10px; /* change this value to increase/decrease button size */
-    z-index: 10;
-    width: 2em;
-    height: auto;
-    padding: 2.1em 1.6em;
-}
-
-    .menu-link:hover,
-    .menu-link:focus {
-        background: #000;
-    }
-
-    .menu-link span {
-        position: relative;
-        display: block;
-    }
-
-    .menu-link span,
-    .menu-link span:before,
-    .menu-link span:after {
-        background-color: #fff;
-        width: 100%;
-        height: 0.2em;
-    }
-
-        .menu-link span:before,
-        .menu-link span:after {
-            position: absolute;
-            margin-top: -0.6em;
-            content: " ";
-        }
-
-        .menu-link span:after {
-            margin-top: 0.6em;
-        }
-
-
 /* -- Responsive Styles (Media Queries) ------------------------------------- */
 
 /*
@@ -257,7 +163,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 
     #layout {
-        padding-left: 150px; /* left col width "#menu" */
+        padding-left: 240px; /* left col width "#menu" */
         left: 0;
     }
     #menu {
