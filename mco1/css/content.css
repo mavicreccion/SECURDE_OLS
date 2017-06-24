@@ -1,0 +1,16 @@
+body{
+    background-color: green !important;
+    width: 100%;
+	height: 100%;
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	font-family: 'Questrial', sans-serif;
+	overflow-y: auto;
+	overflow-x: hidden;		
+}
+
+#body{
+	width: 920px;
+	margin: 0 auto;
+}
