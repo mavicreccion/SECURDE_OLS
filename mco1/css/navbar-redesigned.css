@@ -1,0 +1,94 @@
+.navbar{
+	background-color: #004216 !important;
+	background-image: none !important;
+	color: white !important;
+	padding: 15px;
+	overflow-x: hidden;
+	z-index: 3;
+}
+
+.navbar-default{
+	border:0;
+}
+
+.navbar-nav{
+	margin: 0 !important;
+}
+
+.navbar-collapse{
+	padding: 0;
+}
+
+a.navbar-brand{
+	margin: 10px 0;
+	display: block;
+	width: 100%;
+	background-image: url("../img/logoicon.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+
+.navbar-collapse{
+	border: none !important;
+}
+
+.nav>li>a:hover, .nav>li>a:focus, .nav>li.active>a, 
+.nav>.dropdown .dropdown-menu>li>a:hover, 
+.nav>.dropdown .dropdown-menu>li>a:focus,
+.nav>.dropdown .dropdown-menu>li.active>a,
+.navbar-default .navbar-nav>.open>a{
+	color: #fff !important;
+	background-color: transparent !important;
+
+}
+
+.nav>li>a, .nav>.dropdown .dropdown-menu>li>a{
+	color: #c2c2c2 !important;
+	border: 0 !important;
+	padding: 15px 0 !important;
+	transition: color 0.6s;
+	border: 0 !important;
+}
+
+a.dropdown-toggle{
+	padding: 15px 0 0 0 !important;
+}
+
+.divider{
+	border-bottom: 1px solid #e7e7e7 !important;
+}
+
+.divider-dark{
+	border-bottom: 1px solid #eee;
+}
+
+.self-menu{
+	display: block;
+	position: absolute;
+	bottom: 0;
+	margin-top: 10px;
+	padding: 15px 0;
+	width: 100%;
+	padding-bottom: 30px;
+
+}
+
+
+a.self-menu, a:hover.self-menu{
+	text-decoration: none !important;
+	color: #fff;
+}
+
+.navbar-collapse ul.self a{
+	color: #fff !important;
+}
+
+.flaticon-user-2:before{
+    margin: 0 !important;
+    margin-right: 10px !important;
+}
+
+body {
+    font-family: 'Varela Round', sans-serif;
+}

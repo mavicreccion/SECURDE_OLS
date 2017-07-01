@@ -1,5 +1,8 @@
 #book-search{
-	margin: 15px 10px;
+	margin: 0 auto;
+	padding: 0 50px;
+	margin-bottom: 50px;
+	max-width: 800px;
 }
 
 #book-search h1, #book-search h2, #book-search h3{
@@ -48,7 +51,7 @@
 	width: auto !important; 
 }
 
-.navi-button{
+.navi-button, a.navi-button{
 	background:#0099ff !important;
 	color: white;
 	font: 'trebuchet ms', trebuchet;
@@ -61,4 +64,5 @@
 	font-weight:bold;
 	margin-left: 50px;
 	width: auto !important; 
+	text-decoration: none !important;
 }

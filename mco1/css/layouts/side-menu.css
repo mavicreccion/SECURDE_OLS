@@ -111,6 +111,7 @@ a.menu-bottom-account-link{
     #menu .pure-menu .menu-item-divided {
         border-top: 1px solid #333;
     }
+    
         /*
         Change color of the anchor links on hover/focus.
         */
@@ -127,8 +128,7 @@ a.menu-bottom-account-link{
     /*
     This styles the selected menu item `<li>`.
     */
-    #menu .pure-menu-selected,
-    #menu .pure-menu-heading {
+    #menu .pure-menu-selected,{
         background: #1f8dd6;
     }
         /*
@@ -144,7 +144,7 @@ a.menu-bottom-account-link{
     #menu .pure-menu-heading {
         font-size: 110%;
         color: #fff;
-        margin: 0;
+        margin: 10px 0;
         width: 100%;
 
     }

@@ -15,14 +15,10 @@
     <link rel="stylesheet" type="text/css" href="css/navbar-fixed-side.css" />
     <link rel="stylesheet" type="text/css" href="css/navbar-redesigned.css"/>
     <link rel="stylesheet" type="text/css" href="img/icons_by_freepik/font/flaticon.css"> 
-    <link rel="stylesheet" type="text/css" href="vitalets-bootstrap-datepicker-c7af15b/css/datepicker.css"/>
     <link rel="stylesheet" type="text/css" href="css/content.css"> 
     <script src="js/jquery-3.0.0.min.js"></script>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script src="vitalets-bootstrap-datepicker-c7af15b/js/bootstrap-datepicker.js"></script>
     <script src="js/app.js"></script>
-    <script src="js/register.js"></script>
-
 </head>
 
 <body>
@@ -43,13 +39,13 @@
           </div>
           <div class="collapse navbar-collapse">
           <br>
-            <div class="row" id="toggle-search">
+            <div href class="row" id="toggle-search">
               <div class="col-xs-12 col-md-8 search-button">Search For...</div>
               <div class="col-xs-6 col-md-4"><i class="flaticon-loupe"></i></div>
             </div>
             <ul class="nav navbar-nav">
               <li class="">
-                <a href="./">Meeting Rooms</a>
+                <a href="./">Meeting Rooms</a>  
               </li>
               <li class="">
                 <a href="inverse.html">Services</a>
@@ -74,18 +70,16 @@
     </div>
     <div class="col-sm-9 col-lg-10 content">
       <!-- your page content -->
-      
       <div class="header">
        <h1>SHS Online Library System</h1>
        <h2>Reserve Books and Meeting Rooms anytime, anywhere!</h2>
       </div>
 
-      <div id="overlay-screen" style="display: none;"></div>
-      <div id="content-search" class="collapse white-container" style="display:none;">
+      <div id="content-search">
         <h3 align="center">Search for Books</h3>
         <form class="form-inline input-group" id="search" align="center">
           <div class="form-group">
-            <select id="search-filter" class="form-control">
+            <select id="search-filter" class="form-control form-components-rd">
               <option value="" selected disabled>Choose Filter</option>
               <option value="k"> Keyword</option>
               <option value="t"> Title</option>
@@ -97,10 +91,10 @@
             </select>
           </div>
           <div class="form-group" style="width:50%">
-            <input type="text" class="form-control" id="search-bar" placeholder="Search for...">
+            <input type="text" class="form-control form-components-rd" id="search-bar" placeholder="Search for..." autofocus>
           </div>
           <div class="form-group">
-            <select id="search-collection" class="form-control">
+            <select id="search-collection" class="form-control form-components-rd">
               <option value="" selected disabled>Choose Collection</option>
               <option value="b">Books</option>
               <option value="m">Magazines</option>
@@ -109,66 +103,14 @@
             </select>
           </div>
           <div class="form-group">
-          <button type="submit" id="submit-search" class="btn btn-default"><i class="flaticon-loupe"></i></button>
+          <button type="submit" id="submit-search" class="btn btn-default form-components-rd transparent-bg"><i class="flaticon-loupe"></i></button>
           </div>
         </form>
-
         <br>
         <div class="divider-dark"></div>
-        <br>
-      </div>
-
-      <form id = "register-details" style="margin-right: 300px;">
-      <!-- names -->
-        <div class="row">
-          <div class="col-md-5"><label for="first-name">First Name</label></div>
-          <div class="col-md-2"><label for="middle-name">Middle Initial</label></div>
-          <div class="col-md-5"><label for="last-name">Last Name</label></div>
-        </div>
-        <div class="row" align="center">
-          <div class="col-md-5">
-            <input type="text" class="form-control form-components-rd" id="first-name" placeholder="Juan Coco" required></div>
-          <div class="col-md-2">
-            <input type="text" class="form-control form-components-rd" id="middle-name" placeholder="S" required>
-          </div>
-          <div class="col-md-5">
-            <input type="text" class="form-control form-components-rd" id="last-name" placeholder="dela Cruz " required>
-          </div>
         </div>
 
-        <label for="password">Password</label>
-        <input type="password" class="form-control form-components-rd" id="password" placeholder="Email" style="width:70%" required>
-          
-        <label for="email-address">Email Address</label>
-        <input type="email" class="form-control form-components-rd" id="email-address" placeholder="Email" style="width:70%" required>
-    
-        <label for="idnumber">ID Number</label>
-        <input type="number" class="form-control form-components-rd" id="idnumber" placeholder="Email" style="width:70%" required>
-                    
-        <label for="bdaypicker">Birthday</label>
-        <div id="bdaypicker" class="input-append date" id="dp3" data-date-format="yyyy-mm-dd" style="width:70%">
-          <input class="span2 form-components-rd" size=11 type="text" value="12-02-2012" readonly
-          style="width:87%" required>
-          <span class="add-on" style="width:10%"><i class="flaticon-calendar"></i></span>
-        </div>
-
-        <div class="bordered-dark auto-width" style="margin: 10px 0; padding: 10px; width:70%; border-radius: 5px;">
-          <label for="secret-question" required>Secret Question</label>
-          <select id = "secret-question" class="form-control form-components-rd" style="margin-left: 0; margin-right: 0;" required>
-            <option value="" selected disabled>Select Secret Question</option>
-            <option>Question 1</option>
-            <option>Question 2</option>
-            <option>Question 3</option>
-            <option>Question 4</option>
-            <option>Question 5</option>
-          </select>
-  
-          <label for="secret-answer">Your Answer</label>
-          <input type="text" class="form-control form-components-rd" id="secret-answer" placeholder="Your Answer" style="margin-left: 0; margin-right: 0;" required>
-        </div>
-
-        <button type="submit" id="submit-register-id" class="btn btn-default submit-btn form-components-rd auto-width erase-margin">Sign Up</button>
-      </form>
+        
 
     </div>
   </div>
@@ -177,5 +119,4 @@
 
 
 </body>
-
 </html>
