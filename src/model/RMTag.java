@@ -5,6 +5,7 @@ public class RMTag {
 	private int RMTagID;
 	private int tagID;
 	private String rmID;
+	private String tag;
 	
 	public RMTag() {
 		
@@ -33,4 +34,21 @@ public class RMTag {
 	public void setRMID(String rmID) {
 		this.rmID = rmID;
 	}
+
+	public String getRmID() {
+		return rmID;
+	}
+
+	public void setRmID(String rmID) {
+		this.rmID = rmID;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+	
 }

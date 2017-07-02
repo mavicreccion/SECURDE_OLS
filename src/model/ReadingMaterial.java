@@ -10,19 +10,19 @@ public class ReadingMaterial {
 	public static final String TABLE_BORROWEDRM = "borrowed_rm";
 	public static final String TABLE_RESERVEDRM = "reserved_rm";
 	
-	public static final String COL_RMID = "rmID";
+	public static final String COL_RMID = "rmID_location";
 	public static final String COL_RMTYPE = "rm_type";
 	public static final String COL_TITLE = "title";
 	public static final String COL_AUTHOR = "author";
 	public static final String COL_PUBLISHER = "publisher";
 	public static final String COL_YEAR = "year";
-	public static final String COL_LOCATION = "location";
 	public static final String COL_DATEARRIVED = "date_arrived";
 	
 	public static final String COL_RMTAGID = "rmTagID";
 	public static final String COL_TAGID = "tagID";
+	public static final String COL_TAG = "tag";
 
-	public static final String COL_USERID = User.COL_USERID;
+	public static final String COL_IDNUMBER = User.COL_IDNUMBER;
 	
 	public static final String COL_BORROWEDRMID = "borrowedRmID";
 	public static final String COL_DATEBORROWED = "date_borrowed";
@@ -31,13 +31,12 @@ public class ReadingMaterial {
 	public static final String COL_RESERVEDRMID = "reservedRmID";
 	public static final String COL_DATERESERVED = "date_reserved";
 
-	private String RMID;
+	private String RMID_Location;
 	private String RMType;
 	private String title;
 	private String author;
 	private String publisher;
 	private int year;
-	private String location;
 	private Date dateArrived;
 	
 	private ArrayList<RMTag> tags;
@@ -49,17 +48,23 @@ public class ReadingMaterial {
 	private Date dateReturned;
 	private Date dateReserved;
 	
+	private int borrowedRMID;
+	private int reservedRMID;
+	
+	private User userBorrowed;
+	private User userReserved;
+	
 	public ReadingMaterial() {
 		tags = new ArrayList<>();
 		reviews = new ArrayList<>();
 	}
 
-	public String getRMID() {
-		return RMID;
+	public String getRMID_Location() {
+		return RMID_Location;
 	}
 
-	public void setRMID(String rMID) {
-		RMID = rMID;
+	public void setRMID_Location(String RMID_Location) {
+		this.RMID_Location = RMID_Location;
 	}
 
 	public String getRMType() {
@@ -100,14 +105,6 @@ public class ReadingMaterial {
 
 	public void setYear(int year) {
 		this.year = year;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
 	}
 
 	public Date getDateArrived() {
@@ -174,6 +171,44 @@ public class ReadingMaterial {
 		this.dateReserved = dateReserved;
 	}
 	
+	public int getBorrowedRMID() {
+		return borrowedRMID;
+	}
+
+	public void setBorrowedRMID(int borrowedRMID) {
+		this.borrowedRMID = borrowedRMID;
+	}
+
+	public int getReservedRMID() {
+		return reservedRMID;
+	}
+
+	public void setReservedRMID(int reservedRMID) {
+		this.reservedRMID = reservedRMID;
+	}
+
+	public User getUserBorrowed() {
+		return userBorrowed;
+	}
+
+	public void setUserBorrowed(User userBorrowed) {
+		this.userBorrowed = userBorrowed;
+	}
+
+	public User getUserReserved() {
+		return userReserved;
+	}
+
+	public void setUserReserved(User userReserved) {
+		this.userReserved = userReserved;
+	}
+
+	public void addTag(RMTag rmTag) {
+		this.tags.add(rmTag);
+	}
 	
+	public void addReview(Review review) {
+		this.reviews.add(review);
+	}
 	
 }

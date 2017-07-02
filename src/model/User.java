@@ -7,12 +7,11 @@ public class User {
 	public static final String TABLE_USER = "user";
 	public static final String TABLE_SECRETQUESTION = "secret_questions";
 	
-	public static final String COL_USERID = "userID";
+	public static final String COL_IDNUMBER = "id_number";
 	public static final String COL_USERTYPE = "user_type";
 	public static final String COL_FIRSTNAME = "first_name";
 	public static final String COL_MI = "middle_initial";
 	public static final String COL_LASTNAME = "last_name";
-	public static final String COL_USERNAME = "username";
 	public static final String COL_PASSWORD = "password";
 	public static final String COL_EMAIL = "email_address";
 	public static final String COL_BDAY = "birthday";
@@ -21,15 +20,14 @@ public class User {
 	
 	public static final String COL_QUESTION = "question";
 	
-	protected String userID;
+	protected String idnumber;
 	protected String firstName;
 	protected String middleInitial;
 	protected String lastName;
-	protected String username;
 	protected String password;
 	protected String email;
 	protected Date birthdate;
-	protected String secretQuestion;
+	protected SecretQuestion secretQuestion;
 	protected String secretAnswer;
 	protected UserType userType;
 	
@@ -37,12 +35,12 @@ public class User {
 		
 	}
 
-	public String getUserID() {
-		return userID;
+	public String getIDNumber() {
+		return idnumber;
 	}
 	
-	public void setUserID(String userID) {
-		this.userID = userID;
+	public void setIDNumber(String idnumber) {
+		this.idnumber = idnumber;
 	}
 	
 	public String getFirstName() {
@@ -69,14 +67,6 @@ public class User {
 		this.lastName = lastName;
 	}
 	
-	public String getUsername() {
-		return username;
-	}
-	
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	
 	public String getPassword() {
 		return password;
 	}
@@ -101,11 +91,11 @@ public class User {
 		this.birthdate = birthdate;
 	}
 	
-	public String getSecretQuestion() {
+	public SecretQuestion getSecretQuestion() {
 		return secretQuestion;
 	}
 	
-	public void setSecretQuestion(String secretQuestion) {
+	public void setSecretQuestion(SecretQuestion secretQuestion) {
 		this.secretQuestion = secretQuestion;
 	}
 	
@@ -124,7 +114,4 @@ public class User {
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
-	
-	
-
 }
