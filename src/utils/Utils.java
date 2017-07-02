@@ -36,13 +36,6 @@ public class Utils {
 		return year + "-" + ((month < 10) ? "0" + month : month) + "-" + ((day < 10) ? "0" + day : day);
 	}
 	
-	public static int convertDBMinutesToRealMinutes(int minutes) {
-		int m = minutes % 100;
-		int h = minutes / 100;
-		
-		return m + h * 60;
-	}
-	
 	public static int convertCurrTimetoInteger() {
 		Calendar c = Calendar.getInstance();
 		

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import db.Query;
 import model.RMFilter;
@@ -208,7 +209,7 @@ public class ReadingMaterialService {
 	}
 
 	// reserve
-	public static boolean reserveRM(User user, String rmID_location) {
+	public static boolean reserveRM(ReadingMaterial rm) {
 		boolean result = false;
 
 		String query = "\nINSERT INTO " + ReadingMaterial.TABLE_RESERVEDRM + " ( "
@@ -218,9 +219,9 @@ public class ReadingMaterialService {
 				+ " VALUES (?, ?, ?);";
 
 		ArrayList<Object> input = new ArrayList<>();
-		input.add(rmID_location);
-		input.add(user.getIDNumber());
-		input.add(Utils.convertDateJavaToStringDB(Calendar.getInstance().getTime()));
+		input.add(rm.getRMID_Location());
+		input.add(rm.getUserReserved().getIDNumber());
+		input.add(Utils.convertDateJavaToStringDB(rm.getDateReserved()));
 
 		Query q = Query.getInstance();
 

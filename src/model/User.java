@@ -11,7 +11,7 @@ public class User {
 	public static final String COL_FIRSTNAME = "first_name";
 	public static final String COL_MI = "middle_initial";
 	public static final String COL_LASTNAME = "last_name";
-	public static final String COL_PASSWORD = "password";
+	public static final String COL_PASSWORD = "passwordHash";
 	public static final String COL_EMAIL = "email_address";
 	public static final String COL_BDAY = "birthday";
 	public static final String COL_SQID = SecretQuestion.COL_SQID;
