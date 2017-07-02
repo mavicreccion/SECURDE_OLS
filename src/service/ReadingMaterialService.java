@@ -290,6 +290,16 @@ public class ReadingMaterialService {
 		return result;
 	}
 
+	public static boolean overrideResRM(int reservedRMID) {
+		boolean result = false;
+
+
+
+		return result;
+	}
+
+	/////////////////////////// GETTERS ///////////////////////////////////////////
+
 	// get RM by id and user type
 	public static ReadingMaterial getRMByID(String rmID_location, UserType userType) {
 		ReadingMaterial rm = null;
@@ -642,6 +652,7 @@ public class ReadingMaterialService {
 				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
 				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
+				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
 
 				// for status
 				input.clear();
@@ -675,7 +686,84 @@ public class ReadingMaterialService {
 		return rmList;
 	}
 
-	// get most borrowed RM
+	// get most borrowed RM (TOP 10)
+	public static ArrayList<ReadingMaterial> getMostBorrowedRM() {
+		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
+		ReadingMaterial rm = null;
+
+		String query = "\nSELECT "
+				+ ReadingMaterial.COL_RMID + ", "
+				+ ReadingMaterial.COL_TITLE + ", "
+				+ ReadingMaterial.COL_AUTHOR + ", "
+				+ ReadingMaterial.COL_PUBLISHER + ", "
+				+ ReadingMaterial.COL_YEAR + ", "
+				+ " COUNT(*) AS NUMBORROWED \n"
+				+ " FROM " + ReadingMaterial.TABLE_RM 
+				+ " NATURAL JOIN " + ReadingMaterial.TABLE_BORROWEDRM + "\n"
+				+ " GROUP BY " + ReadingMaterial.COL_RMID + "\n"
+				+ " ORDER BY NUMBORROWED DESC\n"
+				+ " LIMIT 10;";
+
+		ArrayList<Object> input = new ArrayList<>();
+
+		// for status
+		String query_reserved = "\nSELECT " + ReadingMaterial.COL_RESERVEDRMID
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM 
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+				+ " AND " + ReadingMaterial.COL_DATERESERVED + " >= CURDATE()";
+
+		String query_borrowed = "\nSELECT " + ReadingMaterial.COL_BORROWEDRMID
+				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM 
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
+
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		ResultSet r2 = null;
+
+		try {
+			r = q.runQuery(query, input);
+
+			while(r.next()) {
+				rm = new ReadingMaterial();
+				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
+				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
+				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
+				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
+				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
+
+				// for status
+				input.clear();
+				input.add(rm.getRMID_Location());
+
+				r2 = q.runQuery(query_reserved, input);
+
+				if(r2.next()) {
+					rm.setStatus(RMStatus.RESERVED);
+				} else {
+					r2 = q.runQuery(query_borrowed, input);
+
+					if(r2.next()) {
+						rm.setStatus(RMStatus.BORROWED);
+					} else {
+						rm.setStatus(RMStatus.AVAILABLE);
+					}
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return rmList;
+	}
 
 
 	// get new arrivals
@@ -715,6 +803,7 @@ public class ReadingMaterialService {
 				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
 				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
+				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
 
 				// for status
 				input.clear();
