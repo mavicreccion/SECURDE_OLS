@@ -166,6 +166,9 @@ public class ReadingMaterialService {
 
 		return result;
 	}
+	
+	// check if user can still borrow
+	
 
 	// borrow
 	public static boolean borrowRM(User user, String rmID_location) {
@@ -671,6 +674,8 @@ public class ReadingMaterialService {
 						rm.setStatus(RMStatus.AVAILABLE);
 					}
 				}
+				
+				rmList.add(rm);
 			}
 
 		} catch (SQLException e) {
@@ -723,7 +728,7 @@ public class ReadingMaterialService {
 		ResultSet r2 = null;
 
 		try {
-			r = q.runQuery(query, input);
+			r = q.runQuery(query);
 
 			while(r.next()) {
 				rm = new ReadingMaterial();
@@ -750,6 +755,8 @@ public class ReadingMaterialService {
 						rm.setStatus(RMStatus.AVAILABLE);
 					}
 				}
+				
+				rmList.add(rm);
 			}
 
 		} catch (SQLException e) {
@@ -822,6 +829,8 @@ public class ReadingMaterialService {
 						rm.setStatus(RMStatus.AVAILABLE);
 					}
 				}
+				
+				rmList.add(rm);
 			}
 
 		} catch (SQLException e) {
@@ -836,7 +845,101 @@ public class ReadingMaterialService {
 
 		return rmList;
 	}
+	
+	// get current borrowed RM of user
+	public static ArrayList<ReadingMaterial> getCurrentBorrowedRMOfUser(String id_number) {
+		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
+		ReadingMaterial rm = null;
+		
+		String query = "\nSELECT "
+				+ ReadingMaterial.COL_RMID + ", "
+				+ ReadingMaterial.COL_TITLE + ", "
+				+ ReadingMaterial.COL_DATEBORROWED + ", "
+				+ ReadingMaterial.COL_DATERETURNED + "\n"
+				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM 
+				+ " NATURAL JOIN " + ReadingMaterial.TABLE_BORROWEDRM + "\n"
+				+ " WHERE " + User.COL_IDNUMBER + " = ? "
+				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND " + ReadingMaterial.COL_DATERETURNED;
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(id_number);
+		
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		
+		try {
+			r = q.runQuery(query, input);
+			
+			while(r.next()) {
+				rm = new ReadingMaterial();
+				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
+				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
+				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
+				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
+				
+				rmList.add(rm);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return rmList;
+	}
 
-	// get borrowed RM of user
+	// get past borrowed RM of user
+	public static ArrayList<ReadingMaterial> getPastBorrowedRMOfUser(String id_number) {
+		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
+		ReadingMaterial rm = null;
+		
+		String query = "\nSELECT "
+				+ ReadingMaterial.COL_RMID + ", "
+				+ ReadingMaterial.COL_TITLE + ", "
+				+ ReadingMaterial.COL_DATEBORROWED + ", "
+				+ ReadingMaterial.COL_DATERETURNED + "\n"
+				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM 
+				+ " NATURAL JOIN " + ReadingMaterial.TABLE_BORROWEDRM + "\n"
+				+ " WHERE " + User.COL_IDNUMBER + " = ? "
+				+ " AND CURDATE() NOT BETWEEN " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND " + ReadingMaterial.COL_DATERETURNED;
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(id_number);
+		
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		
+		try {
+			r = q.runQuery(query, input);
+			
+			while(r.next()) {
+				rm = new ReadingMaterial();
+				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
+				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
+				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
+				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
+				
+				rmList.add(rm);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return rmList;
+	}
 
 }
