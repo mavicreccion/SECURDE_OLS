@@ -75,7 +75,6 @@ public class RoomService {
 		return result;
 	}
 	
-	
 	// get all reservations of user
 	public static ArrayList<ReservedRoom> getReservationsOfUser(String idNumber) {
 		ArrayList<ReservedRoom> rmList = new ArrayList<>();
@@ -110,34 +109,28 @@ public class RoomService {
 		
 		return rmList;
 	}
-	
+
 	// get number of hours of current reservation of user
-	public static int getReservedMinutesOfThisDay(int id_number, Date date) {
+	public static int getReservedMinutesOfThisDay(String id_number, Date date) {
 		int minutes = 0;
-		String columnName = "MINUTES";
 		
-		String query = "\nSELECT (" + ReservedRoom.COL_TIMEEND + "-" 
-				+ ReservedRoom.COL_TIMESTART + ") AS " + columnName
-				+ " FROM " + User.TABLE_USER
-				+ " WHERE " + User.COL_IDNUMBER + " = ? AND "
-				+ ReservedRoom.COL_DATERESERVED + " = DATE(?)";
+		String query = "\nSELECT COUNT(*) "
+				+ " FROM " + ReservedRoom.TABLE_NAME
+				+ " WHERE " + User.COL_IDNUMBER + " = ? "
+				+ " AND " + ReservedRoom.COL_DATERESERVED + " = DATE(?);";
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(id_number);
 		input.add(Utils.convertDateJavaToStringDB(date));
 		
 		Query q = Query.getInstance();
+		
 		try {
 			ResultSet r = q.runQuery(query, input);
 			
-			while(r.next()) {
-				minutes = minutes + r.getInt(1);
+			if(r.next()) {
+				minutes = r.getInt(1) * 30;
 			}
-			
-			if(minutes > 0) {
-				minutes = Utils.convertDBMinutesToRealMinutes(minutes);
-			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
