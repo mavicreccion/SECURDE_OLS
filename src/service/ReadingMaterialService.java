@@ -341,7 +341,7 @@ public class ReadingMaterialService {
 						+ User.COL_LASTNAME + ", "
 						+ Review.COL_REVIEW + "\n"
 						+ " FROM " + Review.TABLE_NAME
-						+ " NATURAL JOIN " + User.TABLE_USER
+						+ " NATURAL JOIN " + User.TABLE_USER + "\n"
 						+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
 
 				input.clear();
@@ -381,7 +381,7 @@ public class ReadingMaterialService {
 	}
 
 	// get list of user who borrowed rm
-	public static ArrayList<ReadingMaterial> getUserBorrowedRM(int rmID_location) {
+	public static ArrayList<ReadingMaterial> getUserListBorrowedRM(int rmID_location) {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
 		User user = null;
 		ReadingMaterial rm = null;
@@ -394,9 +394,9 @@ public class ReadingMaterialService {
 				+ User.COL_FIRSTNAME + ", "
 				+ User.COL_LASTNAME + "\n"
 				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM
-				+ " NATURAL JOIN " + User.TABLE_USER
+				+ " NATURAL JOIN " + User.TABLE_USER + "\n"
 				+ " WHERE " + ReadingMaterial.COL_BORROWEDRMID + " = ?\n"
-				+ " ORDER BY " + ReadingMaterial.COL_BORROWEDRMID;
+				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED;
 
 		ArrayList<Object> input = new ArrayList<>();		
 		input.add(rmID_location);
@@ -408,16 +408,16 @@ public class ReadingMaterialService {
 			r = q.runQuery(query, input);
 
 			while(r.next()) {
+				rm = new ReadingMaterial();
+				rm.setBorrowedRMID(r.getInt(ReadingMaterial.COL_BORROWEDRMID));
+				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
+				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
+				
 				user = new User();
 				user.setIDNumber(r.getString(User.COL_IDNUMBER));
 				user.setFirstName(r.getString(User.COL_FIRSTNAME));
 				user.setLastName(r.getString(User.COL_LASTNAME));
 
-				rm = new ReadingMaterial();
-
-				rm.setBorrowedRMID(r.getInt(ReadingMaterial.COL_BORROWEDRMID));
-				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
-				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERESERVED));
 				rm.setUserBorrowed(user);
 
 				rmList.add(rm);
@@ -436,11 +436,9 @@ public class ReadingMaterialService {
 
 		return rmList;
 	}
-
-
-	// get list of user who reserved rm 
-	public static ArrayList<ReadingMaterial> getUserReservedRM(int rmID_location) {
-		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
+	
+	// get user who currently reserved this rm
+	public static ReadingMaterial getUserReservedRM(int rmID_location) {
 		User user = null;
 		ReadingMaterial rm = null;
 
@@ -450,10 +448,10 @@ public class ReadingMaterialService {
 				+ User.COL_IDNUMBER + ", "
 				+ User.COL_FIRSTNAME + ", "
 				+ User.COL_LASTNAME + "\n"
-				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM
-				+ " NATURAL JOIN " + User.TABLE_USER
-				+ " WHERE " + ReadingMaterial.COL_BORROWEDRMID + " = ?\n"
-				+ " ORDER BY " + ReadingMaterial.COL_BORROWEDRMID;
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM
+				+ " NATURAL JOIN " + User.TABLE_USER + "\n"
+				+ " WHERE " + ReadingMaterial.COL_RESERVEDRMID + " = ?\n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED;
 
 		ArrayList<Object> input = new ArrayList<>();		
 		input.add(rmID_location);
@@ -465,19 +463,17 @@ public class ReadingMaterialService {
 			r = q.runQuery(query, input);
 
 			while(r.next()) {
+
+				rm = new ReadingMaterial();
+				rm.setBorrowedRMID(r.getInt(ReadingMaterial.COL_RESERVEDRMID));
+				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERESERVED));
+				
 				user = new User();
 				user.setIDNumber(r.getString(User.COL_IDNUMBER));
 				user.setFirstName(r.getString(User.COL_FIRSTNAME));
 				user.setLastName(r.getString(User.COL_LASTNAME));
 
-				rm = new ReadingMaterial();
-
-				rm.setBorrowedRMID(r.getInt(ReadingMaterial.COL_BORROWEDRMID));
-				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
-				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERESERVED));
-				rm.setUserBorrowed(user);
-
-				rmList.add(rm);
+				rm.setUserReserved(user);
 
 			}
 
@@ -491,7 +487,7 @@ public class ReadingMaterialService {
 			}
 		}
 
-		return rmList;
+		return rm;
 	}
 
 	// get all RM by search/tag
