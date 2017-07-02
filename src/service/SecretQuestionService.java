@@ -14,7 +14,7 @@ public class SecretQuestionService {
 		ArrayList<SecretQuestion> sqList = new ArrayList<>();
 		SecretQuestion sq;
 		
-		String query = "\nSELECT * FROM " + User.TABLE_SECRETQUESTION;
+		String query = "\nSELECT * FROM " + SecretQuestion.TABLE_NAME;
 		
 		Query q = Query.getInstance();
 		
@@ -24,7 +24,7 @@ public class SecretQuestionService {
 			while(r.next()) {
 				sq = new SecretQuestion();
 				sq.setSQID(r.getInt(User.COL_SQID));
-				sq.setQuestion(r.getString(User.COL_QUESTION));
+				sq.setQuestion(r.getString(SecretQuestion.COL_QUESTION));
 				
 				sqList.add(sq);
 			}
@@ -46,8 +46,8 @@ public class SecretQuestionService {
 	public static SecretQuestion getSecretQuestion(int idnumber) {
 		SecretQuestion sq = null;
 		
-		String query = "\nSELECT " + User.TABLE_USER + "." + User.COL_SQID + ", " + User.COL_QUESTION + " \n"
-				+ " FROM " + User.TABLE_USER + " NATURAL JOIN " + User.TABLE_SECRETQUESTION 
+		String query = "\nSELECT " + User.TABLE_USER + "." + User.COL_SQID + ", " + SecretQuestion.COL_QUESTION + " \n"
+				+ " FROM " + User.TABLE_USER + " NATURAL JOIN " + SecretQuestion.TABLE_NAME 
 				+ " WHERE " + User.COL_IDNUMBER + " = ?;";
 		
 		ArrayList<Object> input = new ArrayList<>();
@@ -61,7 +61,7 @@ public class SecretQuestionService {
 			if(r.next()) {
 				sq = new SecretQuestion();
 				sq.setSQID(r.getInt(User.COL_SQID));
-				sq.setQuestion(r.getString(User.COL_QUESTION));
+				sq.setQuestion(r.getString(SecretQuestion.COL_QUESTION));
 			}
 			
 		} catch (SQLException e) {

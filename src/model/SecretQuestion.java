@@ -2,6 +2,10 @@ package model;
 
 public class SecretQuestion {
 	
+	public static final String TABLE_NAME = "secret_questions";
+	public static final String COL_SQID = "sqID";
+	public static final String COL_QUESTION = "question";
+	
 	private int SQID;
 	private String question;
 	

@@ -5,7 +5,6 @@ import java.util.Date;
 public class User {
 	
 	public static final String TABLE_USER = "user";
-	public static final String TABLE_SECRETQUESTION = "secret_questions";
 	
 	public static final String COL_IDNUMBER = "id_number";
 	public static final String COL_USERTYPE = "user_type";
@@ -15,10 +14,8 @@ public class User {
 	public static final String COL_PASSWORD = "password";
 	public static final String COL_EMAIL = "email_address";
 	public static final String COL_BDAY = "birthday";
-	public static final String COL_SQID = "sqID";
+	public static final String COL_SQID = SecretQuestion.COL_SQID;
 	public static final String COL_SQANSWER = "sq_answer";
-	
-	public static final String COL_QUESTION = "question";
 	
 	protected String idnumber;
 	protected String firstName;
