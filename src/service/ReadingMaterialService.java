@@ -7,6 +7,7 @@ import java.util.Calendar;
 
 import db.Query;
 import model.RMFilter;
+import model.RMStatus;
 import model.RMTag;
 import model.RMType;
 import model.ReadingMaterial;
@@ -290,7 +291,7 @@ public class ReadingMaterialService {
 	}
 
 	// get RM by id and user type
-	public static ReadingMaterial getRMByID(String rmID_location) {
+	public static ReadingMaterial getRMByID(String rmID_location, UserType userType) {
 		ReadingMaterial rm = null;
 		RMTag rmTag = null;
 		Review review = null;
@@ -319,7 +320,9 @@ public class ReadingMaterialService {
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
 
 				// 2. tags
-				query = "\nSELECT * FROM " + ReadingMaterial.TABLE_RMTAG
+				query = "\nSELECT * "
+						+ " FROM " + ReadingMaterial.TABLE_RMTAG 
+						+ " NATURAL JOIN " + ReadingMaterial.TABLE_TAG + "\n"
 						+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
 
 				input.clear();
@@ -364,9 +367,68 @@ public class ReadingMaterialService {
 					rm.addReview(review);
 				}
 
-				// 4. get borrowed and reserved
+				// 4. check status
+				///// reserved
+				query = "\nSELECT " + ReadingMaterial.COL_DATERESERVED + ", "
+						+ User.COL_USERTYPE + "\n"
+						+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM 
+						+ " NATURAL JOIN " + User.TABLE_USER
+						+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+						+ " AND " + ReadingMaterial.COL_DATERESERVED + " >= CURDATE()";
+				
+				input.clear();
+				input.add(rmID_location);
 
+				r = q.runQuery(query, input);
+				if(r.next()) {
+					rm.setStatus(RMStatus.RESERVED);
+					UserType userType1 = UserType.getValue(r.getString(User.COL_USERTYPE));
+					
+					// set date of availability
+					rm.setDateAvailable(r.getDate(ReadingMaterial.COL_DATERESERVED));
+					if(userType1 == UserType.STUDENT) {
+						rm.setDateAvailable(Utils.addDays(rm.getDateAvailable(), 8));
+					} else if(userType1 == UserType.FACULTY) {
+						rm.setDateAvailable(Utils.addMonth(rm.getDateAvailable(), 1));
+						rm.setDateAvailable(Utils.addDays(rm.getDateAvailable(), 1));
+					}
+					
+				} else {
+					
+					///// borrowed
+					query = "\nSELECT * FROM " + ReadingMaterial.TABLE_BORROWEDRM 
+							+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+							+ " AND " + ReadingMaterial.COL_DATEBORROWED + " <= CURDATE()"
+							+ " AND " + ReadingMaterial.COL_DATERETURNED + " > CURDATE();";
+					
+					input.clear();
+					input.add(rmID_location);
 
+					r = q.runQuery(query, input);
+					if(r.next()) {
+						rm.setStatus(RMStatus.BORROWED);
+						
+						// set date of availability
+						rm.setDateAvailable(r.getDate(ReadingMaterial.COL_DATERETURNED));
+					} else {
+						
+						///// available
+						rm.setStatus(RMStatus.AVAILABLE);
+						
+						// set "reservation date"
+						rm.setDateReserved(Calendar.getInstance().getTime());
+						
+						// set anticipated return date
+						if(userType == UserType.STUDENT) {
+							rm.setDateReturned(Utils.addDays(rm.getDateReserved(), 8));
+						} else if(userType == UserType.FACULTY) {
+							rm.setDateReturned(Utils.addMonth(rm.getDateReserved(), 1));
+							rm.setDateReturned(Utils.addDays(rm.getDateReturned(), 1));
+						}
+					}
+				}
+				
+				
 			}
 
 		} catch (SQLException e) {
@@ -397,7 +459,7 @@ public class ReadingMaterialService {
 				+ User.COL_LASTNAME + "\n"
 				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM
 				+ " NATURAL JOIN " + User.TABLE_USER + "\n"
-				+ " WHERE " + ReadingMaterial.COL_BORROWEDRMID + " = ?\n"
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?\n"
 				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED;
 
 		ArrayList<Object> input = new ArrayList<>();		
@@ -452,8 +514,8 @@ public class ReadingMaterialService {
 				+ User.COL_LASTNAME + "\n"
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM
 				+ " NATURAL JOIN " + User.TABLE_USER + "\n"
-				+ " WHERE " + ReadingMaterial.COL_RESERVEDRMID + " = ?\n"
-				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED;
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ? "
+				+ " AND " + ReadingMaterial.COL_DATERESERVED + " >= CURDATE();";
 
 		ArrayList<Object> input = new ArrayList<>();		
 		input.add(rmID_location);
@@ -495,8 +557,20 @@ public class ReadingMaterialService {
 	// get all RM by search
 	public static ArrayList<ReadingMaterial> searchRM(RMFilter rmFilter, RMType rmType) {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
+		ReadingMaterial rm = null;
 		
+		String query = "";
 		
+		if(rmFilter == RMFilter.KEYWORDS && rmType == RMType.ALL) {
+			// search in TAGS table only
+			
+			query = "\n SELECT ";
+			
+		} else if(rmFilter == RMFilter.KEYWORDS) {
+			// search in TAGS and READING MATERIAL
+		} else {
+			// search in READING MATERIAL ONLY
+		}
 		
 		return rmList;
 	}

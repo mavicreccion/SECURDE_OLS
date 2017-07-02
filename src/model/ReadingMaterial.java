@@ -9,6 +9,7 @@ public class ReadingMaterial {
 	public static final String TABLE_RMTAG = "rm_tag";
 	public static final String TABLE_BORROWEDRM = "borrowed_rm";
 	public static final String TABLE_RESERVEDRM = "reserved_rm";
+	public static final String TABLE_TAG = "tags";
 	
 	public static final String COL_RMID = "rmID_location";
 	public static final String COL_RMTYPE = "rm_type";
@@ -47,6 +48,7 @@ public class ReadingMaterial {
 	private Date dateBorrowed;
 	private Date dateReturned;
 	private Date dateReserved;
+	private Date dateAvailable;
 	
 	private int borrowedRMID;
 	private int reservedRMID;
@@ -171,6 +173,14 @@ public class ReadingMaterial {
 		this.dateReserved = dateReserved;
 	}
 	
+	public Date getDateAvailable() {
+		return dateAvailable;
+	}
+
+	public void setDateAvailable(Date dateAvailable) {
+		this.dateAvailable = dateAvailable;
+	}
+
 	public int getBorrowedRMID() {
 		return borrowedRMID;
 	}

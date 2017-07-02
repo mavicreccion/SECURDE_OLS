@@ -2,6 +2,6 @@ package model;
 
 public enum RMStatus {
 
-	BORROWED, OUT, AVAILABLE
+	BORROWED, RESERVED, AVAILABLE
 	
 }
