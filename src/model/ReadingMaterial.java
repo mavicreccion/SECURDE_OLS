@@ -32,7 +32,7 @@ public class ReadingMaterial {
 	public static final String COL_DATERESERVED = "date_reserved";
 
 	private String RMID_Location;
-	private String RMType;
+	private RMType RMType;
 	private String title;
 	private String author;
 	private String publisher;
@@ -67,11 +67,11 @@ public class ReadingMaterial {
 		this.RMID_Location = RMID_Location;
 	}
 
-	public String getRMType() {
+	public RMType getRMType() {
 		return RMType;
 	}
 
-	public void setRMType(String rMType) {
+	public void setRMType(RMType rMType) {
 		RMType = rMType;
 	}
 

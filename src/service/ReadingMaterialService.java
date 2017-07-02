@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import db.Query;
+import model.RMFilter;
 import model.RMTag;
+import model.RMType;
 import model.ReadingMaterial;
 import model.Review;
 import model.User;
@@ -310,7 +312,7 @@ public class ReadingMaterialService {
 			if(r.next()) {
 				rm = new ReadingMaterial();
 				rm.setRMID_Location(rmID_location);
-				rm.setRMType(r.getString(ReadingMaterial.COL_RMTYPE));
+				rm.setRMType(RMType.getValue(r.getString(ReadingMaterial.COL_RMTYPE)));
 				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
 				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
@@ -490,7 +492,16 @@ public class ReadingMaterialService {
 		return rm;
 	}
 
-	// get all RM by search/tag
+	// get all RM by search
+	public static ArrayList<ReadingMaterial> searchRM(RMFilter rmFilter, RMType rmType) {
+		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
+		
+		
+		
+		return rmList;
+	}
+	
+	
 	// get most borrowed RM
 	// get new arrivals
 
