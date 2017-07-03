@@ -4,7 +4,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 
 import db.Query;
 import model.RMFilter;
@@ -29,8 +28,9 @@ public class ReadingMaterialService {
 				+ ReadingMaterial.COL_AUTHOR + ", " 
 				+ ReadingMaterial.COL_PUBLISHER + ", " 
 				+ ReadingMaterial.COL_YEAR + ", " 
-				+ ReadingMaterial.COL_DATEARRIVED + ")\n "
-				+ " VALUES (?, ?, ?, ?, ?, ?);";
+				+ ReadingMaterial.COL_DATEARRIVED + ", "
+				+ ReadingMaterial.COL_LIBSTATUS + ")\n "
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?);";
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(myRM.getRMType());
@@ -39,6 +39,7 @@ public class ReadingMaterialService {
 		input.add(myRM.getPublisher());
 		input.add(myRM.getYear());
 		input.add(Utils.convertDateJavaToStringDB(myRM.getDateArrived()));
+		input.add(RMStatus.INSTOCK + "");
 
 		Query q = Query.getInstance();
 
@@ -84,6 +85,33 @@ public class ReadingMaterialService {
 	}
 
 	// delete
+	public static boolean deleteRM(String rmID) {
+		boolean result = false;
+		
+		String query = "\nUPDATE " + ReadingMaterial.TABLE_RM + "\n"
+				+ " SET " + ReadingMaterial.COL_LIBSTATUS + " = ?\n"
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(RMStatus.OUTSTOCK + "");
+		input.add(rmID);
+		
+		Query q = Query.getInstance();
+		
+		try {
+			result = q.runInsertUpdateDelete(query, input);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
 
 
 	// edit reading material details
@@ -167,9 +195,9 @@ public class ReadingMaterialService {
 
 		return result;
 	}
-	
+
 	// check if user can still borrow
-	
+
 
 	// borrow
 	public static boolean borrowRM(User user, String rmID_location) {
@@ -332,6 +360,7 @@ public class ReadingMaterialService {
 				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
+				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
 
 				// 2. tags
 				query = "\nSELECT * "
@@ -384,67 +413,70 @@ public class ReadingMaterialService {
 				}
 
 				// 4. check status
-				///// reserved
-				query = "\nSELECT " + ReadingMaterial.COL_DATERESERVED + ", "
-						+ User.COL_USERTYPE + "\n"
-						+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM 
-						+ " NATURAL JOIN " + User.TABLE_USER
-						+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
-						+ " AND " + ReadingMaterial.COL_DATERESERVED + " >= CURDATE()";
-
-				input.clear();
-				input.add(rmID_location);
-
-				r = q.runQuery(query, input);
-				if(r.next()) {
-					rm.setStatus(RMStatus.RESERVED);
-					UserType userType1 = UserType.getValue(r.getString(User.COL_USERTYPE));
-
-					// set date of availability
-					rm.setDateAvailable(r.getDate(ReadingMaterial.COL_DATERESERVED));
-					if(userType1 == UserType.STUDENT) {
-						rm.setDateAvailable(Utils.addDays(rm.getDateAvailable(), 8));
-					} else if(userType1 == UserType.FACULTY) {
-						rm.setDateAvailable(Utils.addMonth(rm.getDateAvailable(), 1));
-						rm.setDateAvailable(Utils.addDays(rm.getDateAvailable(), 1));
-					}
-
-				} else {
-
-					///// borrowed
-					query = "\nSELECT " + ReadingMaterial.COL_DATERETURNED
-							+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM 
+				// if in stock, then override status to AVAILABLE, BORROWED, or RESERVED
+				if(rm.getStatus() == RMStatus.INSTOCK) {
+					
+					///// reserved
+					query = "\nSELECT " + ReadingMaterial.COL_DATERESERVED + ", "
+							+ User.COL_USERTYPE + "\n"
+							+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM 
+							+ " NATURAL JOIN " + User.TABLE_USER
 							+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
-							+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
-							+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
+							+ " AND " + ReadingMaterial.COL_DATERESERVED + " >= CURDATE()";
 
 					input.clear();
 					input.add(rmID_location);
 
 					r = q.runQuery(query, input);
 					if(r.next()) {
-						rm.setStatus(RMStatus.BORROWED);
+						rm.setStatus(RMStatus.RESERVED);
+						UserType userType1 = UserType.getValue(r.getString(User.COL_USERTYPE));
 
 						// set date of availability
-						rm.setDateAvailable(r.getDate(ReadingMaterial.COL_DATERETURNED));
+						rm.setDateAvailable(r.getDate(ReadingMaterial.COL_DATERESERVED));
+						if(userType1 == UserType.STUDENT) {
+							rm.setDateAvailable(Utils.addDays(rm.getDateAvailable(), 8));
+						} else if(userType1 == UserType.FACULTY) {
+							rm.setDateAvailable(Utils.addMonth(rm.getDateAvailable(), 1));
+							rm.setDateAvailable(Utils.addDays(rm.getDateAvailable(), 1));
+						}
+
 					} else {
 
-						///// available
-						rm.setStatus(RMStatus.AVAILABLE);
+						///// borrowed
+						query = "\nSELECT " + ReadingMaterial.COL_DATERETURNED
+								+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM 
+								+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+								+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
+								+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
 
-						// set "reservation date"
-						rm.setDateReserved(Calendar.getInstance().getTime());
+						input.clear();
+						input.add(rmID_location);
 
-						// set anticipated return date
-						if(userType == UserType.STUDENT) {
-							rm.setDateReturned(Utils.addDays(rm.getDateReserved(), 8));
-						} else if(userType == UserType.FACULTY) {
-							rm.setDateReturned(Utils.addMonth(rm.getDateReserved(), 1));
-							rm.setDateReturned(Utils.addDays(rm.getDateReturned(), 1));
+						r = q.runQuery(query, input);
+						if(r.next()) {
+							rm.setStatus(RMStatus.BORROWED);
+
+							// set date of availability
+							rm.setDateAvailable(r.getDate(ReadingMaterial.COL_DATERETURNED));
+						} else {
+
+							///// available
+							rm.setStatus(RMStatus.AVAILABLE);
+
+							// set "reservation date"
+							rm.setDateReserved(Calendar.getInstance().getTime());
+
+							// set anticipated return date
+							if(userType == UserType.STUDENT) {
+								rm.setDateReturned(Utils.addDays(rm.getDateReserved(), 8));
+							} else if(userType == UserType.FACULTY) {
+								rm.setDateReturned(Utils.addMonth(rm.getDateReserved(), 1));
+								rm.setDateReturned(Utils.addDays(rm.getDateReturned(), 1));
+							}
 						}
 					}
 				}
-
 
 			}
 
@@ -657,25 +689,29 @@ public class ReadingMaterialService {
 				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
+				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
 
 				// for status
-				input.clear();
-				input.add(rm.getRMID_Location());
+				// check if in stock
+				if(rm.getStatus() == RMStatus.INSTOCK) {
+					input.clear();
+					input.add(rm.getRMID_Location());
 
-				r2 = q.runQuery(query_reserved, input);
-
-				if(r2.next()) {
-					rm.setStatus(RMStatus.RESERVED);
-				} else {
-					r2 = q.runQuery(query_borrowed, input);
+					r2 = q.runQuery(query_reserved, input);
 
 					if(r2.next()) {
-						rm.setStatus(RMStatus.BORROWED);
+						rm.setStatus(RMStatus.RESERVED);
 					} else {
-						rm.setStatus(RMStatus.AVAILABLE);
+						r2 = q.runQuery(query_borrowed, input);
+
+						if(r2.next()) {
+							rm.setStatus(RMStatus.BORROWED);
+						} else {
+							rm.setStatus(RMStatus.AVAILABLE);
+						}
 					}
 				}
-				
+
 				rmList.add(rm);
 			}
 
@@ -738,25 +774,29 @@ public class ReadingMaterialService {
 				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
+				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
 
 				// for status
-				input.clear();
-				input.add(rm.getRMID_Location());
+				// check if in stock
+				if(rm.getStatus() == RMStatus.INSTOCK) {
+					input.clear();
+					input.add(rm.getRMID_Location());
 
-				r2 = q.runQuery(query_reserved, input);
-
-				if(r2.next()) {
-					rm.setStatus(RMStatus.RESERVED);
-				} else {
-					r2 = q.runQuery(query_borrowed, input);
+					r2 = q.runQuery(query_reserved, input);
 
 					if(r2.next()) {
-						rm.setStatus(RMStatus.BORROWED);
+						rm.setStatus(RMStatus.RESERVED);
 					} else {
-						rm.setStatus(RMStatus.AVAILABLE);
+						r2 = q.runQuery(query_borrowed, input);
+
+						if(r2.next()) {
+							rm.setStatus(RMStatus.BORROWED);
+						} else {
+							rm.setStatus(RMStatus.AVAILABLE);
+						}
 					}
 				}
-				
+
 				rmList.add(rm);
 			}
 
@@ -812,25 +852,29 @@ public class ReadingMaterialService {
 				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
+				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
 
 				// for status
-				input.clear();
-				input.add(rm.getRMID_Location());
+				// check if in stock
+				if(rm.getStatus() == RMStatus.INSTOCK) {
+					input.clear();
+					input.add(rm.getRMID_Location());
 
-				r2 = q.runQuery(query_reserved, input);
-
-				if(r2.next()) {
-					rm.setStatus(RMStatus.RESERVED);
-				} else {
-					r2 = q.runQuery(query_borrowed, input);
+					r2 = q.runQuery(query_reserved, input);
 
 					if(r2.next()) {
-						rm.setStatus(RMStatus.BORROWED);
+						rm.setStatus(RMStatus.RESERVED);
 					} else {
-						rm.setStatus(RMStatus.AVAILABLE);
+						r2 = q.runQuery(query_borrowed, input);
+
+						if(r2.next()) {
+							rm.setStatus(RMStatus.BORROWED);
+						} else {
+							rm.setStatus(RMStatus.AVAILABLE);
+						}
 					}
 				}
-				
+
 				rmList.add(rm);
 			}
 
@@ -846,42 +890,44 @@ public class ReadingMaterialService {
 
 		return rmList;
 	}
-	
+
 	// get current borrowed RM of user
 	public static ArrayList<ReadingMaterial> getCurrentBorrowedRMOfUser(String id_number) {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
 		ReadingMaterial rm = null;
-		
+
 		String query = "\nSELECT "
 				+ ReadingMaterial.COL_RMID + ", "
 				+ ReadingMaterial.COL_TITLE + ", "
 				+ ReadingMaterial.COL_DATEBORROWED + ", "
-				+ ReadingMaterial.COL_DATERETURNED + "\n"
+				+ ReadingMaterial.COL_DATERETURNED + ", "
+				+ ReadingMaterial.COL_LIBSTATUS + "\n"
 				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_BORROWEDRM + "\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ? "
 				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
 				+ " AND " + ReadingMaterial.COL_DATERETURNED;
-		
+
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(id_number);
-		
+
 		Query q = Query.getInstance();
 		ResultSet r = null;
-		
+
 		try {
 			r = q.runQuery(query, input);
-			
+
 			while(r.next()) {
 				rm = new ReadingMaterial();
 				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
 				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
 				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
 				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
-				
+				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
+
 				rmList.add(rm);
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -891,7 +937,7 @@ public class ReadingMaterialService {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return rmList;
 	}
 
@@ -899,37 +945,39 @@ public class ReadingMaterialService {
 	public static ArrayList<ReadingMaterial> getPastBorrowedRMOfUser(String id_number) {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
 		ReadingMaterial rm = null;
-		
+
 		String query = "\nSELECT "
 				+ ReadingMaterial.COL_RMID + ", "
 				+ ReadingMaterial.COL_TITLE + ", "
 				+ ReadingMaterial.COL_DATEBORROWED + ", "
-				+ ReadingMaterial.COL_DATERETURNED + "\n"
+				+ ReadingMaterial.COL_DATERETURNED + ", "
+				+ ReadingMaterial.COL_LIBSTATUS + "\n"
 				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_BORROWEDRM + "\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ? "
 				+ " AND CURDATE() NOT BETWEEN " + ReadingMaterial.COL_DATEBORROWED
 				+ " AND " + ReadingMaterial.COL_DATERETURNED;
-		
+
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(id_number);
-		
+
 		Query q = Query.getInstance();
 		ResultSet r = null;
-		
+
 		try {
 			r = q.runQuery(query, input);
-			
+
 			while(r.next()) {
 				rm = new ReadingMaterial();
 				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
 				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
 				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
 				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
-				
+				rm.setStatus(RMStatus.getStockValue(ReadingMaterial.COL_LIBSTATUS));
+
 				rmList.add(rm);
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -939,7 +987,79 @@ public class ReadingMaterialService {
 				e.printStackTrace();
 			}
 		}
-		
+
+		return rmList;
+	}
+
+	public static ArrayList<ReadingMaterial> getDataForExport() {
+		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
+		ReadingMaterial rm = null;
+
+		String query = "\nSELECT " + ReadingMaterial.COL_RMID + ", "
+				+ ReadingMaterial.COL_LIBSTATUS + "\n"
+				+ " FROM " + ReadingMaterial.TABLE_RM;
+
+		// for status
+		String query_reserved = "\nSELECT " + ReadingMaterial.COL_RESERVEDRMID
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM 
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+				+ " AND " + ReadingMaterial.COL_DATERESERVED + " >= CURDATE()";
+
+		String query_borrowed = "\nSELECT " + ReadingMaterial.COL_BORROWEDRMID
+				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM 
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
+
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		ResultSet r2 = null;
+		ArrayList<Object> input = new ArrayList<>();
+
+		try {
+			r = q.runQuery(query);
+
+			while(r.next()) {
+				rm = new ReadingMaterial();
+				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
+				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
+
+				// for status
+				// check if in stock
+				if(rm.getStatus() == RMStatus.INSTOCK) {
+					input.clear();
+					input.add(rm.getRMID_Location());
+
+					r2 = q.runQuery(query_reserved, input);
+
+					if(r2.next()) {
+						rm.setStatus(RMStatus.RESERVED);
+					} else {
+						r2 = q.runQuery(query_borrowed, input);
+
+						if(r2.next()) {
+							rm.setStatus(RMStatus.BORROWED);
+						} else {
+							rm.setStatus(RMStatus.AVAILABLE);
+						}
+					}
+				}
+
+				rmList.add(rm);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+
 		return rmList;
 	}
 
