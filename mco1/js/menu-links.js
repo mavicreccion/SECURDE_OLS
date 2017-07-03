@@ -1,0 +1,5 @@
+function initMenu(){
+	var menu = 
+
+
+}

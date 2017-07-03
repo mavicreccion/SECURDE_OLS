@@ -102,7 +102,7 @@
     background: transparent;
 }
 
-.flaticon-loupe:before{
+.flaticon-loupe:before, .flaticon-message:before{
     margin:0;
 }
 
@@ -128,17 +128,19 @@ form{
     margin: 15px 0;
 }
 
-.submit-btn{
+
+.submit-btn, .reserve-inline{
     background-color: #00CC45;
     transition: 0.6s;
 }
 
-.submit-btn:hover, .submit-btn:focus{
+.submit-btn:hover, .submit-btn:focus, .reserve-inline:hover, .reserve-inline:focus{
     background-color: #009D35;
 }
 
+
 #overlay-screen{
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, 0.5);
     width: 100%;
     height: 100%;
     position: fixed;
@@ -146,4 +148,121 @@ form{
     top: 0;
     bottom: 0;
     z-index: 1;
+}
+
+
+.content div:not(.header), .content div:not(.content-search){
+    /* should i add padding or naah? */
+}
+
+.rm-information > span, .rm-information > a, .rm-information > div{
+    display: block;
+
+}
+
+.rm-gen-details{
+    padding: 10px;
+    padding-top: 25px;
+    padding-bottom: 0;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.rm-results .rm-gen-details:nth-of-type(even){
+    background-color: #f2f2f2;
+}
+
+.location-status .row{
+    margin-bottom: 10px;
+}
+
+
+
+.reserved-status, .borrowed-status, .available-status{
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.available-status{
+    color: #00cc45;   
+}
+
+.reserved-status{
+    color: #ff7070;
+}
+
+.borrowed-status{
+    color: #6c61f1;
+}
+
+.disabled{
+    transition: 0 !important;
+    background-color: #b7b7b7;
+}
+
+.disabled:hover{
+    background-color: #b7b7b7 !important;
+}
+
+#confirm-reservation{
+    position: absolute;
+    z-index: 9999;
+    display: block;
+    background-color: white;
+    padding: 20px;
+    border-radius: 3px;
+
+    right: 0;
+    left: 0;
+    max-width: 500px;
+    margin: 0 auto;
+
+}
+
+.rm-results, .content .rm-gen-details, .rm-reviews{
+    border-radius: 5px;
+    border: 1px solid #004216;
+    border-top: 6px solid #004216;
+    margin-left: -1px;
+    margin: 0 90px;
+}
+
+.rm-reviews{
+    margin: 0 !important
+}
+
+.content .rm-gen-details{
+    border: 0;
+}
+
+.rm-results b#results-found, .rm-reviews b#results-found{
+    display: block;
+    background-color: #004216;
+    color: white;
+    border: 1px solid #004216;
+    padding: 5px;
+    padding-left: 20px;
+}
+
+
+.rm-information a.title{
+    text-decoration: underline;
+}
+
+
+.availability-date{
+    font-weight: bold;
+}
+
+.rm-reviews div{
+    margin: 20px; 
+    padding-bottom: 10px;
+}
+
+.log-item{
+    display: inline-block;
+    width: 24.1%;
+    margin: 3px;
+    padding: 15px;
 }

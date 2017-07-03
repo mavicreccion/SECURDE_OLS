@@ -118,18 +118,23 @@
       <!-- Sign Up button | Sign In Form -->
       <div class="row">
         <div class="col-xs-5 bordered-dark">
-        <h3 align="center">Create an Account</h3> 
-        <div class="divider-dark"></div>
-        <p align="center" style="margin: 20px 0">Please enter your ID number to create an account.</p>
-        <div class="form-group">
-          <label for="exampleInputEmail1">ID Number</label>
-          <input type="number" id="register-idnum" class="form-control form-components-rd erase-margin" id="exampleInputEmail1" placeholder="ID Number">
-        </div>
-        <div class="form-group">
-          <button type="submit" id="submit-register-id" class="btn btn-default submit-btn submit-btn form-components-rd auto-width erase-margin">Sign Up</button>
-        </div>
-        </form>
-  
+          <h3 align="center">Create an Account</h3> 
+          <div class="divider-dark"></div>
+          <form class="form-horizontal">
+            <p align="center" style="margin: 20px 0;">Please enter your ID number to create an account.</p>
+              <div class="form-group">
+                <label for="register-idnum" class="col-sm-2 control-label">ID #</label>
+                <div class="col-sm-10">
+                  <input type="number" class="form-control form-components-rd erase-margin" id="login-idnum" placeholder="ID Number">
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <button type="submit" id="register-login" class="btn btn-default submit-btn form-components-rd auto-width erase-margin">Sign in</button>
+                </div>
+              </div>
+            </form>
+            <br>
         </div>
         <div class="col-xs-5 col-xs-offset-2 bordered-dark">
             <h3 align="center">Already Registered?</h3> 
@@ -147,6 +152,9 @@
                 <div class="col-sm-10">
                   <input type="password" class="form-control form-components-rd erase-margin" id="login-password" placeholder="Password">
                 </div>
+                <br><br>
+                <a href="forgot-pwd.html" class="col-sm-10 col-sm-offset-2">Forgot your password?</a>
+                <br>
               </div>
 
               <div class="form-group">

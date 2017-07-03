@@ -1,0 +1,102 @@
+
+div#table-of-rooms{
+	background-color: transparent;
+	overflow: auto;
+}
+
+table#table-of-rooms{
+	border-collapse: collapse;
+	overflow: auto;    
+}
+
+#table-of-rooms td:not(.colHeader){
+    text-align: center;
+    font-size: 10px;
+    padding: 20px;
+    border: 1.5px dashed #8c8c8c;
+}
+
+
+
+#table-of-rooms th, .colHeader{
+	background-color: #000;
+    color: white;
+    font-weight: normal;
+	text-align: center;
+	padding: 10px;
+	letter-spacing: 3px;
+	font-size: 12px;
+	border: 1.5px dashed #c9c7c7;
+}
+
+.colHeader{
+    position:absolute;
+    width: 61px;
+    height: 42px;
+    left:auto;
+    top:auto;
+    padding: 0;
+    padding-top: 10px;
+}
+
+.otherCells
+{
+	background-color: #00cc00;
+    transition-duration: 0.3s;
+	transition-property: all;
+	transition-timing-function: ease;
+}
+
+.otherCells:hover:not(.closedCell):not(.breakCell):not(.classesCell)
+{
+	background-color: #66ff99;
+	cursor: pointer;
+}
+
+.openCell {
+    background: #00cc00;
+}
+.closedCell {
+    background: #ff6666;
+}
+.classesCell {
+    background: #6699ff;
+}
+.breakCell {
+    background: #ff9933;
+}
+
+
+#legends{
+    display: inline-block;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    width: auto;
+}
+.legends{
+    padding: 10px; 
+    border-radius: 10px; 
+    display: inline-block;
+    position: relative;
+    margin: 0 3px;
+    max-width: 30%;
+    min-width: 10%;
+}
+
+#time{
+    margin-left: 40px;
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.title3{
+    display: inline;
+    margin-right: 20px;
+    font-weight: bold;
+    font-size: x-large;
+}

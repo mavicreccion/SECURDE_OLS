@@ -34,3 +34,6 @@ function initSearchToggle(){
       $('#content-search').fadeOut(350, function(){});
   })
 }
+
+
+/* "db" */

@@ -113,72 +113,65 @@
         <br>
       </div>
 
-      <div class="row rm-gen-details">
-        <div class="col-md-2">
-        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-        <div class="col-md-10 rm-information">
-          <a href="rm-details.html" class="title"><b>Title</b></a>
-          <span class="author">Author</span>
-          <span class="pub-info">Pub Info</span>
-          <span class="tags">Tags</span>
-          <br>
-          <div class="row">
-            <b>
-            <div class="col-md-3"><u>Location</u></div>
-            <div class="col-md-3"><u>Status</u></div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div></b>
-          </div>
-          <div class="location-status">
-            <div class="row">
-              <div class="col-md-3"><span class="location">Location</span></div>
-              <div class="col-md-3"><span class="available-status">Available</span></div>
-              <div class="col-md-3"><button class="reserve-inline btn btn-default">Reserve</button></div>
-              <div class="col-md-3"><span class="availability-date">Returned by: </span> 09/30/2017</div>
-            </div> 
-          </div>
+      <div align="center" id="content-forgotten">
+      <h2>Forgot your Password?</h2>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <form class="form-horizontal">
+              <div class="form-group">
+                <label for="login-idnum" class="col-sm-2 control-label">Username</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control form-components-rd erase-margin" id="login-idnum" placeholder="ID Number">
+                </div>
+              </div>
+              <div class="form-group" align="left">
+                <div class="col-sm-offset-2 col-sm-10">
+                  <div type="submit" id="verify-username" class="btn btn-default submit-btn form-components-rd auto-width erase-margin">Submit</div>
+                </div>
+              </div>
+
+              <div id="secret-question" style="display:none;">
+                <div class="form-group">
+                  <label for="login-idnum" class="col-sm-2 control-label">Secret Question</label>
+                  <div class="col-sm-10">
+                    <div class="well">Where did you spend your 10th birthday?</div>
+                    <div class="alert alert-danger" style="display:none;" role="alert">Wrong Answer!</div>
+                    <input type="text" class="form-control form-components-rd erase-margin" id="login-idnum" placeholder="Your Answer">
+                  </div>
+                </div>
+                <div class="form-group" align="left">
+                  <div class="col-sm-offset-2 col-sm-10">
+                    <div type="submit" id="verify-secret-answer" class="btn btn-default submit-btn form-components-rd auto-width erase-margin">Submit</div>
+                  </div>
+                </div>
+              </div>
+            </form>
+
+
+
+
 
         </div>
       </div>
-      
-      <br>
-      <div class="divider"></div>
-      <br>
-
-      <div class="rm-reviews">
-        <b id="results-found" style="margin: -1px;">Reviews</b>
-        
-        <div class="write-review divider">
-          <b>Write a short review</b>
-          <form class="form-inline" align="center">
-
-            <textarea class="form-control" placeholder="Tell us what you think" rows="2" style="width: 80%; margin-right: 20px;" ></textarea>
-            <button class="btn btn-default" style="margin: 0 auto;"><i class="flaticon-message"></i></button>
-
-          </form>
-        </div>
-
-        <div class="review divider">Reviewed on <i>6 / 30 / 2017</i>
-          <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
-
-        </div>
-
-        <div class="review divider">Reviewed on  <i>6 / 30 / 2017</i>
-          <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
-
-        </div>
 
       </div>
+
+
 
     </div>
   </div>
 </div>
 
 
+<script>
 
+$("#verify-secret-answer").click(function(){
+  $('.alert-danger').show("fast", function(){});
+  setTimeout(function(){
+      $('.alert-danger').hide("fast", function(){});  
+    }, 1000);
+});
+
+</script>
 </body>
 </html>

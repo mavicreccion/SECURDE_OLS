@@ -1,6 +1,6 @@
 $(document).ready(function(){
   if(user != null){
-    window.location = "index.html";
+    //window.location = "index.html";
   }
 
 	initBdayDatePicker();

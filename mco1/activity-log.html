@@ -113,72 +113,77 @@
         <br>
       </div>
 
-      <div class="row rm-gen-details">
-        <div class="col-md-2">
-        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-        <div class="col-md-10 rm-information">
-          <a href="rm-details.html" class="title"><b>Title</b></a>
-          <span class="author">Author</span>
-          <span class="pub-info">Pub Info</span>
-          <span class="tags">Tags</span>
-          <br>
-          <div class="row">
-            <b>
-            <div class="col-md-3"><u>Location</u></div>
-            <div class="col-md-3"><u>Status</u></div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div></b>
-          </div>
-          <div class="location-status">
-            <div class="row">
-              <div class="col-md-3"><span class="location">Location</span></div>
-              <div class="col-md-3"><span class="available-status">Available</span></div>
-              <div class="col-md-3"><button class="reserve-inline btn btn-default">Reserve</button></div>
-              <div class="col-md-3"><span class="availability-date">Returned by: </span> 09/30/2017</div>
-            </div> 
-          </div>
+      <h2 align="center">Activity Log</h2><br><br>
 
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a data-toggle="collapse" href="#current-book-log">Current / Pending Reading Material/s</a>
         </div>
-      </div>
-      
-      <br>
-      <div class="divider"></div>
-      <br>
-
-      <div class="rm-reviews">
-        <b id="results-found" style="margin: -1px;">Reviews</b>
         
-        <div class="write-review divider">
-          <b>Write a short review</b>
-          <form class="form-inline" align="center">
+        <div id="current-book-log" class="panel-collapse collapse in">
+          <div class="panel-body">
+            
+            <div class="log-item bordered-dark">
+              <a class="title">Analyzing Driving Risks of Roadway Traffic under Adverse Weather Conditions: In Case of Rain Day</a>
+              <div class="status reserved-status">Reserved</div>
+              Reserved on : <span class="date_reserved">mm / dd / yyyy</span><br>
+              Return by : <span class="date_returned">mm / dd / yyyy</span>
+            </div>
 
-            <textarea class="form-control" placeholder="Tell us what you think" rows="2" style="width: 80%; margin-right: 20px;" ></textarea>
-            <button class="btn btn-default" style="margin: 0 auto;"><i class="flaticon-message"></i></button>
+            <div class="log-item bordered-dark">
+              <a class="title">Analyzing Driving Risks of Roadway Traffic under Adverse Weather Conditions: In Case of Rain Day</a>
+              <div class="status borrowed-status">Borrowed</div>
+              Borrowed on : <span class="date_reserved">mm / dd / yyyy</span><br>
+              Return by : <span class="date_returned">mm / dd / yyyy</span>
+            </div>
 
-          </form>
+          </div>
         </div>
-
-        <div class="review divider">Reviewed on <i>6 / 30 / 2017</i>
-          <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
-
-        </div>
-
-        <div class="review divider">Reviewed on  <i>6 / 30 / 2017</i>
-          <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
-
-        </div>
-
       </div>
 
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a data-toggle="collapse" href="#previous-book-log">Previously Borrowed Reading Material/s</a>
+        </div>
+        
+        <div id="previous-book-log" class="panel-collapse collapse in">
+          <div class="panel-body">
+            
+            <div class="log-item bordered-dark">
+              <a class="title">Analyzing Driving Risks of Roadway Traffic under Adverse Weather Conditions: In Case of Rain Day</a>
+              <br>
+              Borrowed on : <span class="date_borrowed">mm / dd / yyyy</span><br>
+              Returned by : <span class="date_returned">mm / dd / yyyy</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <a data-toggle="collapse" href="#previous-book-log">Reserved Meeting Rooms</a>
+        </div>
+        
+        <div id="previous-book-log" class="panel-collapse collapse in">
+          <div class="panel-body">
+            
+            <div class="log-item bordered-dark">
+              <a class="room_no">R201</a><br>
+              Reserved on : <br>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="date_reserved">mm / dd / yyyy</span> <br> 
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="time_reserved">0930 am</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      
     </div>
   </div>
 </div>
-
-
-
 </body>
 </html>

@@ -76,6 +76,32 @@
       </div>
 
       <div id="overlay-screen" style="display: none;"></div>
+
+      <div id="confirm-reservation" style="display: none;">
+        <h3 align="center">Confirm Reservation?</h3>
+        <div align="center" class="divider"></div>
+
+        <h3>Reserving <a href="rm-details.html" class="title">Title</a></h3>
+
+        <div style="padding: 0 20%;" align="left">
+          <b>Reservation Date</b>: <span class="confirm-reserve-date">07 / 02 / 2017</span><br>
+          <b>Anticipated Return Date</b>: <span class="confirm-return-date">07 / 09 / 2017</span>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <div class="col-md-1"></div>
+          <div class="col-md-2"></div>
+          <div class="col-md-2"><button id="submit-reserve" class="btn btn-default">Confirm</button></div>
+          <div class="col-md-1"></div>
+          <div class="col-md-2"><button id="cancel-reserve" class="btn btn-default">Cancel</button></div>
+          <div class="col-md-2"></div>
+          <div class="col-md-1"></div>
+
+        </div>
+      </div>
+
       <div id="content-search" class="collapse white-container" style="display:none;">
         <h3 align="center">Search for Books</h3>
         <form class="form-inline input-group" id="search" align="center">
@@ -113,6 +139,8 @@
         <br>
       </div>
 
+      <div class="rm-results">
+      <b id="results-found" style="margin: -1px;">34 results found</b>
       <div class="row rm-gen-details">
         <div class="col-md-2">
         <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
@@ -124,61 +152,101 @@
           <br>
           <div class="row">
             <b>
-            <div class="col-md-3"><u>Location</u></div>
-            <div class="col-md-3"><u>Status</u></div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div></b>
+            <div class="col-md-4"><u>Location</u></div>
+            <div class="col-md-4"><u>Status</u></div></b>
+            <div class="col-md-4"></div>
           </div>
           <div class="location-status">
             <div class="row">
-              <div class="col-md-3"><span class="location">Location</span></div>
-              <div class="col-md-3"><span class="available-status">Available</span></div>
-              <div class="col-md-3"><button class="reserve-inline btn btn-default">Reserve</button></div>
-              <div class="col-md-3"><span class="availability-date">Returned by: </span> 09/30/2017</div>
+              <div class="col-md-4"><span class="location">Location</span></div>
+              <div class="col-md-4"><span class="reserved-status">RESERVED</span></div>
+              <div class="col-md-4"><button class="reserve-inline btn btn-default disabled">Reserve</button></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row rm-gen-details">
+        <div class="col-md-2">
+        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
+        <div class="col-md-10 rm-information">
+          <a href="rm-details.html" class="title"><b>Title</b></a>
+          <span class="author">Author</span>
+          <span class="pub-info">Pub Info</span>
+          <span class="tags">Tags</span>
+          <br>
+          <div class="row">
+            <b>
+            <div class="col-md-4"><u>Location</u></div>
+            <div class="col-md-4"><u>Status</u></div>
+            <div class="col-md-4"></div></b>
+          </div>
+          <div class="location-status">
+            <div class="row">
+              <div class="col-md-4"><span class="location">Location</span></div>
+              <div class="col-md-4"><span class="available-status">Available</span></div>
+              <div class="col-md-4"><button class="reserve-inline btn btn-default">Reserve</button></div>
             </div> 
           </div>
 
         </div>
       </div>
-      
-      <br>
-      <div class="divider"></div>
-      <br>
 
-      <div class="rm-reviews">
-        <b id="results-found" style="margin: -1px;">Reviews</b>
-        
-        <div class="write-review divider">
-          <b>Write a short review</b>
-          <form class="form-inline" align="center">
-
-            <textarea class="form-control" placeholder="Tell us what you think" rows="2" style="width: 80%; margin-right: 20px;" ></textarea>
-            <button class="btn btn-default" style="margin: 0 auto;"><i class="flaticon-message"></i></button>
-
-          </form>
-        </div>
-
-        <div class="review divider">Reviewed on <i>6 / 30 / 2017</i>
+      <div class="row rm-gen-details">
+        <div class="col-md-2">
+        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
+        <div class="col-md-10 rm-information">
+          <a href="rm-details.html" class="title"><b>Title</b></a>
+          <span class="author">Author</span>
+          <span class="pub-info">Pub Info</span>
+          <span class="tags">Tags</span>
           <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
+          <div class="row">
+            <b>
+            <div class="col-md-4"><u>Location</u></div>
+            <div class="col-md-4"><u>Status</u></div>
+            <div class="col-md-4"></div></b>
+          </div>
+          <div class="location-status">
+            <div class="row">
+              <div class="col-md-4"><span class="location">Location</span></div>
+              <div class="col-md-4"><span class="borrowed-status">Borrowed</span></div>
+              <div class="col-md-4"><button class="reserve-inline btn btn-default">Reserve</button></div>
+            </div> 
+          </div>
 
         </div>
+      </div>
 
-        <div class="review divider">Reviewed on  <i>6 / 30 / 2017</i>
-          <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
-
-        </div>
 
       </div>
+
 
     </div>
   </div>
 </div>
-
-
-
 </body>
+<script>
+
+$('#submit-reserve').click(function(){
+    alert("Reserved!");
+})
+
+$('.reserve-inline:not(.disabled)').click(function(){
+    $('#overlay-screen').fadeIn("fast", function(){})
+    $('#confirm-reservation').fadeIn(350, function(){});
+})
+
+$('#cancel-reserve').click(function(){
+    $('#overlay-screen').fadeOut("fast", function(){})
+    $('#confirm-reservation').fadeOut(350, function(){});
+})
+
+$('#overlay-screen').click(function(){
+    $('#overlay-screen').fadeOut("fast", function(){})
+    $('#confirm-reservation').fadeOut(350, function(){});
+})
+
+</script>
 </html>
