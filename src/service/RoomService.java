@@ -145,6 +145,7 @@ public class RoomService {
 		return rmList;
 	}
 	
+	// check if user can borrow
 
 	// get number of hours of current reservation of user
 	public static int getReservedMinutesOfThisDay(String id_number, Date date) {

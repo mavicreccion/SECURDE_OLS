@@ -138,6 +138,7 @@ public class UserService {
 		return user;
 	}
 	
+	// get user type
 	public static UserType getUserType(String id_number) {
 		UserType userType = null;
 		
