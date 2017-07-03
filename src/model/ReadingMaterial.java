@@ -18,6 +18,7 @@ public class ReadingMaterial {
 	public static final String COL_PUBLISHER = "publisher";
 	public static final String COL_YEAR = "year";
 	public static final String COL_DATEARRIVED = "date_arrived";
+	public static final String COL_LIBSTATUS = "lib_status";
 	
 	public static final String COL_RMTAGID = "rmTagID";
 	public static final String COL_TAGID = "tagID";

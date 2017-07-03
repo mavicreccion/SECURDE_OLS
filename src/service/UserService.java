@@ -15,19 +15,11 @@ public class UserService {
 	public static boolean registerUser(User user) {
 		boolean result = false;
 		
-		String query = "\nINSERT INTO " + User.TABLE_USER + " ( " 
-				+ User.COL_USERTYPE + ", "
-				+ User.COL_FIRSTNAME + ", "
-				+ User.COL_MI + ", "
-				+ User.COL_LASTNAME + ", "
-				+ User.COL_PASSWORD + ", "
-				+ User.COL_EMAIL + ", "
-				+ User.COL_BDAY + ", "
-				+ User.COL_SQID + ", "
-				+ User.COL_SQANSWER + ")\n "
-				+ " VALUES (?, ?, ?, ?, SHA2(?, 512), ?, ?, ?, ?);";
+		String query = "\nINSERT INTO " + User.TABLE_USER + "\n"
+				+ " VALUES (?, ?, ?, ?, ?, SHA2(?, 512), ?, ?, ?, ?);";
 		
 		ArrayList<Object> input = new ArrayList<>();
+		input.add(user.getIDNumber());
 		input.add(user.getUserType());
 		input.add(user.getFirstName());
 		input.add(user.getMiddleInitial());
