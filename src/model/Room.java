@@ -6,8 +6,9 @@ public class Room {
 	public static final String COL_MRID = "mrID";
 	public static final String COL_MRNAME = "mr_name";
 	
-	private int mrID;
-	private String mr_name;
+	protected int mrID;
+	protected String mr_name;
+	protected RoomStatus roomStatus;
 	
 	public Room() {
 		
@@ -28,7 +29,13 @@ public class Room {
 	public void setMr_name(String mr_name) {
 		this.mr_name = mr_name;
 	}
-	
-	
+
+	public RoomStatus getRoomStatus() {
+		return roomStatus;
+	}
+
+	public void setRoomStatus(RoomStatus roomStatus) {
+		this.roomStatus = roomStatus;
+	}
 
 }

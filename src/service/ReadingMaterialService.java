@@ -113,7 +113,6 @@ public class ReadingMaterialService {
 		return result;
 	}
 
-
 	// edit reading material details
 	public static boolean editRM(ReadingMaterial myRM) {
 		boolean result = false;
@@ -813,7 +812,6 @@ public class ReadingMaterialService {
 		return rmList;
 	}
 
-
 	// get new arrivals
 	public static ArrayList<ReadingMaterial> getNewArrivals() {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
@@ -991,6 +989,7 @@ public class ReadingMaterialService {
 		return rmList;
 	}
 
+	// get id and status of ALL RM
 	public static ArrayList<ReadingMaterial> getDataForExport() {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
 		ReadingMaterial rm = null;
@@ -1024,29 +1023,32 @@ public class ReadingMaterialService {
 				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
 				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
 
+				rmList.add(rm);
+			}
+			
+			for (ReadingMaterial rm1 : rmList) {
 				// for status
 				// check if in stock
-				if(rm.getStatus() == RMStatus.INSTOCK) {
+				if(rm1.getStatus() == RMStatus.INSTOCK) {
 					input.clear();
-					input.add(rm.getRMID_Location());
+					input.add(rm1.getRMID_Location());
 
 					r2 = q.runQuery(query_reserved, input);
 
 					if(r2.next()) {
-						rm.setStatus(RMStatus.RESERVED);
+						rm1.setStatus(RMStatus.RESERVED);
 					} else {
 						r2 = q.runQuery(query_borrowed, input);
 
 						if(r2.next()) {
-							rm.setStatus(RMStatus.BORROWED);
+							rm1.setStatus(RMStatus.BORROWED);
 						} else {
-							rm.setStatus(RMStatus.AVAILABLE);
+							rm1.setStatus(RMStatus.AVAILABLE);
 						}
 					}
+					
+					r2.close();
 				}
-
-				rmList.add(rm);
-
 			}
 
 		} catch (SQLException e) {

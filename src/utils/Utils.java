@@ -44,5 +44,19 @@ public class Utils {
 		
 		return h + m;
 	}
+	
+	public static int[] getTimeSlots() {
+		int[] timeSlots = new int[27];
+		int start = 700;
+		timeSlots[0] = start;
+		
+		for(int i = 1; i < timeSlots.length; i ++) {
+			timeSlots[i] = start + ((i % 2 == 0) ? 70 : 30);
+			start = timeSlots[i];
+		}
+		
+		return timeSlots;
+		
+	}
 
 }
