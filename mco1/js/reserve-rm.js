@@ -1,4 +1,3 @@
-
 $('#submit-reserve').click(function(){
     alert("Reserved!");
 })
