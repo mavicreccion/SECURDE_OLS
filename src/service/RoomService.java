@@ -10,6 +10,7 @@ import model.ReservedRoom;
 import model.Room;
 import model.RoomStatus;
 import model.User;
+import model.UserType;
 import utils.Utils;
 
 public class RoomService {
@@ -145,29 +146,31 @@ public class RoomService {
 		return rmList;
 	}
 	
-	// check if user can borrow
-
-	// get number of hours of current reservation of user
-	public static int getReservedMinutesOfThisDay(String id_number, Date date) {
-		int minutes = 0;
+	// check if user can still reserve a meeting room
+	public static boolean checkIfUserCanStillReserve(User user, Date date) {
+		boolean result = false;
 		
 		String query = "\nSELECT COUNT(*) "
 				+ " FROM " + ReservedRoom.TABLE_NAME
 				+ " WHERE " + User.COL_IDNUMBER + " = ? "
-				+ " AND " + ReservedRoom.COL_DATERESERVED + " = DATE(?);";
+				+ " AND " + ReservedRoom.COL_DATERESERVED + " = DATE(?) "
+				+ " GROUP BY " + User.COL_IDNUMBER
+				+ " HAVING COUNT(*) < ?;";
 		
 		ArrayList<Object> input = new ArrayList<>();
-		input.add(id_number);
+		input.add(user.getIDNumber());
 		input.add(Utils.convertDateJavaToStringDB(date));
+		
+		if(user.getUserType() == UserType.STUDENT) 
+			input.add(4);
+		else if(user.getUserType() == UserType.FACULTY)
+			input.add(10);
 		
 		Query q = Query.getInstance();
 		
 		try {
 			ResultSet r = q.runQuery(query, input);
-			
-			if(r.next()) {
-				minutes = r.getInt(1) * 30;
-			}
+			result = r.next();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -178,7 +181,7 @@ public class RoomService {
 			}
 		}
 		
-		return minutes;
+		return result;
 	}
 	
 	// get reserved rooms at this time and day (USER)

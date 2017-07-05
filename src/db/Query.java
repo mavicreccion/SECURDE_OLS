@@ -129,7 +129,7 @@ public class Query {
 						pstmt.setDate(i + 1, (Date) input.get(i));
 					}
 			
-			 System.out.println(pstmt.toString());
+			System.out.println(pstmt.toString());
 			rs = pstmt.executeQuery();
 			}
 		return rs;
@@ -160,7 +160,7 @@ public class Query {
 	public boolean runInsertUpdateDelete(String query, ArrayList<Object> input) throws SQLException{
 		boolean result = connect(username, password, url);
 		if(result){
-			pstmt = con.prepareStatement(query);
+			pstmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			if(input != null)
 				for(int i = 0; i < input.size(); i++){
 					if(input.get(i) instanceof String)

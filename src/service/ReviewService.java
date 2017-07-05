@@ -20,7 +20,7 @@ public class ReviewService {
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ? "
 				+ " AND " + ReadingMaterial.COL_IDNUMBER + " = ? "
-				+ " AND CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED; 
+				+ " AND CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED;
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rmID);

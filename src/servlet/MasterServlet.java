@@ -15,11 +15,14 @@ import subservlet.*;
  */
 @WebServlet(urlPatterns = { AccountPageServlet.URL,
 							HomePageServlet.URL,
+							LoadBookTitleServlet.URL,
 							MeetingRoomPageServlet.URL,
 							RegistrationPageServlet.URL,
 							RegisterUserServlet.URL,
 							SignInServlet.URL,
 							SignUpServlet.URL,
+							RMDetailsServlet.URL,
+							ReserveRMServlet.URL,
 							RMSearchResultsPageServlet.URL
 							})
 
@@ -55,11 +58,17 @@ public class MasterServlet extends HttpServlet {
 				case HomePageServlet.URL:
 					HomePageServlet.process(request, response, type);
 					break;
+				case LoadBookTitleServlet.URL:
+					LoadBookTitleServlet.process(request, response, type);
+					break;
 				case MeetingRoomPageServlet.URL:
 					MeetingRoomPageServlet.process(request, response, type);
 					break;
 				case RMSearchResultsPageServlet.URL:
 					RMSearchResultsPageServlet.process(request, response, type);
+					break;
+				case ReserveRMServlet.URL:
+					ReserveRMServlet.process(request, response, type);
 					break;
 				case RegistrationPageServlet.URL:
 					RegistrationPageServlet.process(request, response, type);
@@ -69,6 +78,9 @@ public class MasterServlet extends HttpServlet {
 					break;
 				case SignInServlet.URL:
 					SignInServlet.process(request, response, type);
+					break;
+				case RMDetailsServlet.URL:
+					RMDetailsServlet.process(request, response, type);
 					break;
 				case SignUpServlet.URL:
 					SignUpServlet.process(request, response, type);

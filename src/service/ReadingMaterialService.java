@@ -24,6 +24,7 @@ public class ReadingMaterialService {
 		boolean result = false;
 
 		String query = "\nINSERT INTO " + ReadingMaterial.TABLE_RM + " ( "
+				+ ReadingMaterial.COL_RMID + ", "
 				+ ReadingMaterial.COL_RMTYPE + ", "
 				+ ReadingMaterial.COL_TITLE + ", " 
 				+ ReadingMaterial.COL_AUTHOR + ", " 
@@ -31,9 +32,10 @@ public class ReadingMaterialService {
 				+ ReadingMaterial.COL_YEAR + ", " 
 				+ ReadingMaterial.COL_DATEARRIVED + ", "
 				+ ReadingMaterial.COL_LIBSTATUS + ")\n "
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?);";
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
 		ArrayList<Object> input = new ArrayList<>();
+		input.add(myRM.getRMID_Location());
 		input.add(myRM.getRMType());
 		input.add(myRM.getTitle());
 		input.add(myRM.getAuthor());
@@ -48,32 +50,6 @@ public class ReadingMaterialService {
 			result = q.runInsertUpdateDelete(query, input);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-
-		// for every reading material, record its tags
-		int rmID;
-		try {
-			rmID = q.getGeneratedKey();
-
-			if(rmID != 0) {
-				ArrayList<RMTag> tags = myRM.getTags();
-				for (RMTag rmTag : tags) {
-					query = "\nINSERT INTO " + ReadingMaterial.TABLE_RMTAG + " ( "
-							+ ReadingMaterial.COL_TAGID + ", "
-							+ ReadingMaterial.COL_RMID +")\n"
-							+ " VALUES (?, ?);";
-
-					input.clear();
-					input.add(rmTag.getTagID());
-					input.add(rmID);
-
-					result = q.runInsertUpdateDelete(query, input);
-				}
-			}
-
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		} finally {
 			try {
 				q.close();
@@ -81,10 +57,44 @@ public class ReadingMaterialService {
 				e.printStackTrace();
 			}
 		}
+		
+		addTags(myRM.getTags());
 
 		return result;
 	}
 
+	// add tags
+	public static boolean addTags(ArrayList<RMTag> rmTags) {
+		boolean result = false;
+		
+		
+		String query = "\nINSERT INTO " + ReadingMaterial.TABLE_RMTAG + " ( "
+				+ ReadingMaterial.COL_TAGID + ", "
+				+ ReadingMaterial.COL_RMID +")\n"
+				+ " VALUES (?, ?);";
+
+		ArrayList<Object> input = new ArrayList<>();
+		
+		Query q = Query.getInstance();
+
+		try {
+			
+			for (RMTag rmTag : rmTags) {
+				input.clear();
+				input.add(rmTag.getTagID());
+				input.add(rmTag.getRmID());
+
+				result = q.runInsertUpdateDelete(query, input);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return result;
+	}
+	
 	// delete
 	public static boolean deleteRM(String rmID) {
 		boolean result = false;
@@ -197,44 +207,45 @@ public class ReadingMaterialService {
 	}
 
 	// check if user can still borrow
+	public static boolean checkIfUserCanReserve(User user) {
+		boolean result = true;
 
-	// borrow
-//	public static boolean borrowRM(User user, String rmID_location) {
-//		boolean result = false;
-//
-//		String query = "\nINSERT INTO " + ReadingMaterial.TABLE_BORROWEDRM + " ( "
-//				+ ReadingMaterial.COL_RMID + ", "
-//				+ ReadingMaterial.COL_IDNUMBER + ", "
-//				+ ReadingMaterial.COL_DATEBORROWED + ", "
-//				+ ReadingMaterial.COL_DATERETURNED +")\n"
-//				+ " VALUES (?, ?, ?, ?);";
-//
-//		ArrayList<Object> input = new ArrayList<>();
-//		input.add(rmID_location);
-//		input.add(user.getIDNumber());
-//		input.add(Utils.convertDateJavaToStringDB(Calendar.getInstance().getTime()));
-//
-//		input.add((user.getUserType() == UserType.STUDENT ? 
-//				input.add(Utils.convertDateJavaToStringDB(Utils.addDays(Calendar.getInstance().getTime(), 7))) :
-//					input.add(Utils.convertDateJavaToStringDB(Utils.addMonth(Calendar.getInstance().getTime(), 1)))));
-//
-//		Query q = Query.getInstance();
-//
-//		try {
-//			result = q.runInsertUpdateDelete(query, input);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				q.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		return result;
-//	}
-	
+		String query = "\nSELECT COUNT(*) "
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
+				+ " WHERE " + ReadingMaterial.COL_IDNUMBER + " = ? "
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") "
+				+ " OR CURDATE() <= " + ReadingMaterial.COL_DATERESERVED + ") \n"
+				+ " GROUP BY " + ReadingMaterial.COL_IDNUMBER + "\n"
+				+ " HAVING COUNT(*) < ?;";
+
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(user.getIDNumber());
+		if(user.getUserType() == UserType.STUDENT)
+			input.add(5);
+		else if(user.getUserType() == UserType.FACULTY) 
+			input.add(10);
+
+		Query q = Query.getInstance();
+		ResultSet r = null;
+
+		try {
+			r = q.runQuery(query, input);
+			result = r.next();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+
+		return result;
+	}
 	
 	// reserve
 	public static boolean reserveRM(ReadingMaterial rm) {
@@ -246,7 +257,7 @@ public class ReadingMaterialService {
 				+ ReadingMaterial.COL_DATERESERVED + ", "
 				+ ReadingMaterial.COL_DATEBORROWED + ", "
 				+ ReadingMaterial.COL_DATERETURNED + ")\n"
-				+ " VALUES (?, ?, ?);";
+				+ " VALUES (?, ?, ?, ?, ?);";
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rm.getRMID_Location());
@@ -259,9 +270,8 @@ public class ReadingMaterialService {
 		input.add(Utils.convertDateJavaToStringDB(date_borrowed));
 		
 		input.add((rm.getUserReserved().getUserType() == UserType.STUDENT ? 
-				input.add(Utils.convertDateJavaToStringDB(Utils.addDays(date_borrowed, 7))) :
-					input.add(Utils.convertDateJavaToStringDB(Utils.addMonth(date_borrowed, 1)))));
-
+				Utils.convertDateJavaToStringDB(Utils.addDays(date_borrowed, 7)) :
+					Utils.convertDateJavaToStringDB(Utils.addMonth(date_borrowed, 1))));
 		Query q = Query.getInstance();
 
 		try {
@@ -278,33 +288,6 @@ public class ReadingMaterialService {
 
 		return result;
 	}
-
-	// return
-//	public static boolean returnRM(int borrowedRMID) {
-//		boolean result = false;
-//
-//		String query = "\nDELETE FROM " + ReadingMaterial.TABLE_BORROWEDRM
-//				+ " WHERE " + ReadingMaterial.COL_BORROWEDRMID + " = ?;";
-//
-//		ArrayList<Object> input = new ArrayList<>();
-//		input.add(borrowedRMID);
-//
-//		Query q = Query.getInstance();
-//
-//		try {
-//			result = q.runInsertUpdateDelete(query, input);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				q.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		return result;
-//	}
 
 	// cancel reservation
 	public static boolean cancelResRM(int reservedRMID) {
@@ -346,6 +329,41 @@ public class ReadingMaterialService {
 		return result;
 	}
 
+	// check if rm can be deleted
+	// can only delete if no borrow or reserve
+	public static boolean checkIfCanDelete(String rmID) {
+		boolean result = false;
+		
+		String query = "\nSELECT " + ReadingMaterial.COL_RMID
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM 
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ? "
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") "
+				+ " OR CURDATE() <= " + ReadingMaterial.COL_DATERESERVED + ")\n";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(rmID);
+
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		
+		try {
+			r = q.runQuery(query, input);
+			result = r.next();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		
+		return !result;
+	}
 	/////////////////////////// GETTERS ///////////////////////////////////////////
 
 	// get RM by id and user type
@@ -380,8 +398,8 @@ public class ReadingMaterialService {
 		String query_borrowed = "\nSELECT " + ReadingMaterial.COL_DATERETURNED
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n" 
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
-				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
-				+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + "); ";
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rmID_location);
@@ -491,6 +509,39 @@ public class ReadingMaterialService {
 		return rm;
 	}
 
+	// get RM title by id
+	public static String getRMTitleByID(String rmID) {
+		String title = "";
+		
+		String query = "\nSELECT " + ReadingMaterial.COL_TITLE
+				+ " FROM " + ReadingMaterial.TABLE_RM
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(rmID);
+		
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		try {
+			r = q.runQuery(query, input);
+			
+			if(r.next()) {
+				title = r.getString(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return title;
+	}
+	
 	// get list of user who borrowed rm
 	public static ArrayList<ReadingMaterial> getUserListBorrowedRM(int rmID_location) {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
@@ -507,7 +558,7 @@ public class ReadingMaterialService {
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM
 				+ " NATURAL JOIN " + User.TABLE_USER + "\n"
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?\n"
-				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED;
+				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED + " DESC";
 
 		ArrayList<Object> input = new ArrayList<>();		
 		input.add(rmID_location);
@@ -670,8 +721,8 @@ public class ReadingMaterialService {
 		String query_borrowed = "\nSELECT " + ReadingMaterial.COL_DATERETURNED
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n" 
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
-				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
-				+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + "); ";
 
 		Query q = Query.getInstance();
 		ResultSet r = null;
@@ -759,8 +810,8 @@ public class ReadingMaterialService {
 		String query_borrowed = "\nSELECT " + ReadingMaterial.COL_DATERETURNED
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n" 
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
-				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
-				+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + "); ";
 
 		Query q = Query.getInstance();
 		ResultSet r = null;
@@ -820,16 +871,17 @@ public class ReadingMaterialService {
 		return rmList;
 	}
 
-	// get new arrivals
+	// get new arrivals (TOP 10)
 	public static ArrayList<ReadingMaterial> getNewArrivals() {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
 		ReadingMaterial rm = null;
 
 		String query = "\nSELECT * "
-				+ " FROM " + ReadingMaterial.TABLE_RM
+				+ " FROM " + ReadingMaterial.TABLE_RM + "\n"
 				+ " WHERE CURDATE() BETWEEN " + ReadingMaterial.COL_DATEARRIVED
-				+ " AND DATE_ADD(" + ReadingMaterial.COL_DATEARRIVED + ", INTERVAL 1 MONTH)"
-				+ " ORDER BY " + ReadingMaterial.COL_DATEARRIVED;
+				+ " AND DATE_ADD(" + ReadingMaterial.COL_DATEARRIVED + ", INTERVAL 1 MONTH)\n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATEARRIVED + " DESC\n"
+				+ " LIMIT 10";
 
 		// for status
 		String query_reserved = "\nSELECT " + ReadingMaterial.COL_DATERETURNED + "\n"
@@ -840,8 +892,8 @@ public class ReadingMaterialService {
 		String query_borrowed = "\nSELECT " + ReadingMaterial.COL_DATERETURNED
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n" 
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
-				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
-				+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + "); ";
 
 		Query q = Query.getInstance();
 		ResultSet r = null;
@@ -915,8 +967,9 @@ public class ReadingMaterialService {
 				+ " FROM " + ReadingMaterial.TABLE_RM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ? "
-				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
-				+ " AND " + ReadingMaterial.COL_DATERETURNED;
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") \n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED + " DESC\n";
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(id_number);
@@ -965,7 +1018,8 @@ public class ReadingMaterialService {
 				+ " FROM " + ReadingMaterial.TABLE_RM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ? "
-				+ " AND CURDATE() <= " + ReadingMaterial.COL_DATERETURNED;
+				+ " AND CURDATE() <= " + ReadingMaterial.COL_DATERETURNED + "\n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED + " DESC\n";
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(id_number);
@@ -1001,49 +1055,49 @@ public class ReadingMaterialService {
 	}
 
 	// get all borrowed books
-//	public static ArrayList<ReadingMaterial> getAllCurrentBorrowedRM() {
-//		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
-//		ReadingMaterial rm = null;
-//
-//		String query = "\nSELECT "
-//				+ ReadingMaterial.COL_RMID + ", "
-//				+ ReadingMaterial.COL_TITLE + ", "
-//				+ ReadingMaterial.COL_DATEBORROWED + ", "
-//				+ ReadingMaterial.COL_DATERETURNED + "\n"
-//				+ " FROM " + ReadingMaterial.TABLE_RM 
-//				+ " NATURAL JOIN " + ReadingMaterial.RETUR + "\n"
-//				+ " WHERE CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
-//				+ " AND " + ReadingMaterial.COL_DATERETURNED
-//				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED;
-//
-//		Query q = Query.getInstance();
-//		ResultSet r = null;
-//
-//		try {
-//			r = q.runQuery(query);
-//
-//			while(r.next()) {
-//				rm = new ReadingMaterial();
-//				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
-//				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
-//				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
-//				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
-//
-//				rmList.add(rm);
-//			}
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				q.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//
-//		return rmList;
-//	}
+	public static ArrayList<ReadingMaterial> getAllCurrentBorrowedRM() {
+		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
+		ReadingMaterial rm = null;
+
+		String query = "\nSELECT "
+				+ ReadingMaterial.COL_RMID + ", "
+				+ ReadingMaterial.COL_TITLE + ", "
+				+ ReadingMaterial.COL_DATEBORROWED + ", "
+				+ ReadingMaterial.COL_DATERETURNED + "\n"
+				+ " FROM " + ReadingMaterial.TABLE_RM 
+				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") \n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED + " DESC\n";
+
+		Query q = Query.getInstance();
+		ResultSet r = null;
+
+		try {
+			r = q.runQuery(query);
+
+			while(r.next()) {
+				rm = new ReadingMaterial();
+				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
+				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
+				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
+				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
+
+				rmList.add(rm);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return rmList;
+	}
 
 	// get all reserved books
 	public static ArrayList<ReadingMaterial> getAllCurrentReservedRM() {
@@ -1056,8 +1110,8 @@ public class ReadingMaterialService {
 				+ ReadingMaterial.COL_DATERESERVED + "\n"
 				+ " FROM " + ReadingMaterial.TABLE_RM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
-				+ " WHERE CURDATE() <= " + ReadingMaterial.COL_DATERESERVED
-				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED;
+				+ " WHERE CURDATE() <= " + ReadingMaterial.COL_DATERESERVED + "\n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED + " DESC\n";
 
 		Query q = Query.getInstance();
 		ResultSet r = null;
@@ -1105,8 +1159,8 @@ public class ReadingMaterialService {
 		String query_borrowed = "\nSELECT " + ReadingMaterial.COL_DATERETURNED
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n" 
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
-				+ " AND CURDATE() BETWEEN " + ReadingMaterial.COL_DATEBORROWED
-				+ " AND " + ReadingMaterial.COL_DATERETURNED + ";";
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + "); ";
 
 		Query q = Query.getInstance();
 		ResultSet r = null;

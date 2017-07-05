@@ -37,7 +37,7 @@ public class MeetingRoomPageServlet {
 	private static void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("MEETING ROOM PAGE POST");
-User user = null;
+		User user = null;
     	
     	//Check if a user is logged in
 		Cookie[] cookies = request.getCookies();
