@@ -4,6 +4,7 @@ $(document).ready(function(){
   }
 
 	initBdayDatePicker();
+  initEditDetailsButton();
 });
 
 
@@ -23,4 +24,39 @@ function initBdayDatePicker(){
   $('#bdaypicker').datepicker('update', currentDate.year + '-' + currentDate.month + '-' + currentDate.date);
 }
 
+
+
+function initEditDetailsButton(){
+  $("#edit-profile").click(function(e){
+    e.preventDefault();
+    $("#edit-profile").fadeOut("fast", function(){});
+    $("#submit-changes").show("fast", function(){});
+    $(".form-components-rd:not(.btn)").attr('disabled', false);
+    $("#bdaypicker span").css("display", "inline-block");
+    $(".form-components-rd:not(.btn)").removeClass("register-input-disabled");
+  });
+
+  $("#cancel-changes").click(function(e){
+    e.preventDefault();
+    $("#submit-changes").hide("fast", function(){});
+    $(".form-components-rd:not(.btn)").attr('disabled', true);
+    $("#bdaypicker span").css("display", "none");
+    $("#edit-profile").fadeIn("fast", function(){});
+    $(".form-components-rd:not(.btn)").addClass("register-input-disabled");
+
+
+  })
+
+  $("#submit-changes").click(function(e){
+    e.preventDefault();
+    $("#submit-changes").hide("fast", function(){});
+    $(".form-components-rd:not(.btn)").attr('disabled', true);
+    $("#bdaypicker span").css("display", "none");
+    $(".form-components-rd:not(.btn)").addClass("register-input-disabled");
+
+    $("#edit-profile").fadeIn("fast", function(){});
+
+    //form.submit
+  })
+}
 

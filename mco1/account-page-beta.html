@@ -76,32 +76,6 @@
       </div>
 
       <div id="overlay-screen" style="display: none;"></div>
-
-      <div id="confirm-reservation" class="pop-up" style="display: none;">
-        <h3 align="center">Confirm Reservation?</h3>
-        <div align="center" class="divider"></div>
-
-        <h3>Reserving <a href="rm-details.html" class="title">Title</a></h3>
-
-        <div style="padding: 0 20%;" align="left">
-          <b>Reservation Date</b>: <span class="confirm-reserve-date">07 / 02 / 2017</span><br>
-          <b>Anticipated Return Date</b>: <span class="confirm-return-date">07 / 09 / 2017</span>
-        </div>
-
-        <br>
-
-        <div class="row">
-          <div class="col-md-1"></div>
-          <div class="col-md-2"></div>
-          <div class="col-md-2"><button id="submit-reserve" class="btn btn-default">Confirm</button></div>
-          <div class="col-md-1"></div>
-          <div class="col-md-2"><button id="cancel-reserve" class="btn btn-default">Cancel</button></div>
-          <div class="col-md-2"></div>
-          <div class="col-md-1"></div>
-
-        </div>
-      </div>
-
       <div id="content-search" class="collapse white-container" style="display:none;">
         <h3 align="center">Search for Books</h3>
         <form class="form-inline input-group" id="search" align="center">
@@ -139,92 +113,99 @@
         <br>
       </div>
 
-      <div class="rm-results">
-        <b id="results-found" style="margin: -1px;">34 results found</b>
-        <div class="row rm-gen-details">
-          <div class="col-md-2">
-          <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-          <div class="col-md-10 rm-information">
-            <a href="rm-details.html" class="title"><b>Title</b></a>
-            <span class="author">Author</span>
-            <span class="pub-info">Pub Info</span>
-            <span class="tags">Tags</span>
-            <br>
+      <h2 align="center">Account Overview Log</h2><br><br>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Panel title</h3>
+        </div>
+        <div class="panel-body">
+          
+          <form id = "register-details">
+          <!-- names -->
             <div class="row">
-              <b>
-              <div class="col-md-4"><u>Location</u></div>
-              <div class="col-md-4"><u>Status</u></div></b>
-              <div class="col-md-4"></div>
-            </div>
-            <div class="location-status">
-              <div class="row">
-                <div class="col-md-4"><span class="location">Location</span></div>
-                <div class="col-md-4"><span class="reserved-status">RESERVED</span></div>
-                <div class="col-md-4"><button class="reserve-inline btn btn-default disabled">Reserve</button></div>
+              <div class="register-form-group">
+                <div class="col-md-5"><label for="first-name">First Name</label></div>
+                <div class="col-md-2"><label for="middle-name">Middle Initial</label></div>
+                <div class="col-md-5"><label for="last-name">Last Name</label></div>
               </div>
             </div>
 
-          </div>
+
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px; "><a>Edit</a></div>
+            </div>
+            <div class="row" align="center">
+              <div class="register-form-group">
+                <div class="col-md-5">
+                  <input type="text" class="form-control form-components-rd" id="first-name" placeholder="Juan Coco" required></div>
+                <div class="col-md-2">
+                  <input type="text" class="form-control form-components-rd" id="middle-name" placeholder="S" required>
+                </div>
+                <div class="col-md-5">
+                  <input type="text" class="form-control form-components-rd" id="last-name" placeholder="dela Cruz " required>
+                </div>
+              </div>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>
+
+            <label for="password">Password</label>
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px;"><a>Edit</a></div>
+            </div>
+            <div class="register-form-group"> 
+              <input type="password" class="form-control form-components-rd" id="password" placeholder="Email" style="width:70%" required>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>
+
+
+            
+            <label for="email-address">Email Address</label>
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px;"><a>Edit</a></div>
+            </div>
+            <div class="register-form-group">
+              <input type="email" class="form-control form-components-rd" id="email-address" placeholder="Email" style="width:70%" required>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>
+            
+            <label for="idnumber">ID Number</label>
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px;"><a>Edit</a></div>
+            </div>
+            <div class="register-form-group">
+              <input type="number" class="form-control form-components-rd" id="idnumber" placeholder="Email" style="width:70%" required>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>            
+            
+            <label for="bdaypicker">Birthday</label>
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px; margin-top: 10px;"><a>Edit</a></div>
+            </div>
+            <div class="register-form-group">
+              <div id="bdaypicker" class="input-append date" id="dp3" data-date-format="yyyy-mm-dd" style="width:70%">
+                <input class="span2 form-components-rd" size=11 type="text" value="12-02-2012" readonly
+                style="width:87%" required>
+                <span class="add-on" style="width:10%"><i class="flaticon-calendar"></i></span>
+              </div>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>
+
+            <div class="register-form-group">
+              <button type="submit" id="submit-register-id" class="btn btn-default submit-btn form-components-rd auto-width erase-margin">Sign Up</button>
+            </div>
+          </form>
+
+
+
+
         </div>
-
-        <div class="row rm-gen-details">
-          <div class="col-md-2">
-          <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-          <div class="col-md-10 rm-information">
-            <a href="rm-details.html" class="title"><b>Title</b></a>
-            <span class="author">Author</span>
-            <span class="pub-info">Pub Info</span>
-            <span class="tags">Tags</span>
-            <br>
-            <div class="row">
-              <b>
-              <div class="col-md-4"><u>Location</u></div>
-              <div class="col-md-4"><u>Status</u></div>
-              <div class="col-md-4"></div></b>
-            </div>
-            <div class="location-status">
-              <div class="row">
-                <div class="col-md-4"><span class="location">Location</span></div>
-                <div class="col-md-4"><span class="available-status">Available</span></div>
-                <div class="col-md-4"><button class="reserve-inline btn btn-default">Reserve</button></div>
-              </div> 
-            </div>
-
-          </div>
-        </div>
-
-        <div class="row rm-gen-details">
-          <div class="col-md-2">
-          <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-          <div class="col-md-10 rm-information">
-            <a href="rm-details.html" class="title"><b>Title</b></a>
-            <span class="author">Author</span>
-            <span class="pub-info">Pub Info</span>
-            <span class="tags">Tags</span>
-            <br>
-            <div class="row">
-              <b>
-              <div class="col-md-4"><u>Location</u></div>
-              <div class="col-md-4"><u>Status</u></div>
-              <div class="col-md-4"></div></b>
-            </div>
-            <div class="location-status">
-              <div class="row">
-                <div class="col-md-4"><span class="location">Location</span></div>
-                <div class="col-md-4"><span class="borrowed-status">Borrowed</span></div>
-                <div class="col-md-4"><button class="reserve-inline btn btn-default">Reserve</button></div>
-              </div> 
-            </div>
-
-          </div>
-        </div>
-
       </div>
 
 
+      
     </div>
   </div>
 </div>
 </body>
-<script src="js/reserve-rm.js"></script>
 </html>
