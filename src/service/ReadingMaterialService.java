@@ -57,6 +57,8 @@ public class ReadingMaterialService {
 				e.printStackTrace();
 			}
 		}
+		
+		addTags(myRM.getTags());
 
 		return result;
 	}
@@ -205,7 +207,45 @@ public class ReadingMaterialService {
 	}
 
 	// check if user can still borrow
-	
+	public static boolean checkIfUserCanReserve(User user) {
+		boolean result = true;
+
+		String query = "\nSELECT COUNT(*) "
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
+				+ " WHERE " + ReadingMaterial.COL_IDNUMBER + " = ? "
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") "
+				+ " OR CURDATE() <= " + ReadingMaterial.COL_DATERESERVED + ") \n"
+				+ " GROUP BY " + ReadingMaterial.COL_IDNUMBER + "\n"
+				+ " HAVING COUNT(*) < ?;";
+
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(user.getIDNumber());
+		if(user.getUserType() == UserType.STUDENT)
+			input.add(5);
+		else if(user.getUserType() == UserType.FACULTY) 
+			input.add(10);
+
+		Query q = Query.getInstance();
+		ResultSet r = null;
+
+		try {
+			r = q.runQuery(query, input);
+			result = r.next();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+
+		return result;
+	}
 	
 	// reserve
 	public static boolean reserveRM(ReadingMaterial rm) {
@@ -300,7 +340,7 @@ public class ReadingMaterialService {
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ? "
 				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
 				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") "
-				+ " OR CURDATE() >= " + ReadingMaterial.COL_DATERESERVED + ")\n";
+				+ " OR CURDATE() <= " + ReadingMaterial.COL_DATERESERVED + ")\n";
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rmID);
