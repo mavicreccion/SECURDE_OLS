@@ -114,7 +114,8 @@ a{
     background: transparent;
 }
 
-.flaticon-loupe:before, .flaticon-message:before, .flaticon-trash:before{
+.flaticon-loupe:before, .flaticon-message:before, .flaticon-trash:before,
+.flaticon-paint-brush:before{
     margin:0;
 }
 
@@ -293,7 +294,7 @@ form{
 .override-btn{
     background-color: #DBB4AD;
     transition: 0.5s;
-    
+
 }
 
 .override-btn:hover{
@@ -318,4 +319,10 @@ form{
 .delete-btn:hover{
     color: #fff;
     background-color: #c73131;
+}
+
+#edit-rm-btn{
+    position: absolute;
+    right: 0;   
+    z-index: 999999;
 }

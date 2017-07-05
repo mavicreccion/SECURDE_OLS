@@ -113,9 +113,41 @@
         <br>
       </div>
 
+      <div id="content-edit-book" class="lesser-padding-content" style="display: none;">
+        <h3 align="center">Edit Reading Material</h3>
+        <div class="content" style="margin: 0 10%">
+          <label for="author-name">Location <i>(Dewey Decimal System)</i></label>
+          <input type="text" class="form-control form-components-rd" id="location-id" placeholder="Location" style="width:100%" required>
+
+          <label for="author-name">Author/s <i>(If more then 2 authors, please separated with & (ampersand) )</i></label>
+          <input type="text" class="form-control form-components-rd" id="author-name" placeholder="Author/s" style="width:100%" required>
+
+          <label for="author-name">Publisher</label>
+          <input type="text" class="form-control form-components-rd" id="publisher" placeholder="Publisher" style="width:100%" required>
+
+          <label for="year-published">Year Published</label>
+          <input type="number" class="form-control form-components-rd" id="year-published" placeholder="Year Published" style="width:100%" required>
+
+          <label for="year-published">Tags</label>
+          <input type="number" class="form-control form-components-rd" id="year-published" placeholder="Year Published" style="width:100%" required>
+          <br>
+          <button type="submit" id="submit-edit-rm" class="btn btn-default submit-btn form-components-rd auto-width erase-margin">Edit Reading Material</button>
+        </div>
+      </div>
+
       <div class="row rm-gen-details">
+        <div style="position: relative;">
+          <div id="edit-rm-btn" style="display: none;">
+            <a href="">
+              <button class="btn btn-default">
+                <i class="flaticon-paint-brush"></i>
+              </button>
+            </a>
+          </div>
+        </div>
         <div class="col-md-2">
-        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
+          <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;">
+        </div>
         <div class="col-md-10 rm-information">
           <a href="rm-details.html" class="title"><b>Title</b></a>
           <span class="author">Author</span>
@@ -137,7 +169,6 @@
               <div class="col-md-3"><span class="availability-date">Returned by: </span> 09/30/2017</div>
             </div> 
           </div>
-
         </div>
       </div>
       
@@ -178,7 +209,30 @@
   </div>
 </div>
 
+<script>
+var userType = "admin"
+if(userType == "admin"){
+  $("#edit-rm-btn").css('display', 'block');
+}
 
+$("#edit-rm-btn").click(function(e){
+  e.preventDefault();
+  $("#content-edit-book").fadeIn("fast", function(){});
+  $(".rm-gen-details").fadeOut("fast", function(){});
+  $(".rm-reviews").fadeOut("fast", function(){});
+  
+
+})
+
+$("#submit-edit-rm").click(function(e){
+  //temporary
+  location.reload();
+
+})
+
+
+
+</script>
 
 </body>
 </html>
