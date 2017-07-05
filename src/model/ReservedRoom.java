@@ -5,7 +5,7 @@ import java.util.Date;
 public class ReservedRoom extends Room {
 	
 	public static final String TABLE_NAME = "reserved_mr";
-	public static final String COL_RESERVEDMRID = "reservedMrID";
+	public static final String COL_RESERVEDMRID = "reservedMRID";
 	public static final String COL_IDNUMBER = "id_number";
 	public static final String COL_DATERESERVED = "date_reserved";
 	public static final String COL_TIMESTART = "time_start";
