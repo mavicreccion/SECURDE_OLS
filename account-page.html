@@ -18,7 +18,11 @@
     <link rel="stylesheet" type="text/css" href="css/content.css"> 
     <script src="js/jquery-3.0.0.min.js"></script>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script src="vitalets-bootstrap-datepicker-c7af15b/js/bootstrap-datepicker.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/register.js"></script>
+
+
 </head>
 
 <body>
@@ -60,7 +64,7 @@
               <a href="http://www.samrayner.com">Sam Rayner</a>
             </p><br><br><br>
             <span class="divider"></span>
-            <a id = "signInSignOut" class="self-menu">
+            <a href="sign-in.html" class="self-menu">
               <i class="flaticon-user-2"></i><span id="account-name">Sign In</span>
             </a>
 
@@ -113,79 +117,66 @@
         <br>
       </div>
 
-      <div class="row rm-gen-details">
-        <div class="col-md-2">
-        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-        <div class="col-md-10 rm-information">
-          <a href="rm-details.html" class="title"><b>${reading_material.title}</b></a>
-          <span class="author">${reading_material.author}</span>
-          <span class="pub-info">${reading_material.publisher}</span>
-          <span class="tags">Tags</span>
-          <br>
-          <div class="row">
-            <b>
-            <div class="col-md-3"><u>Location</u></div>
-            <div class="col-md-3"><u>Status</u></div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div></b>
-          </div>
-          <div class="location-status">
+      <h2 align="center">Account Overview</h2><br><br>
+
+      <div class="panel panel-default" style="width: 60%; margin: 0 auto">
+        <div class="panel-heading">
+          <h3 class="panel-title">Account Information</h3>
+        </div>
+        <div class="panel-body">
+          <form id = "account-details" style="margin-right: 20px;">
+            <!-- names -->
             <div class="row">
-              <div class="col-md-3"><span class="location">${reading_material.RMID_Location}</span></div>
-              <div class="col-md-3"><span class="available-status">${reading_material.status}</span></div>
-              <c:choose>
-					    <c:when test="${status== 'AVAILABLE'}">
-					       <div onclick="clickedType('${loc}')" class="col-md-4"><button   onclick="clickedType(${reading_material.RMID_Location })" class="reserve-inline btn btn-default">Reserve</button></div>
-					    </c:when>    
-					    <c:otherwise>
-					        <div class="col-md-4"><button class="reserve-inline btn btn-default disabled">Reserve</button></div>
-					    </c:otherwise>
-				 </c:choose>
-              <div class="col-md-3"><span class="availability-date">Returned by: </span> ${reading_material.dateReturned}</div>
-            </div> 
-          </div>
+              <div class="col-md-4"><label for="first-name">First Name</label></div>
+              <div class="col-md-4"><label for="middle-name">Middle Initial</label></div>
+              <div class="col-md-4"><label for="last-name">Last Name</label></div>
+            </div>
+            <div class="row" align="center">
+              <div class="col-md-4">
+                <input type="text" class="form-control form-components-rd register-input-disabled" id="first-name" placeholder="Juan Coco" disabled></div>
+              <div class="col-md-4">
+                <input type="text" class="form-control form-components-rd register-input-disabled" id="middle-name" placeholder="S" disabled>
+              </div>
+              <div class="col-md-4">
+                <input type="text" class="form-control form-components-rd register-input-disabled" id="last-name" placeholder="dela Cruz " disabled>
+              </div>
+            </div>
 
-        </div>
-      </div>
-      
-      <br>
-      <div class="divider"></div>
-      <br>
-
-      <div class="rm-reviews">
-        <b id="results-found" style="margin: -1px;">Reviews</b>
+            <label for="password">Password</label>
+            <input type="password" class="form-control form-components-rd register-input-disabled" id="password" placeholder="Email" style="width:70%" disabled>
+              
+            <label for="email-address">Email Address</label>
+            <input type="email" class="form-control form-components-rd register-input-disabled" id="email-address" placeholder="Email" style="width:70%" disabled>
         
-        <div class="write-review divider">
-          <b>Write a short review</b>
-          <form class="form-inline" align="center">
+            <label for="idnumber">ID Number</label>
+            <input type="number" class="form-control form-components-rd register-input-disabled" id="idnumber" placeholder="Email" style="width:70%" disabled>
+                        
+            <label for="bdaypicker">Birthday</label>
+            <div id="bdaypicker" class="input-append date" id="dp3" data-date-format="yyyy-mm-dd" style="width:70%">
+              <input class="span2 form-components-rd register-input-disabled" size=11 type="text" value="12-02-2012" readonly style="width:70%" required disabled>
+              <span class="add-on" style="width:5%; display: none;"><i class="flaticon-calendar"></i></span>
+            </div>
 
-            <textarea class="form-control" placeholder="Tell us what you think" rows="2" style="width: 80%; margin-right: 20px;" ></textarea>
-            <button class="btn btn-default" style="margin: 0 auto;"><i class="flaticon-message"></i></button>
+            <br>
 
+            <div align="center">
+              <div style="margin-top: 20px; display:none;" id="submit-changes">
+                <button type="submit" id="save-changes" class="btn btn-default submit-btn form-components-rd erase-margin"  style="width: 30%;" align="center">Save Changes</button>
+                <span style="margin: 0 20px"></span>
+                <button type="submit" id="cancel-changes" class="btn btn-default submit-btn form-components-rd erase-margin" style="width: 30%;" align="center">Cancel Changes</button>
+              </div>
+              <button type="submit" id="edit-profile" class="btn btn-default submit-btn form-components-rd erase-margin" style="width: 90%;" align="center">Edit Profile</button>
+              
+            </div>
           </form>
-        </div>
-
-        <div class="review divider">Reviewed on <i>6 / 30 / 2017</i>
-          <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
 
         </div>
-
-        <div class="review divider">Reviewed on  <i>6 / 30 / 2017</i>
-          <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
-
-        </div>
-
       </div>
+
+
 
     </div>
   </div>
 </div>
-
-
-
 </body>
 </html>

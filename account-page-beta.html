@@ -60,7 +60,7 @@
               <a href="http://www.samrayner.com">Sam Rayner</a>
             </p><br><br><br>
             <span class="divider"></span>
-            <a id = "signInSignOut" class="self-menu">
+            <a href="sign-in.html" class="self-menu">
               <i class="flaticon-user-2"></i><span id="account-name">Sign In</span>
             </a>
 
@@ -113,79 +113,99 @@
         <br>
       </div>
 
-      <div class="row rm-gen-details">
-        <div class="col-md-2">
-        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-        <div class="col-md-10 rm-information">
-          <a href="rm-details.html" class="title"><b>${reading_material.title}</b></a>
-          <span class="author">${reading_material.author}</span>
-          <span class="pub-info">${reading_material.publisher}</span>
-          <span class="tags">Tags</span>
-          <br>
-          <div class="row">
-            <b>
-            <div class="col-md-3"><u>Location</u></div>
-            <div class="col-md-3"><u>Status</u></div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div></b>
-          </div>
-          <div class="location-status">
+      <h2 align="center">Account Overview Log</h2><br><br>
+
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Panel title</h3>
+        </div>
+        <div class="panel-body">
+          
+          <form id = "register-details">
+          <!-- names -->
             <div class="row">
-              <div class="col-md-3"><span class="location">${reading_material.RMID_Location}</span></div>
-              <div class="col-md-3"><span class="available-status">${reading_material.status}</span></div>
-              <c:choose>
-					    <c:when test="${status== 'AVAILABLE'}">
-					       <div onclick="clickedType('${loc}')" class="col-md-4"><button   onclick="clickedType(${reading_material.RMID_Location })" class="reserve-inline btn btn-default">Reserve</button></div>
-					    </c:when>    
-					    <c:otherwise>
-					        <div class="col-md-4"><button class="reserve-inline btn btn-default disabled">Reserve</button></div>
-					    </c:otherwise>
-				 </c:choose>
-              <div class="col-md-3"><span class="availability-date">Returned by: </span> ${reading_material.dateReturned}</div>
-            </div> 
-          </div>
+              <div class="register-form-group">
+                <div class="col-md-5"><label for="first-name">First Name</label></div>
+                <div class="col-md-2"><label for="middle-name">Middle Initial</label></div>
+                <div class="col-md-5"><label for="last-name">Last Name</label></div>
+              </div>
+            </div>
 
-        </div>
-      </div>
-      
-      <br>
-      <div class="divider"></div>
-      <br>
 
-      <div class="rm-reviews">
-        <b id="results-found" style="margin: -1px;">Reviews</b>
-        
-        <div class="write-review divider">
-          <b>Write a short review</b>
-          <form class="form-inline" align="center">
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px; "><a>Edit</a></div>
+            </div>
+            <div class="row" align="center">
+              <div class="register-form-group">
+                <div class="col-md-5">
+                  <input type="text" class="form-control form-components-rd" id="first-name" placeholder="Juan Coco" required></div>
+                <div class="col-md-2">
+                  <input type="text" class="form-control form-components-rd" id="middle-name" placeholder="S" required>
+                </div>
+                <div class="col-md-5">
+                  <input type="text" class="form-control form-components-rd" id="last-name" placeholder="dela Cruz " required>
+                </div>
+              </div>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>
 
-            <textarea class="form-control" placeholder="Tell us what you think" rows="2" style="width: 80%; margin-right: 20px;" ></textarea>
-            <button class="btn btn-default" style="margin: 0 auto;"><i class="flaticon-message"></i></button>
+            <label for="password">Password</label>
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px;"><a>Edit</a></div>
+            </div>
+            <div class="register-form-group"> 
+              <input type="password" class="form-control form-components-rd" id="password" placeholder="Email" style="width:70%" required>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>
 
+
+            
+            <label for="email-address">Email Address</label>
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px;"><a>Edit</a></div>
+            </div>
+            <div class="register-form-group">
+              <input type="email" class="form-control form-components-rd" id="email-address" placeholder="Email" style="width:70%" required>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>
+            
+            <label for="idnumber">ID Number</label>
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px;"><a>Edit</a></div>
+            </div>
+            <div class="register-form-group">
+              <input type="number" class="form-control form-components-rd" id="idnumber" placeholder="Email" style="width:70%" required>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>            
+            
+            <label for="bdaypicker">Birthday</label>
+            <div style="position: relative">
+              <div style="position: absolute; right: 0; margin-right: 100px; margin-top: 10px;"><a>Edit</a></div>
+            </div>
+            <div class="register-form-group">
+              <div id="bdaypicker" class="input-append date" id="dp3" data-date-format="yyyy-mm-dd" style="width:70%">
+                <input class="span2 form-components-rd" size=11 type="text" value="12-02-2012" readonly
+                style="width:87%" required>
+                <span class="add-on" style="width:10%"><i class="flaticon-calendar"></i></span>
+              </div>
+            </div>
+            <div style="margin: 10px"></div><div class="divider"></div><div style="margin: 10px"></div>
+
+            <div class="register-form-group">
+              <button type="submit" id="submit-register-id" class="btn btn-default submit-btn form-components-rd auto-width erase-margin">Sign Up</button>
+            </div>
           </form>
-        </div>
 
-        <div class="review divider">Reviewed on <i>6 / 30 / 2017</i>
-          <br>
 
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
+
 
         </div>
-
-        <div class="review divider">Reviewed on  <i>6 / 30 / 2017</i>
-          <br>
-
-          • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
-
-        </div>
-
       </div>
 
+
+      
     </div>
   </div>
 </div>
-
-
-
 </body>
 </html>

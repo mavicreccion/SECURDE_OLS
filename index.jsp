@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -48,11 +49,8 @@
 	  	
 	  	$("#signInSignOut").click(function() {
 	  		console.log($("#account-name").text());
-	  		if($("#account-name").text() == "Sign In"){
-	  			console.log("GO TO SIGN IN");
-	  			window.location.href = "sign_in_sign_up.jsp";
-	  		}
-	  	});
+				$("#signInForm").submit();
+			});
 	      
 	      });
     </script>
@@ -60,7 +58,7 @@
 
 <body>
 <form id="meetingRoomForm" action="MeetingRoomPageServlet" method="post"></form>
-<form id="servicesForm" action="CalendarOrgRepServlet" method="post"></form>
+<form id="signInForm" action="SignInSignUpPageServlet" method="post"></form>
 <form id="homeForm" action="HomePageServlet" method="post"></form>
 <form id="yourReservationsForm" action="CalendarOrgRepServlet" method="post"></form>
 

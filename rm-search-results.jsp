@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 	pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -23,9 +24,72 @@
     <script src="js/jquery-3.0.0.min.js"></script>
     <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/reserve-rm.js"></script>
+    
+    <script>
+    function clickedType(id)
+    {
+    	 console.log("hahaha " + id);
+    	$("#locationID").val(id);
+    	$("#locationID").text(id);
+    	console.log("ehhe " + $("#locationID").val()); 
+    	 $("#reserveForm").submit();
+    	
+    	
+    }
+    
+    function review(id)
+    {
+    	 console.log("hahaha " + id);
+    	$("#reviewID").val(id);
+    	$("#reviewID").text(id);
+    	console.log("EHHE " + $("#reviewID").val()); 
+    	 $("#reviewForm").submit();
+    	 
+    	
+    }
+    
+  //Meeting Rooms
+	   $('#mRoom').click(function() {
+		   console.log("Meeting Rooms CLICKED");
+			$("#meetingRoomForm").submit();
+		});
+	   //Services
+	  $('#services').click(function() {
+		   console.log("Services CLICKED");
+			$("#servicesForm").submit();
+		});
+	  //Reservations
+	 $('#reservations').click(function() {
+		   console.log("Resevations CLICKED");
+			$("#yourReservationsForm").submit();
+		});
+	$('#logo').click(function() {
+		console.log("LOGO CLICKED");
+		$("#homeForm").submit();
+	});
+	
+	$("#signInSignOut").click(function() {
+		console.log($("#account-name").text());
+			$("#signInForm").submit();
+		});
+   
+    	
+    </script>
 </head>
 
 <body>
+<form id="meetingRoomForm" action="MeetingRoomPageServlet" method="post"></form>
+<form id="servicesForm" action="CalendarOrgRepServlet" method="post"></form>
+<form id="signInForm" action="SignInSignUpPageServlet" method="post"></form>
+<form id="homeForm" action="HomePageServlet" method="post"></form>
+<form id="signInFirstForm" action="sign_in_sign_up.jsp" method="post"></form>
+<form id="reserveForm" action="ReserveRMServlet" method="post">
+		 <input type = "hidden" name="locationID" id="locationID" value="hehehe">
+</form>
+<form id="reviewForm" action="RMDetailsServlet" method="post">
+		 <input type = "hidden" name="reviewID" id="reviewID" value="hehehe">
+</form>
 
 <div class="container-fluid">
   <div class="row">
@@ -64,7 +128,7 @@
               <a href="http://www.samrayner.com">Sam Rayner</a>
             </p><br><br><br>
             <span class="divider"></span>
-            <a href="sign-in.html" class="self-menu">
+            <a id = "signInSignOut" class="self-menu">
               <i class="flaticon-user-2"></i><span id="account-name">Sign In</span>
             </a>
 
@@ -81,7 +145,7 @@
 
       <div id="overlay-screen" style="display: none;"></div>
 
-      <div id="confirm-reservation" style="display: none;">
+      <div id="confirm-reservation" class="pop-up" style="display: none;">
         <h3 align="center">Confirm Reservation?</h3>
         <div align="center" class="divider"></div>
 
@@ -151,12 +215,10 @@
         <div class="col-md-2">
 	        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
 	        <div class="col-md-10 rm-information">
-	          <a href="rm-details.html" class="title"><b>${i.title}</b></a>
+	        <c:set var="rmID">${i.RMID_Location}</c:set>
+	          <a onclick="review('${rmID}')" class="title"><b>${i.title}</b></a>
 	          <span class="author">${i.author}</span>
 	          <span class="pub-info">${i.publisher}</span>
-	          <c:forEach items="${i.tags}" var = "o" >
-	          	<span class="tags">${o.tag}, </span>
-	          </c:forEach>
 	          <br>
 	          
 	          <div class="row">
@@ -171,8 +233,10 @@
 	              <div class="col-md-4"><span class="reserved-status">${i.status}</span></div>
 	              <c:set var="status">${i.status}</c:set>
 	              <c:choose>
-					    <c:when test='${status== "Available" }'>
-					       <div class="col-md-4"><button class="reserve-inline btn btn-default">Reserve</button></div>
+					    <c:when test="${status== 'AVAILABLE'}">
+					    	<c:set var="loc">${i.RMID_Location}</c:set>
+					       <div onclick="clickedType('${loc}')" class="col-md-4"><button   onclick="clickedType(${i.RMID_Location })" class="reserve-inline btn btn-default">Reserve</button></div>
+					       
 					    </c:when>    
 					    <c:otherwise>
 					        <div class="col-md-4"><button class="reserve-inline btn btn-default disabled">Reserve</button></div>
@@ -186,63 +250,6 @@
         </c:forEach>
         
 		<!-- END -->
-		
-        
-      
-
-      <div class="row rm-gen-details">
-        <div class="col-md-2">
-        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-        <div class="col-md-10 rm-information">
-          <a href="rm-details.html" class="title"><b>Title</b></a>
-          <span class="author">Author</span>
-          <span class="pub-info">Pub Info</span>
-          <span class="tags">Tags</span>
-          <br>
-          <div class="row">
-            <b>
-            <div class="col-md-4"><u>Location</u></div>
-            <div class="col-md-4"><u>Status</u></div>
-            <div class="col-md-4"></div></b>
-          </div>
-          <div class="location-status">
-            <div class="row">
-              <div class="col-md-4"><span class="location">Location</span></div>
-              <div class="col-md-4"><span class="available-status">Available</span></div>
-              <div class="col-md-4"><button class="reserve-inline btn btn-default">Reserve</button></div>
-            </div> 
-          </div>
-
-        </div>
-      </div>
-
-      <div class="row rm-gen-details">
-        <div class="col-md-2">
-        <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
-        <div class="col-md-10 rm-information">
-          <a href="rm-details.html" class="title"><b>Title</b></a>
-          <span class="author">Author</span>
-          <span class="pub-info">Pub Info</span>
-          <span class="tags">Tags</span>
-          <br>
-          <div class="row">
-            <b>
-            <div class="col-md-4"><u>Location</u></div>
-            <div class="col-md-4"><u>Status</u></div>
-            <div class="col-md-4"></div></b>
-          </div>
-          <div class="location-status">
-            <div class="row">
-              <div class="col-md-4"><span class="location">Location</span></div>
-              <div class="col-md-4"><span class="borrowed-status">Borrowed</span></div>
-              <div class="col-md-4"><button class="reserve-inline btn btn-default">Reserve</button></div>
-            </div> 
-          </div>
-
-        </div>
-      </div>
-
-
       </div>
 
 
@@ -252,16 +259,19 @@
 </body>
 <script>
 
-$('#submit-reserve').click(function(){
+/* $('#submit-reserve').click(function(){
     alert("Reserved!");
-})
+})*/
 
-$('.reserve-inline:not(.disabled)').click(function(){
-    $('#overlay-screen').fadeIn("fast", function(){})
-    $('#confirm-reservation').fadeIn(350, function(){});
-})
 
-$('#cancel-reserve').click(function(){
+/* $('.reserve-inline:not(.disabled)').click(function(){
+console.log(status);
+	$("#location").val(status);
+	$("#reserveForm").submit();
+	
+});
+ */
+/*$('#cancel-reserve').click(function(){
     $('#overlay-screen').fadeOut("fast", function(){})
     $('#confirm-reservation').fadeOut(350, function(){});
 })
@@ -269,7 +279,7 @@ $('#cancel-reserve').click(function(){
 $('#overlay-screen').click(function(){
     $('#overlay-screen').fadeOut("fast", function(){})
     $('#confirm-reservation').fadeOut(350, function(){});
-})
+}) */
 
 </script>
 </html>
