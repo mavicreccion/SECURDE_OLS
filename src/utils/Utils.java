@@ -1,5 +1,6 @@
 package utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -34,6 +35,19 @@ public class Utils {
 		int day = c.get(Calendar.DAY_OF_MONTH);
 		
 		return year + "-" + ((month < 10) ? "0" + month : month) + "-" + ((day < 10) ? "0" + day : day);
+	}
+	
+	public static Date convertStringToDate(String strDate) {
+		
+		String[] splitDate = strDate.split("-");
+		int year = Integer.parseInt(splitDate[0]);
+		int month = Integer.parseInt(splitDate[1])-1;
+		int day = Integer.parseInt(splitDate[2]);
+		
+		Calendar c = Calendar.getInstance();
+		c.set(year, month, day);
+		
+		return c.getTime();
 	}
 	
 	public static int convertCurrTimetoInteger() {
