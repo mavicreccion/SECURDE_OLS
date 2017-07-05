@@ -57,7 +57,7 @@ public class UserService {
 				+ User.COL_LASTNAME + "\n"
 				+ " FROM " + User.TABLE_USER + "\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ?"
-				+ " AND " + User.COL_PASSWORD + " SHA2(?, 512);";
+				+ " AND " + User.COL_PASSWORD + " = SHA2(?, 512);";
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(id_number);

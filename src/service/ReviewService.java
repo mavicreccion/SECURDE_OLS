@@ -17,9 +17,10 @@ public class ReviewService {
 		boolean result = false;
 		
 		String query = "\nSELECT " + ReadingMaterial.COL_RMID
-				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM + "\n"
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ? "
-				+ " AND " + ReadingMaterial.COL_IDNUMBER + " = ?;";
+				+ " AND " + ReadingMaterial.COL_IDNUMBER + " = ? "
+				+ " AND CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED; 
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rmID);
