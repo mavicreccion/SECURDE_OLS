@@ -510,6 +510,39 @@ public class ReadingMaterialService {
 		return rm;
 	}
 
+	// get RM title by id
+	public static String getRMTitleByID(String rmID) {
+		String title = "";
+		
+		String query = "\nSELECT " + ReadingMaterial.COL_TITLE
+				+ " FROM " + ReadingMaterial.TABLE_RM
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(rmID);
+		
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		try {
+			r = q.runQuery(query, input);
+			
+			if(r.next()) {
+				title = r.getString(1);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return title;
+	}
+	
 	// get list of user who borrowed rm
 	public static ArrayList<ReadingMaterial> getUserListBorrowedRM(int rmID_location) {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
@@ -526,7 +559,7 @@ public class ReadingMaterialService {
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM
 				+ " NATURAL JOIN " + User.TABLE_USER + "\n"
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?\n"
-				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED;
+				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED + " DESC";
 
 		ArrayList<Object> input = new ArrayList<>();		
 		input.add(rmID_location);
@@ -839,16 +872,17 @@ public class ReadingMaterialService {
 		return rmList;
 	}
 
-	// get new arrivals
+	// get new arrivals (TOP 10)
 	public static ArrayList<ReadingMaterial> getNewArrivals() {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
 		ReadingMaterial rm = null;
 
 		String query = "\nSELECT * "
-				+ " FROM " + ReadingMaterial.TABLE_RM
+				+ " FROM " + ReadingMaterial.TABLE_RM + "\n"
 				+ " WHERE CURDATE() BETWEEN " + ReadingMaterial.COL_DATEARRIVED
-				+ " AND DATE_ADD(" + ReadingMaterial.COL_DATEARRIVED + ", INTERVAL 1 MONTH)"
-				+ " ORDER BY " + ReadingMaterial.COL_DATEARRIVED;
+				+ " AND DATE_ADD(" + ReadingMaterial.COL_DATEARRIVED + ", INTERVAL 1 MONTH)\n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATEARRIVED + " DESC\n"
+				+ " LIMIT 10";
 
 		// for status
 		String query_reserved = "\nSELECT " + ReadingMaterial.COL_DATERETURNED + "\n"
@@ -935,7 +969,8 @@ public class ReadingMaterialService {
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ? "
 				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
-				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + "); ";
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") \n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED + " DESC\n";
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(id_number);
@@ -984,7 +1019,8 @@ public class ReadingMaterialService {
 				+ " FROM " + ReadingMaterial.TABLE_RM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ? "
-				+ " AND CURDATE() <= " + ReadingMaterial.COL_DATERETURNED;
+				+ " AND CURDATE() <= " + ReadingMaterial.COL_DATERETURNED + "\n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED + " DESC\n";
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(id_number);
@@ -1032,8 +1068,8 @@ public class ReadingMaterialService {
 				+ " FROM " + ReadingMaterial.TABLE_RM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
-				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") "
-				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED;
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") \n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATEBORROWED + " DESC\n";
 
 		Query q = Query.getInstance();
 		ResultSet r = null;
@@ -1075,8 +1111,8 @@ public class ReadingMaterialService {
 				+ ReadingMaterial.COL_DATERESERVED + "\n"
 				+ " FROM " + ReadingMaterial.TABLE_RM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
-				+ " WHERE CURDATE() <= " + ReadingMaterial.COL_DATERESERVED
-				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED;
+				+ " WHERE CURDATE() <= " + ReadingMaterial.COL_DATERESERVED + "\n"
+				+ " ORDER BY " + ReadingMaterial.COL_DATERESERVED + " DESC\n";
 
 		Query q = Query.getInstance();
 		ResultSet r = null;
