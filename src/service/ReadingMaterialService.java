@@ -24,6 +24,7 @@ public class ReadingMaterialService {
 		boolean result = false;
 
 		String query = "\nINSERT INTO " + ReadingMaterial.TABLE_RM + " ( "
+				+ ReadingMaterial.COL_RMID + ", "
 				+ ReadingMaterial.COL_RMTYPE + ", "
 				+ ReadingMaterial.COL_TITLE + ", " 
 				+ ReadingMaterial.COL_AUTHOR + ", " 
@@ -31,9 +32,10 @@ public class ReadingMaterialService {
 				+ ReadingMaterial.COL_YEAR + ", " 
 				+ ReadingMaterial.COL_DATEARRIVED + ", "
 				+ ReadingMaterial.COL_LIBSTATUS + ")\n "
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?);";
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
 		ArrayList<Object> input = new ArrayList<>();
+		input.add(myRM.getRMID_Location());
 		input.add(myRM.getRMType());
 		input.add(myRM.getTitle());
 		input.add(myRM.getAuthor());
@@ -48,32 +50,6 @@ public class ReadingMaterialService {
 			result = q.runInsertUpdateDelete(query, input);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}
-
-		// for every reading material, record its tags
-		int rmID;
-		try {
-			rmID = q.getGeneratedKey();
-
-			if(rmID != 0) {
-				ArrayList<RMTag> tags = myRM.getTags();
-				for (RMTag rmTag : tags) {
-					query = "\nINSERT INTO " + ReadingMaterial.TABLE_RMTAG + " ( "
-							+ ReadingMaterial.COL_TAGID + ", "
-							+ ReadingMaterial.COL_RMID +")\n"
-							+ " VALUES (?, ?);";
-
-					input.clear();
-					input.add(rmTag.getTagID());
-					input.add(rmID);
-
-					result = q.runInsertUpdateDelete(query, input);
-				}
-			}
-
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
 		} finally {
 			try {
 				q.close();
@@ -85,6 +61,38 @@ public class ReadingMaterialService {
 		return result;
 	}
 
+	// add tags
+	public static boolean addTags(ArrayList<RMTag> rmTags) {
+		boolean result = false;
+		
+		
+		String query = "\nINSERT INTO " + ReadingMaterial.TABLE_RMTAG + " ( "
+				+ ReadingMaterial.COL_TAGID + ", "
+				+ ReadingMaterial.COL_RMID +")\n"
+				+ " VALUES (?, ?);";
+
+		ArrayList<Object> input = new ArrayList<>();
+		
+		Query q = Query.getInstance();
+
+		try {
+			
+			for (RMTag rmTag : rmTags) {
+				input.clear();
+				input.add(rmTag.getTagID());
+				input.add(rmTag.getRmID());
+
+				result = q.runInsertUpdateDelete(query, input);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return result;
+	}
+	
 	// delete
 	public static boolean deleteRM(String rmID) {
 		boolean result = false;
