@@ -6,17 +6,18 @@ import java.util.ArrayList;
 
 import db.Query;
 import model.User;
+import model.UserStatus;
 import model.UserType;
 import utils.Utils;
 
 public class UserService {
 	
-	// register
+	// register user
 	public static boolean registerUser(User user) {
 		boolean result = false;
 		
 		String query = "\nINSERT INTO " + User.TABLE_USER + "\n"
-				+ " VALUES (?, ?, ?, ?, ?, SHA2(?, 512), ?, ?, ?, ?);";
+				+ " VALUES (?, ?, ?, ?, ?, SHA2(?, 512), ?, ?, ?, ?, ?);";
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(user.getIDNumber());
@@ -29,11 +30,64 @@ public class UserService {
 		input.add(Utils.convertDateJavaToStringDB(user.getBirthdate()));
 		input.add(user.getSecretQuestion().getSQID());
 		input.add(user.getSecretAnswer());
+		input.add(UserStatus.ACTIVATED+"");
 		
 		Query q = Query.getInstance();
 		
 		try {
 			result = q.runInsertUpdateDelete(query, input);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+	
+	// register libstaff/libmngr
+	public static boolean registerLibStaffLibMngr(User user) {
+		boolean result = false;
+		
+		String query = "\nINSERT INTO " + User.TABLE_USER + "\n"
+				+ " VALUES (?, ?, ?, ?, ?, SHA2(?, 512), ?, ?, ?, ?, ?);";
+		
+		String query_event = "\nCREATE EVENT activate_event_" + user.getIDNumber() +"\n"
+				+ " ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE \n" 
+				+ " DO \n"
+				+ "\tUPDATE " + User.TABLE_USER + "\n"
+				+ "\tSET status = ?\n"
+				+ "\tWHERE id_number = ? AND status = ?;";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(user.getIDNumber());
+		input.add(user.getUserType());
+		input.add(user.getFirstName());
+		input.add(user.getMiddleInitial());
+		input.add(user.getLastName());
+		input.add(user.getPassword());
+		input.add(user.getEmail());
+		input.add(Utils.convertDateJavaToStringDB(user.getBirthdate()));
+		input.add(user.getSecretQuestion().getSQID());
+		input.add(user.getSecretAnswer());
+		input.add(UserStatus.PENDING+"");
+		
+		Query q = Query.getInstance();
+		
+		try {
+			result = q.runInsertUpdateDelete(query, input);
+			
+			input.clear();
+			input.add(UserStatus.DEACTIVATED + "");
+			input.add(user.getIDNumber());
+			input.add(UserStatus.PENDING + "");
+			
+			result = q.runSQLEvent(query_event, input);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -172,5 +226,8 @@ public class UserService {
 		return userType;
 	}
 	
-	// change password
+	// change password of libstaff/libmngr to activate account
+//	public static boolean changePasswordToActivateAccount(User user) {
+//		
+//	}
 }
