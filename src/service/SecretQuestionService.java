@@ -10,6 +10,7 @@ import model.User;
 
 public class SecretQuestionService {
 	
+	// get all
 	public static ArrayList<SecretQuestion> getAllSecretQuestions() {
 		ArrayList<SecretQuestion> sqList = new ArrayList<>();
 		SecretQuestion sq;
@@ -43,7 +44,8 @@ public class SecretQuestionService {
 		
 	}
 	
-	public static SecretQuestion getSecretQuestion(int idnumber) {
+	// get sq of user
+	public static SecretQuestion getSecretQuestionOfUser(int idnumber) {
 		SecretQuestion sq = null;
 		
 		String query = "\nSELECT " + User.TABLE_USER + "." + User.COL_SQID + ", " + SecretQuestion.COL_QUESTION + " \n"
@@ -77,4 +79,36 @@ public class SecretQuestionService {
 		return sq;
 	}
 
+	// get sq by id
+	public static SecretQuestion getSecretQuestionByID(int sqID) {
+		SecretQuestion sq = null;
+		
+		String query = "\nSELECT * FROM " + SecretQuestion.TABLE_NAME;
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(sqID);
+		
+		Query q = Query.getInstance();
+		
+		try {
+			ResultSet r = q.runQuery(query, input);
+			
+			if(r.next()) {
+				sq = new SecretQuestion();
+				sq.setSQID(r.getInt(User.COL_SQID));
+				sq.setQuestion(r.getString(SecretQuestion.COL_QUESTION));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return sq;
+	}
 }

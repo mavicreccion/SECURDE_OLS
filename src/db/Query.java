@@ -129,7 +129,7 @@ public class Query {
 						pstmt.setDate(i + 1, (Date) input.get(i));
 					}
 			
-			System.out.println(pstmt.toString());
+			// System.out.println(pstmt.toString());
 			rs = pstmt.executeQuery();
 			}
 		return rs;

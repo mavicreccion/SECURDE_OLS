@@ -55,6 +55,7 @@ public class UserService {
 				+ User.COL_IDNUMBER + ", "
 				+ User.COL_FIRSTNAME + ", "
 				+ User.COL_LASTNAME + "\n"
+				+ " FROM " + User.TABLE_USER + "\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ?"
 				+ " AND " + User.COL_PASSWORD + " SHA2(?, 512);";
 		
@@ -138,6 +139,7 @@ public class UserService {
 		return user;
 	}
 	
+	// get user type
 	public static UserType getUserType(String id_number) {
 		UserType userType = null;
 		
