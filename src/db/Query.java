@@ -129,12 +129,45 @@ public class Query {
 						pstmt.setDate(i + 1, (Date) input.get(i));
 					}
 			
-			// System.out.println(pstmt.toString());
+			System.out.println(pstmt.toString());
 			rs = pstmt.executeQuery();
 			}
 		return rs;
 		
 	}
+	
+	@SuppressWarnings("rawtypes")
+	public boolean runSQLEvent(String query, ArrayList<Object> input) throws SQLException {
+		boolean rs = false;
+		if(connect(username, password, url)){
+			pstmt= con.prepareStatement(query);
+			if(input != null)
+				for(int i = 0; i < input.size(); i++){
+					if(input.get(i) instanceof String)
+						pstmt.setString(i + 1,(String) input.get(i));
+					else if(input.get(i) instanceof Integer)
+						pstmt.setInt(i + 1,(Integer) input.get(i));
+					else if(input.get(i) instanceof Float)
+						pstmt.setFloat(i + 1,(Float) input.get(i));
+					else if(input.get(i) instanceof Double)
+						pstmt.setDouble(i + 1,(Double) input.get(i));
+					else if(input.get(i) instanceof Long)
+						pstmt.setLong(i + 1, (Long)input.get(i));
+					else if(input.get(i) instanceof Boolean)
+						pstmt.setBoolean(i + 1, (Boolean)input.get(i));
+					else if(input.get(i) instanceof Enum)
+						pstmt.setString(i + 1,((Enum) input.get(i)).toString());
+					else if(input.get(i) instanceof Calendar)
+						pstmt.setDate(i + 1,(Date) ((Calendar) input.get(i)).getTime());
+					else if(input.get(i) instanceof Date)
+						pstmt.setDate(i + 1, (Date) input.get(i));
+					}
+			
+			rs = pstmt.execute();
+		}
+		return rs;
+	}
+	
 	/**
 	 * 	Runs a query and returns true or false depending on whether query was a success. </br>
 	 *  Uses array list of objects as its input but can be set to null if no input is needed.</br> 
@@ -160,7 +193,7 @@ public class Query {
 	public boolean runInsertUpdateDelete(String query, ArrayList<Object> input) throws SQLException{
 		boolean result = connect(username, password, url);
 		if(result){
-			pstmt = con.prepareStatement(query);
+			pstmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			if(input != null)
 				for(int i = 0; i < input.size(); i++){
 					if(input.get(i) instanceof String)
