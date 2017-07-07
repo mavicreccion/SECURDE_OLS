@@ -2,19 +2,16 @@ package model;
 
 import java.util.Date;
 
-public class ReservedRoom {
+public class ReservedRoom extends Room {
 	
 	public static final String TABLE_NAME = "reserved_mr";
-	public static final String COL_RESERVEDMRID = "reserved_mr";
-	public static final String COL_MRID = "reserved_mr";
-	public static final String COL_IDNUMBER = "reserved_mr";
-	public static final String COL_DATERESERVED = "reserved_mr";
-	public static final String COL_TIMESTART = "reserved_mr";
-	public static final String COL_TIMEEND = "reserved_mr";
+	public static final String COL_RESERVEDMRID = "reservedMRID";
+	public static final String COL_IDNUMBER = "id_number";
+	public static final String COL_DATERESERVED = "date_reserved";
+	public static final String COL_TIMESTART = "time_start";
+	public static final String COL_TIMEEND = "time_end";
 	
 	private int reservedMRID;
-	private int MRID;
-	private String idnumber;
 	private Date reservedDate;
 	private int timeStart;
 	private int timeEnd;
@@ -31,22 +28,6 @@ public class ReservedRoom {
 
 	public void setReservedMRID(int reservedMRID) {
 		this.reservedMRID = reservedMRID;
-	}
-
-	public int getMRID() {
-		return MRID;
-	}
-
-	public void setMRID(int mRID) {
-		MRID = mRID;
-	}
-
-	public String getIdnumber() {
-		return idnumber;
-	}
-
-	public void setIdnumber(String idnumber) {
-		this.idnumber = idnumber;
 	}
 
 	public Date getReservedDate() {

@@ -7,7 +7,10 @@ import java.util.Date;
 
 import db.Query;
 import model.ReservedRoom;
+import model.Room;
+import model.RoomStatus;
 import model.User;
+import model.UserType;
 import utils.Utils;
 
 public class RoomService {
@@ -25,8 +28,8 @@ public class RoomService {
 				+ " VALUES (?, ?, ?, ?, ?);";
 		
 		ArrayList<Object> input = new ArrayList<>();
-		input.add(reserved_room.getMRID());
-		input.add(reserved_room.getIdnumber());
+		input.add(reserved_room.getMrID());
+		input.add(reserved_room.getUser().getIDNumber());
 		input.add(Utils.convertDateJavaToStringDB(reserved_room.getReservedDate()));
 		input.add(reserved_room.getTimeStart());
 		input.add(reserved_room.getTimeEnd());
@@ -75,6 +78,39 @@ public class RoomService {
 		return result;
 	}
 	
+	// get ALL rooms
+	public static ArrayList<Room> getALLRooms() {
+		ArrayList<Room> roomList = new ArrayList<>();
+		Room room = null;
+		
+		String query = "\nSELECT * FROM " + Room.TABLE_NAME;
+		
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		
+		try {
+			r = q.runQuery(query);
+			
+			while(r.next()) {
+				room = new Room();
+				room.setMrID(r.getInt(Room.COL_MRID));
+				room.setMr_name(r.getString(Room.COL_MRNAME));
+				
+				roomList.add(room);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return roomList;
+	}
+	
 	// get all reservations of user
 	public static ArrayList<ReservedRoom> getReservationsOfUser(String idNumber) {
 		ArrayList<ReservedRoom> rmList = new ArrayList<>();
@@ -109,28 +145,32 @@ public class RoomService {
 		
 		return rmList;
 	}
-
-	// get number of hours of current reservation of user
-	public static int getReservedMinutesOfThisDay(String id_number, Date date) {
-		int minutes = 0;
+	
+	// check if user can still reserve a meeting room
+	public static boolean checkIfUserCanStillReserve(User user, Date date) {
+		boolean result = false;
 		
 		String query = "\nSELECT COUNT(*) "
 				+ " FROM " + ReservedRoom.TABLE_NAME
 				+ " WHERE " + User.COL_IDNUMBER + " = ? "
-				+ " AND " + ReservedRoom.COL_DATERESERVED + " = DATE(?);";
+				+ " AND " + ReservedRoom.COL_DATERESERVED + " = DATE(?) "
+				+ " GROUP BY " + User.COL_IDNUMBER
+				+ " HAVING COUNT(*) < ?;";
 		
 		ArrayList<Object> input = new ArrayList<>();
-		input.add(id_number);
+		input.add(user.getIDNumber());
 		input.add(Utils.convertDateJavaToStringDB(date));
+		
+		if(user.getUserType() == UserType.STUDENT) 
+			input.add(4);
+		else if(user.getUserType() == UserType.FACULTY)
+			input.add(10);
 		
 		Query q = Query.getInstance();
 		
 		try {
 			ResultSet r = q.runQuery(query, input);
-			
-			if(r.next()) {
-				minutes = r.getInt(1) * 30;
-			}
+			result = r.next();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -141,7 +181,7 @@ public class RoomService {
 			}
 		}
 		
-		return minutes;
+		return result;
 	}
 	
 	// get reserved rooms at this time and day (USER)
@@ -165,7 +205,7 @@ public class RoomService {
 			
 			while(r.next()) {
 				rm = new ReservedRoom();
-				rm.setMRID(r.getInt(ReservedRoom.COL_MRID));
+				rm.setMrID(r.getInt(ReservedRoom.COL_MRID));
 				rm.setTimeStart(r.getInt(ReservedRoom.COL_TIMESTART));
 				rm.setTimeEnd(r.getInt(ReservedRoom.COL_TIMEEND));
 				
@@ -218,7 +258,7 @@ public class RoomService {
 			while(r.next()) {
 				rm = new ReservedRoom();
 				rm.setReservedMRID(r.getInt(ReservedRoom.COL_RESERVEDMRID));
-				rm.setMRID(r.getInt(ReservedRoom.COL_MRID));
+				rm.setMrID(r.getInt(ReservedRoom.COL_MRID));
 				rm.setTimeStart(r.getInt(ReservedRoom.COL_TIMESTART));
 				rm.setTimeEnd(r.getInt(ReservedRoom.COL_TIMEEND));
 				
@@ -243,4 +283,67 @@ public class RoomService {
 		return rmList;
 	}
 	
+	// get room number and status of particular time of all rooms
+	public static ArrayList<Room> getDataForExport() {
+		int[] timeSlots = Utils.getTimeSlots();
+		ArrayList<Room> rooms = getALLRooms();
+		int time_start, time_end;
+		
+		ArrayList<Room> all_rooms = new ArrayList<>();
+		
+		Room room = null;
+		
+		String query = "\nSELECT " + ReservedRoom.COL_RESERVEDMRID + "\n"
+				+ " FROM " + ReservedRoom.TABLE_NAME + "\n"
+				+ " WHERE " + Room.COL_MRID + " = ? "
+				+ " AND " + ReservedRoom.COL_TIMESTART + " = ?"
+				+ " AND " + ReservedRoom.COL_TIMEEND + " = ?"
+				+ " AND " + ReservedRoom.COL_DATERESERVED + " = CURDATE();";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		
+		try {
+			
+			for (int j = 0; j < rooms.size(); j ++) {
+				
+				for(int i = 1; i < timeSlots.length; i ++) {
+					
+					room = new Room();
+					room.setMrID(rooms.get(j).getMrID());
+					room.setMr_name(rooms.get(j).getMr_name());
+					
+					time_start = timeSlots[i-1];
+					time_end = timeSlots[i];
+					
+					input.clear();
+					input.add(room.getMrID());
+					input.add(time_start);
+					input.add(time_end);
+					
+					r = q.runQuery(query, input);
+					
+					if(r.next()) {
+						// there's a reservation at this time
+						room.setRoomStatus(RoomStatus.RESERVED);
+					} else {
+						room.setRoomStatus(RoomStatus.AVAILABLE);
+					}
+					
+					all_rooms.add(room);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return all_rooms;
+	}
 }

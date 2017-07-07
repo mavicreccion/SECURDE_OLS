@@ -17,9 +17,10 @@ public class ReviewService {
 		boolean result = false;
 		
 		String query = "\nSELECT " + ReadingMaterial.COL_RMID
-				+ " FROM " + ReadingMaterial.TABLE_BORROWEDRM + "\n"
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ? "
-				+ " AND " + ReadingMaterial.COL_IDNUMBER + " = ?;";
+				+ " AND " + ReadingMaterial.COL_IDNUMBER + " = ? "
+				+ " AND CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED;
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rmID);
@@ -60,8 +61,8 @@ public class ReviewService {
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(review.getUser().getIDNumber());
 		input.add(review.getRMID());
-		input.add(review.getReview());
 		input.add(Utils.convertDateJavaToStringDB(Calendar.getInstance().getTime()));
+		input.add(review.getReview());
 
 		Query q = Query.getInstance();
 
@@ -115,4 +116,5 @@ public class ReviewService {
 		return result;
 	}
 
+	
 }

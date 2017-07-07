@@ -7,7 +7,6 @@ public class ReadingMaterial {
 	
 	public static final String TABLE_RM = "reading_material";
 	public static final String TABLE_RMTAG = "rm_tag";
-	public static final String TABLE_BORROWEDRM = "borrowed_rm";
 	public static final String TABLE_RESERVEDRM = "reserved_rm";
 	public static final String TABLE_TAG = "tags";
 	
@@ -25,13 +24,11 @@ public class ReadingMaterial {
 	public static final String COL_TAG = "tag";
 
 	public static final String COL_IDNUMBER = User.COL_IDNUMBER;
-	
-	public static final String COL_BORROWEDRMID = "borrowedRmID";
-	public static final String COL_DATEBORROWED = "date_borrowed";
-	public static final String COL_DATERETURNED = "date_returned";
-	
+
 	public static final String COL_RESERVEDRMID = "reservedRmID";
 	public static final String COL_DATERESERVED = "date_reserved";
+	public static final String COL_DATEBORROWED = "date_borrowed";
+	public static final String COL_DATERETURNED = "date_returned";
 
 	private String RMID_Location;
 	private RMType RMType;
@@ -46,15 +43,13 @@ public class ReadingMaterial {
 	private int numTimesBorrowed;
 	
 	private RMStatus status;
+	private Date dateReserved;
 	private Date dateBorrowed;
 	private Date dateReturned;
-	private Date dateReserved;
 	private Date dateAvailable;
 	
-	private int borrowedRMID;
 	private int reservedRMID;
 	
-	private User userBorrowed;
 	private User userReserved;
 	
 	public ReadingMaterial() {
@@ -182,28 +177,12 @@ public class ReadingMaterial {
 		this.dateAvailable = dateAvailable;
 	}
 
-	public int getBorrowedRMID() {
-		return borrowedRMID;
-	}
-
-	public void setBorrowedRMID(int borrowedRMID) {
-		this.borrowedRMID = borrowedRMID;
-	}
-
 	public int getReservedRMID() {
 		return reservedRMID;
 	}
 
 	public void setReservedRMID(int reservedRMID) {
 		this.reservedRMID = reservedRMID;
-	}
-
-	public User getUserBorrowed() {
-		return userBorrowed;
-	}
-
-	public void setUserBorrowed(User userBorrowed) {
-		this.userBorrowed = userBorrowed;
 	}
 
 	public User getUserReserved() {

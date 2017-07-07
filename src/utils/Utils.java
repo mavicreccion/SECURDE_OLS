@@ -1,5 +1,6 @@
 package utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -36,6 +37,19 @@ public class Utils {
 		return year + "-" + ((month < 10) ? "0" + month : month) + "-" + ((day < 10) ? "0" + day : day);
 	}
 	
+	public static Date convertStringToDate(String strDate) {
+		
+		String[] splitDate = strDate.split("-");
+		int year = Integer.parseInt(splitDate[0]);
+		int month = Integer.parseInt(splitDate[1])-1;
+		int day = Integer.parseInt(splitDate[2]);
+		
+		Calendar c = Calendar.getInstance();
+		c.set(year, month, day);
+		
+		return c.getTime();
+	}
+	
 	public static int convertCurrTimetoInteger() {
 		Calendar c = Calendar.getInstance();
 		
@@ -43,6 +57,20 @@ public class Utils {
 		int m = c.get(Calendar.MINUTE);
 		
 		return h + m;
+	}
+	
+	public static int[] getTimeSlots() {
+		int[] timeSlots = new int[27];
+		int start = 700;
+		timeSlots[0] = start;
+		
+		for(int i = 1; i < timeSlots.length; i ++) {
+			timeSlots[i] = start + ((i % 2 == 0) ? 70 : 30);
+			start = timeSlots[i];
+		}
+		
+		return timeSlots;
+		
 	}
 
 }
