@@ -61,8 +61,8 @@ public class ReviewService {
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(review.getUser().getIDNumber());
 		input.add(review.getRMID());
-		input.add(review.getReview());
 		input.add(Utils.convertDateJavaToStringDB(Calendar.getInstance().getTime()));
+		input.add(review.getReview());
 
 		Query q = Query.getInstance();
 
@@ -116,4 +116,5 @@ public class ReviewService {
 		return result;
 	}
 
+	
 }

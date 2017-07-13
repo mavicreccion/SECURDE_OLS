@@ -17,9 +17,7 @@ import service.RoomService;
 
 public class DataExport {
 	
-	private static final String FILENAME = "excel/Excel1.xlsx";
-	
-	public static boolean exportAll() {
+	public static boolean exportAll(String filename) {
 		boolean result = false;
 
 		XSSFWorkbook workbook = new XSSFWorkbook();
@@ -103,7 +101,7 @@ public class DataExport {
  		}
 		
 		try {
-            FileOutputStream outputStream = new FileOutputStream(FILENAME);
+            FileOutputStream outputStream = new FileOutputStream(filename);
             workbook.write(outputStream);
             workbook.close();
         } catch (FileNotFoundException e) {

@@ -57,7 +57,7 @@ public class ReadingMaterialService {
 				e.printStackTrace();
 			}
 		}
-		
+
 		addTags(myRM.getTags());
 
 		return result;
@@ -66,19 +66,19 @@ public class ReadingMaterialService {
 	// add tags
 	public static boolean addTags(ArrayList<RMTag> rmTags) {
 		boolean result = false;
-		
-		
+
+
 		String query = "\nINSERT INTO " + ReadingMaterial.TABLE_RMTAG + " ( "
 				+ ReadingMaterial.COL_TAGID + ", "
 				+ ReadingMaterial.COL_RMID +")\n"
 				+ " VALUES (?, ?);";
 
 		ArrayList<Object> input = new ArrayList<>();
-		
+
 		Query q = Query.getInstance();
 
 		try {
-			
+
 			for (RMTag rmTag : rmTags) {
 				input.clear();
 				input.add(rmTag.getTagID());
@@ -86,15 +86,15 @@ public class ReadingMaterialService {
 
 				result = q.runInsertUpdateDelete(query, input);
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
+
+
 		return result;
 	}
-	
+
 	// delete
 	public static boolean deleteRM(String rmID) {
 		boolean result = false;
@@ -246,7 +246,7 @@ public class ReadingMaterialService {
 
 		return result;
 	}
-	
+
 	// reserve
 	public static boolean reserveRM(ReadingMaterial rm) {
 		boolean result = false;
@@ -262,16 +262,16 @@ public class ReadingMaterialService {
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rm.getRMID_Location());
 		input.add(rm.getUserReserved().getIDNumber());
-		
+
 		Date date_reserved = rm.getDateReserved();
 		Date date_borrowed = Utils.addDays(date_reserved, 1);
-		
+
 		input.add(Utils.convertDateJavaToStringDB(date_reserved));
 		input.add(Utils.convertDateJavaToStringDB(date_borrowed));
-		
+
 		input.add((rm.getUserReserved().getUserType() == UserType.STUDENT ? 
-				input.add(Utils.convertDateJavaToStringDB(Utils.addDays(date_borrowed, 7))) :
-					input.add(Utils.convertDateJavaToStringDB(Utils.addMonth(date_borrowed, 1)))));
+				Utils.convertDateJavaToStringDB(Utils.addDays(date_borrowed, 7)) :
+					Utils.convertDateJavaToStringDB(Utils.addMonth(date_borrowed, 1))));
 
 		Query q = Query.getInstance();
 
@@ -317,41 +317,28 @@ public class ReadingMaterialService {
 		return result;
 	}
 
-	// override reservation
-	public static boolean overrideResRM(int oldResMRID, ReadingMaterial newResRM) {
-		boolean result = false;
-
-		result = cancelResRM(oldResMRID);
-		
-		if(!result) {
-			result = reserveRM(newResRM);
-		}
-
-		return result;
-	}
-
 	// check if rm can be deleted
 	// can only delete if no borrow or reserve
 	public static boolean checkIfCanDelete(String rmID) {
 		boolean result = false;
-		
+
 		String query = "\nSELECT " + ReadingMaterial.COL_RMID
 				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM 
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ? "
 				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
 				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + ") "
 				+ " OR CURDATE() <= " + ReadingMaterial.COL_DATERESERVED + ")\n";
-		
+
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rmID);
 
 		Query q = Query.getInstance();
 		ResultSet r = null;
-		
+
 		try {
 			r = q.runQuery(query, input);
 			result = r.next();
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -362,7 +349,7 @@ public class ReadingMaterialService {
 			}
 		}
 
-		
+
 		return !result;
 	}
 	/////////////////////////// GETTERS ///////////////////////////////////////////
@@ -513,23 +500,104 @@ public class ReadingMaterialService {
 	// get RM title by id
 	public static String getRMTitleByID(String rmID) {
 		String title = "";
-		
+
 		String query = "\nSELECT " + ReadingMaterial.COL_TITLE
 				+ " FROM " + ReadingMaterial.TABLE_RM
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
-		
+
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rmID);
-		
+
 		Query q = Query.getInstance();
 		ResultSet r = null;
 		try {
 			r = q.runQuery(query, input);
-			
+
 			if(r.next()) {
 				title = r.getString(1);
 			}
-			
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return title;
+	}
+
+	// get RM by type
+	public static ArrayList<ReadingMaterial> getRMByType(RMType rmType) {
+		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
+		ReadingMaterial rm = null;
+		
+		String query = "\nSELECT * "
+				+ " FROM " + ReadingMaterial.TABLE_RM
+				+ " WHERE " + ReadingMaterial.COL_RMTYPE + " = ?";
+
+		// for status
+		String query_reserved = "\nSELECT " + ReadingMaterial.COL_DATERETURNED + "\n"
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+				+ " AND " + ReadingMaterial.COL_DATERESERVED + " >= CURDATE()";
+
+		String query_borrowed = "\nSELECT " + ReadingMaterial.COL_DATERETURNED
+				+ " FROM " + ReadingMaterial.TABLE_RESERVEDRM + "\n" 
+				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
+				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
+				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + "); ";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(rmType + "");
+		
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		ResultSet r2 = null;
+
+		try {
+			r = q.runQuery(query, input);
+
+			while(r.next()) {
+				rm = new ReadingMaterial();
+				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
+				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
+				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
+				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
+				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
+				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
+
+				rmList.add(rm);
+			}
+
+			for (ReadingMaterial rm1 : rmList) {
+				// for status
+				// check if in stock
+				if(rm1.getStatus() == RMStatus.INSTOCK) {
+					input.clear();
+					input.add(rm1.getRMID_Location());
+
+					r2 = q.runQuery(query_reserved, input);
+
+					if(r2.next()) {
+						rm1.setStatus(RMStatus.RESERVED);
+					} else {
+						r2 = q.runQuery(query_borrowed, input);
+
+						if(r2.next()) {
+							rm1.setStatus(RMStatus.BORROWED);
+						} else {
+							rm1.setStatus(RMStatus.AVAILABLE);
+						}
+					}
+
+					r2.close();
+				}
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -540,9 +608,9 @@ public class ReadingMaterialService {
 			}
 		}
 		
-		return title;
+		return rmList;
 	}
-	
+
 	// get list of user who borrowed rm
 	public static ArrayList<ReadingMaterial> getUserListBorrowedRM(int rmID_location) {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
@@ -1108,7 +1176,8 @@ public class ReadingMaterialService {
 		String query = "\nSELECT "
 				+ ReadingMaterial.COL_RMID + ", "
 				+ ReadingMaterial.COL_TITLE + ", "
-				+ ReadingMaterial.COL_DATERESERVED + "\n"
+				+ ReadingMaterial.COL_DATERESERVED + ", "
+				+ ReadingMaterial.COL_DATERETURNED + "\n"
 				+ " FROM " + ReadingMaterial.TABLE_RM 
 				+ " NATURAL JOIN " + ReadingMaterial.TABLE_RESERVEDRM + "\n"
 				+ " WHERE CURDATE() <= " + ReadingMaterial.COL_DATERESERVED + "\n"
@@ -1124,7 +1193,8 @@ public class ReadingMaterialService {
 				rm = new ReadingMaterial();
 				rm.setRMID_Location(r.getString(ReadingMaterial.COL_RMID));
 				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
-				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATERESERVED));
+				rm.setDateReserved(r.getDate(ReadingMaterial.COL_DATERESERVED));
+				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
 
 				rmList.add(rm);
 			}
