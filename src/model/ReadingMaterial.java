@@ -6,9 +6,7 @@ import java.util.Date;
 public class ReadingMaterial {
 	
 	public static final String TABLE_RM = "reading_material";
-	public static final String TABLE_RMTAG = "rm_tag";
 	public static final String TABLE_RESERVEDRM = "reserved_rm";
-	public static final String TABLE_TAG = "tags";
 	
 	public static final String COL_RMID = "rmID_location";
 	public static final String COL_RMTYPE = "rm_type";
@@ -18,10 +16,7 @@ public class ReadingMaterial {
 	public static final String COL_YEAR = "year";
 	public static final String COL_DATEARRIVED = "date_arrived";
 	public static final String COL_LIBSTATUS = "lib_status";
-	
-	public static final String COL_RMTAGID = "rmTagID";
-	public static final String COL_TAGID = "tagID";
-	public static final String COL_TAG = "tag";
+	public static final String COL_TAG = "tags";
 
 	public static final String COL_IDNUMBER = User.COL_IDNUMBER;
 
@@ -37,8 +32,8 @@ public class ReadingMaterial {
 	private String publisher;
 	private int year;
 	private Date dateArrived;
+	private String tags;
 	
-	private ArrayList<RMTag> tags;
 	private ArrayList<Review> reviews;
 	private int numTimesBorrowed;
 	
@@ -53,7 +48,6 @@ public class ReadingMaterial {
 	private User userReserved;
 	
 	public ReadingMaterial() {
-		tags = new ArrayList<>();
 		reviews = new ArrayList<>();
 	}
 
@@ -113,11 +107,11 @@ public class ReadingMaterial {
 		this.dateArrived = dateArrived;
 	}
 
-	public ArrayList<RMTag> getTags() {
+	public String getTags() {
 		return tags;
 	}
 
-	public void setTags(ArrayList<RMTag> tags) {
+	public void setTags(String tags) {
 		this.tags = tags;
 	}
 
@@ -191,10 +185,6 @@ public class ReadingMaterial {
 
 	public void setUserReserved(User userReserved) {
 		this.userReserved = userReserved;
-	}
-
-	public void addTag(RMTag rmTag) {
-		this.tags.add(rmTag);
 	}
 	
 	public void addReview(Review review) {

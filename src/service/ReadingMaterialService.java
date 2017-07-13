@@ -9,7 +9,6 @@ import java.util.Date;
 import db.Query;
 import model.RMFilter;
 import model.RMStatus;
-import model.RMTag;
 import model.RMType;
 import model.ReadingMaterial;
 import model.Review;
@@ -30,9 +29,10 @@ public class ReadingMaterialService {
 				+ ReadingMaterial.COL_AUTHOR + ", " 
 				+ ReadingMaterial.COL_PUBLISHER + ", " 
 				+ ReadingMaterial.COL_YEAR + ", " 
+				+ ReadingMaterial.COL_TAG + ", "
 				+ ReadingMaterial.COL_DATEARRIVED + ", "
 				+ ReadingMaterial.COL_LIBSTATUS + ")\n "
-				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+				+ " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(myRM.getRMID_Location());
@@ -41,6 +41,7 @@ public class ReadingMaterialService {
 		input.add(myRM.getAuthor());
 		input.add(myRM.getPublisher());
 		input.add(myRM.getYear());
+		input.add(myRM.getTags());
 		input.add(Utils.convertDateJavaToStringDB(myRM.getDateArrived()));
 		input.add(RMStatus.INSTOCK + "");
 
@@ -58,42 +59,9 @@ public class ReadingMaterialService {
 			}
 		}
 
-		addTags(myRM.getTags());
-
 		return result;
 	}
 
-	// add tags
-	public static boolean addTags(ArrayList<RMTag> rmTags) {
-		boolean result = false;
-
-
-		String query = "\nINSERT INTO " + ReadingMaterial.TABLE_RMTAG + " ( "
-				+ ReadingMaterial.COL_TAGID + ", "
-				+ ReadingMaterial.COL_RMID +")\n"
-				+ " VALUES (?, ?);";
-
-		ArrayList<Object> input = new ArrayList<>();
-
-		Query q = Query.getInstance();
-
-		try {
-
-			for (RMTag rmTag : rmTags) {
-				input.clear();
-				input.add(rmTag.getTagID());
-				input.add(rmTag.getRmID());
-
-				result = q.runInsertUpdateDelete(query, input);
-			}
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-
-		return result;
-	}
 
 	// delete
 	public static boolean deleteRM(String rmID) {
@@ -134,7 +102,8 @@ public class ReadingMaterialService {
 				+ ReadingMaterial.COL_TITLE + " = ?, " 
 				+ ReadingMaterial.COL_AUTHOR + " = ?, " 
 				+ ReadingMaterial.COL_PUBLISHER + " = ?, " 
-				+ ReadingMaterial.COL_YEAR + " = ? \n "
+				+ ReadingMaterial.COL_YEAR + " = ?, "
+				+ ReadingMaterial.COL_TAG + " = ? \n"
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
 
 		ArrayList<Object> input = new ArrayList<>();
@@ -143,56 +112,13 @@ public class ReadingMaterialService {
 		input.add(myRM.getAuthor());
 		input.add(myRM.getPublisher());
 		input.add(myRM.getYear());
+		input.add(myRM.getTags());
 		input.add(myRM.getRMID_Location());
 
 		Query q = Query.getInstance();
 
 		try {
 			result = q.runInsertUpdateDelete(query, input);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				q.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return result;
-	}
-
-	// edit reading material tags
-	public static boolean editRMTags(String rmID_location, ArrayList<RMTag> tags) {
-		boolean result = false;
-
-		Query q = Query.getInstance();
-
-		String query;
-		ArrayList<Object> input = new ArrayList<>();
-
-		try {
-			// delete current tags
-			query = "\nDELETE FROM " + ReadingMaterial.TABLE_RMTAG
-					+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
-
-			input.add(rmID_location);
-
-			result = q.runInsertUpdateDelete(query, input);
-
-			// insert new tags
-			for (RMTag rmTag : tags) {
-				query = "\nINSERT INTO " + ReadingMaterial.TABLE_RMTAG + " ( "
-						+ ReadingMaterial.COL_TAGID + ", "
-						+ ReadingMaterial.COL_RMID +")\n"
-						+ " VALUES (?, ?);";
-
-				input.clear();
-				input.add(rmTag.getTagID());
-				input.add(rmID_location);
-
-				result = q.runInsertUpdateDelete(query, input);
-			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -357,16 +283,10 @@ public class ReadingMaterialService {
 	// get RM by id and user type
 	public static ReadingMaterial getRMByID(String rmID_location, UserType userType) {
 		ReadingMaterial rm = null;
-		RMTag rmTag = null;
 		Review review = null;
 		User user = null;
 
 		String query_details = "\nSELECT * FROM " + ReadingMaterial.TABLE_RM 
-				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
-
-		String query_tags = "\nSELECT * "
-				+ " FROM " + ReadingMaterial.TABLE_RMTAG 
-				+ " NATURAL JOIN " + ReadingMaterial.TABLE_TAG + "\n"
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?;";
 
 		String query_reviews = "\nSELECT "
@@ -407,26 +327,13 @@ public class ReadingMaterialService {
 				rm.setAuthor(r.getString(ReadingMaterial.COL_AUTHOR));
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
+				rm.setTags(r.getString(ReadingMaterial.COL_TAG));
 				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
 			}
 
 			r.close();
 
-			// 2. tags
-			r = q.runQuery(query_tags, input);
-			while(r.next()) {
-				rmTag = new RMTag();
-				rmTag.setRMTagID(r.getInt(ReadingMaterial.COL_RMTAGID));
-				rmTag.setRMID(rmID_location);
-				rmTag.setTagID(r.getInt(ReadingMaterial.COL_TAGID));
-				rmTag.setTag(r.getString(ReadingMaterial.COL_TAG));
-
-				rm.addTag(rmTag);
-			}
-
-			r.close();
-
-			// 3. reviews
+			// 2. reviews
 			r = q.runQuery(query_reviews, input);
 			while(r.next()) {
 				review = new Review();
@@ -444,7 +351,7 @@ public class ReadingMaterialService {
 
 			r.close();
 
-			// 4. status
+			// 3. status
 			if(rm.getStatus() == RMStatus.INSTOCK) {
 				// reserved
 				r = q.runQuery(query_reserved, input);
@@ -739,32 +646,27 @@ public class ReadingMaterialService {
 		} else if(rmFilter == RMFilter.PUBLISHER){
 			column = ReadingMaterial.COL_PUBLISHER;
 		}
-
+		
 		if(rmFilter == RMFilter.KEYWORDS && rmType == RMType.ALL) {
-			// search in TAGS table without type
 			query = "\nSELECT * "
 					+ " FROM " + ReadingMaterial.TABLE_RM
-					+ " WHERE " + ReadingMaterial.COL_RMID + " IN \n\t"
-					+ "( SELECT " + ReadingMaterial.COL_RMID
-					+ "\t\tFROM " + ReadingMaterial.TABLE_RMTAG 
-					+ " NATURAL JOIN " + ReadingMaterial.TABLE_TAG
-					+ "\t\tWHERE MATCH(" + ReadingMaterial.COL_TAG + ") AGAINST (?)"
-					+ ");";
-
+					+ " WHERE MATCH("
+					+ ReadingMaterial.COL_TITLE + ", "
+					+ ReadingMaterial.COL_AUTHOR + ", "
+					+ ReadingMaterial.COL_PUBLISHER + ", "
+					+ ReadingMaterial.COL_TAG + ") AGAINST(?);";
+			
 		} else if(rmFilter == RMFilter.KEYWORDS) {
-			// search in TAGS table with type
 			query = "\nSELECT * "
 					+ " FROM " + ReadingMaterial.TABLE_RM
-					+ " WHERE " + ReadingMaterial.COL_RMID + " IN \n\t"
-					+ "( SELECT " + ReadingMaterial.COL_RMID
-					+ "\t\tFROM " + ReadingMaterial.TABLE_RMTAG 
-					+ " NATURAL JOIN " + ReadingMaterial.TABLE_TAG
-					+ "\t\tWHERE MATCH(" + ReadingMaterial.COL_TAG + ") AGAINST (?)"
-					+ ")"
-					+ " AND " + ReadingMaterial.COL_RMTYPE + "= ?;";
-
+					+ " WHERE MATCH("
+					+ ReadingMaterial.COL_TITLE + ", "
+					+ ReadingMaterial.COL_AUTHOR + ", "
+					+ ReadingMaterial.COL_PUBLISHER + ", "
+					+ ReadingMaterial.COL_TAG + ") AGAINST(?) "
+					+ " AND " + ReadingMaterial.COL_RMTYPE + " = ?;";
 			input.add(rmType + "");
-
+			
 		} else if(rmType == RMType.ALL) {
 			// search in READING MATERIAL table without type
 			query = "\nSELECT * "
