@@ -83,7 +83,7 @@
           <li role="presentation" class="active" id="books-tab"><a href class="tab">Manage Books</a></li> 
           <li role="presentation" id="reservations-tab" ><a href class="tab">Manage Reservations</a></li> 
           <li role="presentation" id="accounts-tab" ><a href class="tab">Manage Accounts</a></li> 
-          <li role="presentation" id="log-tab"><a href class="tab">Log</a></li> 
+          <li role="presentation" id="log-tab"><a href class="tab">Export Log</a></li> 
         </ul>
         <br>
 
@@ -169,129 +169,31 @@
           <br>
         </div>
 
-        <div id ="manage-reservations" class="content lesser-padding-content toggable">
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <a data-toggle="collapse" href="#current-book-log">Current Reading Material Reservations</a>
-            </div>
-            
-            <div id="current-book-log" class="panel-collapse collapse in">
-              <div class="panel-body">
-                <div class="log-item bordered-dark">
-                  <a class="title">Analyzing Driving Risks of Roadway Traffic under Adverse Weather Conditions: In Case of Rain Day</a>
-                  <div class="status reserved-status">Reserved</div>
-                  Reserved on : <span class="date_reserved">mm / dd / yyyy</span><br>
-                  Return by : <span class="date_returned">mm / dd / yyyy</span>
-
-                  <button class="btn btn-default override-btn">Override Reservation</button>
-                </div>
-
-                <div class="log-item bordered-dark">
-                  <a class="title">Analyzing Driving Risks of Roadway Traffic under Adverse Weather Conditions: In Case of Rain Day</a>
-                  <div class="status reserved-status">Reserved</div>
-                  Reserved on : <span class="date_reserved">mm / dd / yyyy</span><br>
-                  Return by : <span class="date_returned">mm / dd / yyyy</span>
-
-                  <button class="btn btn-default override-btn">Override Reservation</button>
-                </div>
-
-              </div>
-            </div>
-          </div>
-          
-          <div class="panel panel-default">
-            <div class="panel-heading">
-              <a data-toggle="collapse" href="#current-book-log">Current Meeting Room Reservations</a>
-            </div>
-            
-            <div id="current-book-log" class="panel-collapse collapse in">
-              <div class="panel-body">
-                <div class="log-item bordered-dark">
-                  <a class="title">Analyzing Driving Risks of Roadway Traffic under Adverse Weather Conditions: In Case of Rain Day</a>
-                  <div class="status reserved-status">Reserved</div>
-                  Reserved on : <span class="date_reserved">mm / dd / yyyy</span><br>
-                  Return by : <span class="date_returned">mm / dd / yyyy</span>
-
-                  <button class="btn btn-default override-btn">Override Reservation</button>
-                </div>
-
-                <div class="log-item bordered-dark">
-                  <a class="title">Analyzing Driving Risks of Roadway Traffic under Adverse Weather Conditions: In Case of Rain Day</a>
-                  <div class="status reserved-status">Reserved</div>
-                  Reserved on : <span class="date_reserved">mm / dd / yyyy</span><br>
-                  Return by : <span class="date_returned">mm / dd / yyyy</span>
-
-                  <button class="btn btn-default override-btn">Override Reservation</button>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id ="manage-accounts" class="content lesser-padding-content toggable">
-          <div class="btn-group btn-group-justified" role="group" aria-label="...">
-            <div class="btn-group" role="group">
-              <button id="btn_add_account" type="button" class="btn btn-default">Add Account</button>
-            </div>
-            <div class="btn-group" role="group">
-              <button type="button" class="btn btn-default">Delete Account</button>
-            </div>
-          </div><br>
-          <div class="panel panel-default">
-            <div class="panel-heading"><h3 class="panel-title">Recent Announcements</h3></div>
-            <div class="panel-body">
-              <ul>
-              <li><B>SECURDE Milestone 1 due on July 6, 2017</B></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-
-
     </div>
   </div>
 </div>
 
-<form id="AdminReservations" action="AdminReservationsServlet" method="post"></form>
+<form id="ManageReservations" action="AdminReservationsServlet" method="post"></form>
+<form id="ManageAccounts" action="AdminAccountsServlet" method="post"></form>
+<form id="ManageLog" action="AdminLogServlet" method="post"></form>
 
 <script>
 
 $("a.tab").click(function(e){
   e.preventDefault();
-})
-
-$("#books-tab a").click(function(e){
-  $("#manage-books").css('display', 'block');
-  $("#manage-reservations").css('display', 'none');
-  $("#books-tab").addClass("active");
-  $("#reservations-tab").removeClass("active");
-  $("#accounts-tab").removeClass("active");
-  $("#log-tab").removeClass("active");
-})
+});
 
 $("#reservations-tab a").click(function(e){
-	
-	$("#AdminReservations").submit();
-	
-})
-
+	$("#ManageReservations").submit();
+});
 
 $("#accounts-tab a").click(function(e){
-  $("#manage-books").css('display', 'none');
-  $("#manage-reservations").css('display', 'none');
-  $("#manage-accounts").css('display', 'block');
-  $("#books-tab").removeClass("active");
-  $("#reservations-tab").removeClass("active");
-  $("#accounts-tab").addClass("active");
-  $("#log-tab").removeClass("active");
-  
-})
+  $("#ManageAccounts").submit();
+});
 
 $("#log-tab a").click(function(e){
-  
-})
+  $("#ManageLog").submit();
+});
 
 $("#toggle-search").click(function(e){
   window.location.href = "index.html";
@@ -327,7 +229,6 @@ $(".delete-btn:not(.disabled)").click(function(e){
 
  $("#submit-add-rm").click(function(e){
 	$("#newRMType").val($("#rm-type option:selected").val());
-	 
     $("#addNewRM").submit();
  })
  

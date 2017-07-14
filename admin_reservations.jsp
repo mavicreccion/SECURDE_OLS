@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -40,17 +41,25 @@
           <li role="presentation" id="books-tab"><a href class="tab">Manage Books</a></li> 
           <li role="presentation" class="active" id="reservations-tab" ><a href class="tab">Manage Reservations</a></li> 
           <li role="presentation" id="accounts-tab" ><a href class="tab">Manage Accounts</a></li> 
-          <li role="presentation" id="log-tab"><a href class="tab">Log</a></li> 
+          <li role="presentation" id="log-tab"><a href class="tab">Export Log</a></li> 
         </ul>
         <br>
     
 		<div id ="manage-reservations" class="content lesser-padding-content">
 		  <div class="panel panel-default">
 		    <div class="panel-heading">
+		    	
 		      <a data-toggle="collapse" href="#current-book-log">Current Reading Material Reservations</a>
 		    </div>
 		    
+		    <c:choose>
+		    <c:when test="${numOfRM == '0'}">
+		    <div id="current-book-log" class="panel-collapse collapse">
+		    </c:when>
+		    <c:otherwise>
 		    <div id="current-book-log" class="panel-collapse collapse in">
+		    </c:otherwise>
+		    </c:choose>
 		      <div class="panel-body">
 		        <c:forEach items="${reading_material}" var ="rm">
 			       	<div class="log-item bordered-dark">
@@ -69,10 +78,17 @@
 		  
 		  <div class="panel panel-default">
 		    <div class="panel-heading">
-		      <a data-toggle="collapse" href="#current-book-log">Current Meeting Room Reservations</a>
+		      <a data-toggle="collapse" href="#current-room-log">Current Meeting Room Reservations</a>
 		    </div>
 		    
-		    <div id="current-book-log" class="panel-collapse collapse in">
+		    <c:choose>
+		    <c:when test="${numOfMR == '0'}">
+		    <div id="current-room-log" class="panel-collapse collapse">
+		    </c:when>
+		    <c:otherwise>
+		    <div id="current-room-log" class="panel-collapse collapse in">
+		    </c:otherwise>
+		    </c:choose>
 		      <div class="panel-body">
 		      
 		      	<c:forEach items="${meeting_room}" var ="mr">
@@ -93,5 +109,28 @@
 	  </div>
   </div>
 </div>
+
+<form id="ManageBooks" action="AdminAreaServlet" method="post"></form>
+<form id="ManageAccounts" action="AdminAccountsServlet" method="post"></form>
+<form id="ManageLog" action="AdminLogServlet" method="post"></form>
+
 </body>
+<script>
+$("a.tab").click(function(e){
+	e.preventDefault();
+});
+
+$("#books-tab a").click(function(e){
+	$("#ManageBooks").submit();
+});
+
+$("#accounts-tab a").click(function(e){
+  $("#ManageAccounts").submit();
+})
+
+$("#log-tab a").click(function(e){
+  $("#ManageLog").submit();
+})
+
+</script>
 </html>
