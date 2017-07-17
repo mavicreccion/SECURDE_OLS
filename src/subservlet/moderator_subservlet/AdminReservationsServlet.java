@@ -49,10 +49,9 @@ public class AdminReservationsServlet {
     		System.out.println("	 : " + reservedMR.get(i).getRoomStatus());
     	}
     	
-    	request.getSession().setAttribute("numOfRM", reservedRM.size());
     	request.getSession().setAttribute(ReadingMaterial.TABLE_RM, reservedRM);
-    	request.getSession().setAttribute("numOfMR", reservedMR.size());
     	request.getSession().setAttribute(Room.TABLE_NAME, reservedMR);
+    	
     	
     	request.getRequestDispatcher("admin_reservations.jsp").forward(request, response);
     	

@@ -16,6 +16,7 @@ public class User {
 	public static final String COL_BDAY = "birthday";
 	public static final String COL_SQID = SecretQuestion.COL_SQID;
 	public static final String COL_SQANSWER = "sq_answer";
+	public static final String COL_STATUS = "status";
 	
 	protected String idnumber;
 	protected String firstName;
@@ -27,6 +28,7 @@ public class User {
 	protected SecretQuestion secretQuestion;
 	protected String secretAnswer;
 	protected UserType userType;
+	protected UserStatus status;
 	
 	public User() {
 		
@@ -111,4 +113,14 @@ public class User {
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
+
+	public UserStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(UserStatus status) {
+		this.status = status;
+	}
+	
+	
 }

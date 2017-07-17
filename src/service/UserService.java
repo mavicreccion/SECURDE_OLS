@@ -233,7 +233,7 @@ public class UserService {
 		String query = "\nUPDATE " + User.TABLE_USER
 				+ " SET "
 				+ User.COL_PASSWORD + " = SHA2(?, 512),"
-				+ " status = ?\n"
+				+ User.COL_STATUS + "  = ?\n"
 				+ " WHERE " + User.COL_IDNUMBER + " = ?";
 		
 		ArrayList<Object> input = new ArrayList<>();
@@ -242,6 +242,75 @@ public class UserService {
 		input.add(user.getIDNumber());
 		
 		Query q = Query.getInstance();
+		try {
+			result = q.runInsertUpdateDelete(query, input);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return result;
+	}
+
+	// get all locked accounts
+	public static ArrayList<User> getLockedAccounts() {
+		ArrayList<User> lockedAccounts = new ArrayList<>();
+		User user = null;
+		
+		String query = "\nSELECT * FROM " + User.TABLE_USER
+				+ " WHERE " + User.COL_STATUS + " = ?";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(UserStatus.DEACTIVATED + "");
+		
+		Query q = Query.getInstance();
+		ResultSet r = null;
+		
+		try {
+			r = q.runQuery(query, input);
+			
+			while(r.next()) {
+				user = new User();
+				user.setIDNumber(r.getString(User.COL_IDNUMBER));
+				user.setFirstName(r.getString(User.COL_FIRSTNAME));
+				user.setMiddleInitial(r.getString(User.COL_MI));
+				user.setLastName(r.getString(User.COL_LASTNAME));
+				user.setUserType(UserType.getValue(r.getString(User.COL_USERTYPE)));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return lockedAccounts;
+	}
+	
+	// unlock account
+	public static boolean unlockAccount(String idnumber) {
+		boolean result = false;
+		
+		String query = "\nUPDATE " + User.TABLE_USER
+				+ " SET "
+				+ User.COL_STATUS + "  = ?\n"
+				+ " WHERE " + User.COL_IDNUMBER + " = ?";
+		
+		ArrayList<Object> input = new ArrayList<>();
+		input.add(UserStatus.ACTIVATED + "");
+		input.add(idnumber);
+		
+		Query q = Query.getInstance();
+		
 		try {
 			result = q.runInsertUpdateDelete(query, input);
 		} catch (SQLException e) {
