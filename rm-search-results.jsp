@@ -1,10 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<head>
-    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="SHS Library Books and Meeting Room Reservations">
     <title>Lib.U</title>
@@ -19,98 +18,9 @@
     <link rel="stylesheet" type="text/css" href="css/navbar-redesigned.css"/>
     <link rel="stylesheet" type="text/css" href="img/icons_by_freepik/font/flaticon.css"> 
     <link rel="stylesheet" type="text/css" href="css/content.css"> 
-    <script src="js/jquery-3.0.0.min.js"></script>
-    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/reserve-rm.js"></script>
-    
-    <script>
-    function clickedType(id)
-    {
-    	$("#confirm-reservation").fadeIn("fast, function(){});
-    	$("#overlay-screen").fadeIn(fast, function(){});
-    	
-    	submitReservation(id);
-    }
-    
-    function submitReservation(id){
-    	 console.log("hahaha " + id);
-     	$("#locationID").val(id);
-     	$("#locationID").text(id);
-     	console.log("ehhe " + $("#locationID").val()); 
-     	 $("#reserveForm").submit();
-    }
-    
-    function review(id)
-    {
-    	 console.log("hahaha " + id);
-    	$("#reviewID").val(id);
-    	$("#reviewID").text(id);
-    	console.log("EHHE " + $("#reviewID").val()); 
-    	 $("#reviewForm").submit();
-    	
-    }
-
-     $('.reserve-inline:not(.disabled)').click(function(){
-    	console.log(status);
-    	$("#location").val(status);
-    	//$("#reserveForm").submit();
-    });
-     
-    $('#cancel-reserve').click(function(){
-        $('#overlay-screen').fadeOut("fast", function(){})
-        $('#confirm-reservation').fadeOut(350, function(){});
-    })
-
-    $('#overlay-screen').click(function(){
-        $('#overlay-screen').fadeOut("fast", function(){})
-        $('#confirm-reservation').fadeOut(350, function(){});
-    }) 
-    
-    //////////////////////
-    
-  //Meeting Rooms
-	   $('#mRoom').click(function() {
-		   console.log("Meeting Rooms CLICKED");
-			$("#meetingRoomForm").submit();
-		});
-	   //Services
-	  $('#services').click(function() {
-		   console.log("Services CLICKED");
-			$("#servicesForm").submit();
-		});
-	  //Reservations
-	 $('#reservations').click(function() {
-		   console.log("Resevations CLICKED");
-			$("#yourReservationsForm").submit();
-		});
-	$('#logo').click(function() {
-		console.log("LOGO CLICKED");
-		$("#homeForm").submit();
-	});
-	
-	$("#signInSignOut").click(function() {
-		console.log($("#account-name").text());
-			$("#signInForm").submit();
-		});
-   
-    	
-    </script>
 </head>
 
 <body>
-<form id="meetingRoomForm" action="MeetingRoomPageServlet" method="post"></form>
-<form id="servicesForm" action="CalendarOrgRepServlet" method="post"></form>
-<form id="signInForm" action="SignInSignUpPageServlet" method="post"></form>
-<form id="homeForm" action="HomePageServlet" method="post"></form>
-<form id="signInFirstForm" action="sign_in_sign_up.jsp" method="post"></form>
-<form id="reserveForm" action="ReserveRMServlet" method="post">
-		 <input type = "hidden" name="locationID" id="locationID" value="hehehe">
-</form>
-<form id="reviewForm" action="RMDetailsServlet" method="post">
-		 <input type = "hidden" name="reviewID" id="reviewID" value="hehehe">
-</form>
-
 <div class="container-fluid">
   <div class="row">
   	<!--  MENU -->
@@ -150,37 +60,9 @@
         </div>
       </div>
 
-      <div id="content-search" class="collapse white-container" style="display:none;">
-        <h3 align="center">Search for Books</h3>
-        <form class="form-inline input-group" id="search" align="center">
-          <div class="form-group">
-            <select id="search-filter" class="form-control">
-              <option value="KEYWORDS" selected disabled> Keyword</option>
-              <option value="TITLE"> Title</option>
-              <option value="AUTHOR"> Author</option>
-              <option value="PUBLISHER"> Publisher</option>  
-            </select>
-          </div>
-          <div class="form-group" style="width:50%">
-            <input type="text" class="form-control" id="search-bar" placeholder="Search for...">
-          </div>
-          <div class="form-group">
-            <select id="search-collection" class="form-control">
-              <option value="ALL" selected disabled>All</option>
-              <option value="BOOK">Books</option>
-              <option value="MAGAZINE">Magazines</option>
-              <option value="THESIS">Thesis</option>    
-            </select>
-          </div>
-          <div class="form-group">
-          <button type="submit" id="submit-search" class="btn btn-default"><i class="flaticon-loupe"></i></button>
-          </div>
-        </form>
-
-        <br>
-        <div class="divider-dark"></div>
-        <br>
-      </div>
+      <!-- SEARCH BAR -->
+      <jsp:include page="reusable/search-bar.jsp"/>    
+      <!-- END OF SEARCH BAR -->
 
       <div class="rm-results">
       <b id="results-found" style="margin: -1px;" >${numOfRM} results found</b>
@@ -228,8 +110,30 @@
       </div>
 
 
-    </div>
-  </div>
-</div>
+	<!-- don't go beyond this point -->
+    </div> <!-- end of content -->
+  </div> <!-- end of row -->
+</div> <!-- end of container-fluid -->
+<form id="meetingRoomForm" action="MeetingRoomPageServlet" method="post"></form>
+<form id="signInForm" action="SignInSignUpPageServlet" method="post"></form>
+<form id="homeForm" action="HomePageServlet" method="post"></form>
+<form id="yourReservationsForm" action="CalendarOrgRepServlet" method="post"></form>
+<form id="signInFirstForm" action="sign_in_sign_up.jsp" method="post"></form>
+<form id="reserveForm" action="ReserveRMServlet" method="post">
+		 <input type = "hidden" name="locationID" id="locationID" value="hehehe">
+</form>
+<form id="reviewForm" action="RMDetailsServlet" method="post">
+		 <input type = "hidden" name="reviewID" id="reviewID" value="hehehe">
+</form>
+
+<!--  INSERT SCRIPT TAGS HERE -->
+<!-- must be in every page -->
+<script src="js/jquery-3.0.0.min.js"></script>
+<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="js/menu-links.js"></script>
+<script src="js/app.js"></script>			
+<!-- //////////////////// -->
+<script src="js/reserve-rm.js"></script>
+
 </body>
 </html>
