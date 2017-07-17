@@ -38,8 +38,8 @@
       <div id="overlay-screen" style="display: none;"></div>
       
       <!-- SEARCH BAR -->
-      <jsp:include page="reusable/search-bar.jsp"/>    
-      <!-- END OF SEARCH BAR -->
+      <jsp:include page="reusable/search-bar-toggable.jsp"/>    
+      <!-- END OF SEARCH BAR -->  
 
       
       <!-- Sign Up button | Sign In Form -->

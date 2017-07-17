@@ -37,7 +37,7 @@
       
 	  <!-- SEARCH BAR -->
       <jsp:include page="reusable/search-bar.jsp"/>    
-      <!-- END OF SEARCH BAR -->
+       <!-- END OF SEARCH BAR -->
 
        <!--  CAROUSEL -->
        <div class="container" style="width:100%;">

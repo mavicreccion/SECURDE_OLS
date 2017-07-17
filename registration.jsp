@@ -37,9 +37,9 @@
       </div>
 
       <div id="overlay-screen" style="display: none;"></div>
-      	  <!-- SEARCH BAR -->
-      <jsp:include page="reusable/search-bar.jsp"/>    
-       <!-- END OF SEARCH BAR -->
+      <!-- SEARCH BAR -->
+      <jsp:include page="reusable/search-bar-toggable.jsp"/>    
+      <!-- END OF SEARCH BAR -->  
       	
       <form id = "register-details" style="margin-right: 300px;" action="RegisterUserServlet" method="POST">
       <!-- names -->

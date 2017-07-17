@@ -61,8 +61,8 @@
       </div>
 
       <!-- SEARCH BAR -->
-      <jsp:include page="reusable/search-bar.jsp"/>    
-       <!-- END OF SEARCH BAR -->
+      <jsp:include page="reusable/search-bar-toggable.jsp"/>    
+      <!-- END OF SEARCH BAR -->  
 
       <h3 align="center">Meeting Room Reservation</h3>
       <h4 align="center">Pick a Room, Pick a Time, Confirm!</h4>

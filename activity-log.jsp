@@ -37,8 +37,8 @@
 
       <div id="overlay-screen" style="display: none;"></div>
       <!-- SEARCH BAR -->
-      <jsp:include page="reusable/search-bar.jsp"/>    
-      <!-- END OF SEARCH BAR -->
+      <jsp:include page="reusable/search-bar-toggable.jsp"/>    
+      <!-- END OF SEARCH BAR -->  
 
       <h2 align="center">Activity Log</h2><br><br>
 

@@ -37,9 +37,20 @@
       </div>
       
       <div id="overlay-screen" style="display: none;"></div>
-      <jsp:include page="reusable/search-bar.jsp"/>    
+      <!-- SEARCH BAR -->
+      <jsp:include page="reusable/search-bar-toggable.jsp"/>    
+      <!-- END OF SEARCH BAR -->  
 
       <div class="row rm-gen-details">
+      	<div style="position: relative;">
+          <div id="edit-rm-btn" style="display: none;">
+            <a href="">
+              <button class="btn btn-default">
+                <i class="flaticon-paint-brush"></i>
+              </button>
+            </a>
+          </div>
+        </div>
         <div class="col-md-2">
         <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
         <div class="col-md-10 rm-information">
