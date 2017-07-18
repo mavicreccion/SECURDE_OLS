@@ -21,16 +21,21 @@
       </div>
       <div class="collapse navbar-collapse">
       <br>
-        <div class="row" id="toggle-search">
-          <div class="col-xs-12 col-md-8 search-button">Search For...</div>
-          <div class="col-xs-6 col-md-4"><i class="flaticon-loupe"></i></div>
-        </div>
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav" style="border-top: 1px solid #fff;">
           <li class="">
-            <a href="" id="mRoom">Meeting Rooms</a>
+            <a href="" id="books-tab">Manage Books</a>
+          </li>
+          <li class="">
+            <a href="" id="rm-reserve-tab">Manage Book Reservations</a>
+          </li>
+          <li class="">
+            <a href="" id="mr-reserve-tab">Manage Meeting Room Reservations</a>
+          </li>
+          <li class="">
+            <a href="" id="accounts-tab">Manage Accounts</a>
           </li>
           <li class="end">
-            <a href="" id="reservations">Your Reservations</a>
+            <a href="" id="log-tab">Export Log</a>
           </li>
           <li class="divider"></li>
         </ul>
