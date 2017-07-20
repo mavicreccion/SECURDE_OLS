@@ -262,8 +262,10 @@ public class UserService {
 		ArrayList<User> lockedAccounts = new ArrayList<>();
 		User user = null;
 		
+		
 		String query = "\nSELECT * FROM " + User.TABLE_USER
 				+ " WHERE " + User.COL_STATUS + " = ?";
+		
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(UserStatus.DEACTIVATED + "");
@@ -273,6 +275,7 @@ public class UserService {
 		
 		try {
 			r = q.runQuery(query, input);
+			//r = q.runQuery(query);
 			
 			while(r.next()) {
 				user = new User();
@@ -281,6 +284,7 @@ public class UserService {
 				user.setMiddleInitial(r.getString(User.COL_MI));
 				user.setLastName(r.getString(User.COL_LASTNAME));
 				user.setUserType(UserType.getValue(r.getString(User.COL_USERTYPE)));
+				lockedAccounts.add(user);
 			}
 			
 		} catch (SQLException e) {

@@ -26,6 +26,7 @@ public class User {
 	protected String email;
 	protected Date birthdate;
 	protected SecretQuestion secretQuestion;
+
 	protected String secretAnswer;
 	protected UserType userType;
 	protected UserStatus status;
@@ -113,7 +114,7 @@ public class User {
 	public void setUserType(UserType userType) {
 		this.userType = userType;
 	}
-
+	
 	public UserStatus getStatus() {
 		return status;
 	}
@@ -121,6 +122,4 @@ public class User {
 	public void setStatus(UserStatus status) {
 		this.status = status;
 	}
-	
-	
 }
