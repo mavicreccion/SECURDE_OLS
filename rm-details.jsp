@@ -1,3 +1,6 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,118 +19,61 @@
     <link rel="stylesheet" type="text/css" href="css/navbar-redesigned.css"/>
     <link rel="stylesheet" type="text/css" href="img/icons_by_freepik/font/flaticon.css"> 
     <link rel="stylesheet" type="text/css" href="css/content.css"> 
-    <script src="js/jquery-3.0.0.min.js"></script>
-    <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-    <script src="js/app.js"></script>
-    <script>
     
-    function passReview(id){
-    	
-    	
-    	
-    	
-    	
-    }
-    
-    	$(".btn btn-default").click(function() {
-    		$("#reviewForm").submit();
-    	});
-    </script>
 </head>
 
 <body>
 
 <div class="container-fluid">
   <div class="row">
-    <div class="col-sm-3 col-lg-2">
-      <nav class="navbar navbar-default navbar-fixed-side">
-        <div class="container">
-          <div class="navbar-header">
-            <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="./"></a>
-          </div>
-          <div class="collapse navbar-collapse">
-          <br>
-            <div class="row" id="toggle-search">
-              <div class="col-xs-12 col-md-8 search-button">Search For...</div>
-              <div class="col-xs-6 col-md-4"><i class="flaticon-loupe"></i></div>
-            </div>
-            <ul class="nav navbar-nav">
-              <li class="">
-                <a href="./">Meeting Rooms</a>
-              </li>
-              <li class="">
-                <a href="inverse.html">Services</a>
-              </li>
-              <li class="end">
-                <a href="inverse.html">Your Reservations</a>
-              </li>
-              <li class="divider"></li>
-            </ul>
-            <p class="navbar-text">
-              Made by
-              <a href="http://www.samrayner.com">Sam Rayner</a>
-            </p><br><br><br>
-            <span class="divider"></span>
-            <a id = "signInSignOut" class="self-menu">
-              <i class="flaticon-user-2"></i><span id="account-name">Sign In</span>
-            </a>
-
-          </div>
-        </div>
-      </nav>
-    </div>
+    <!-- NAV BAR -->
+    <jsp:include page="reusable/navbar.jsp"/>    
+    <!-- END OF NAV BAR -->    
     <div class="col-sm-9 col-lg-10 content">
       <!-- your page content -->
       <div class="header">
        <h1>SHS Online Library System</h1>
        <h2>Reserve Books and Meeting Rooms anytime, anywhere!</h2>
       </div>
-
+      
       <div id="overlay-screen" style="display: none;"></div>
-      <div id="content-search" class="collapse white-container" style="display:none;">
-        <h3 align="center">Search for Books</h3>
-        <form class="form-inline input-group" id="search" align="center">
-          <div class="form-group">
-            <select id="search-filter" class="form-control">
-              <option value="" selected disabled>Choose Filter</option>
-              <option value="k"> Keyword</option>
-              <option value="t"> Title</option>
-              <option value="a"> Author</option>
-              <option value="d"> Subject</option>
-              <option value="c"> LC Call #</option>
-              <option value="g"> Govt Doc #</option>
-              <option value="i"> ISBN/ISSN</option>     
-            </select>
-          </div>
-          <div class="form-group" style="width:50%">
-            <input type="text" class="form-control" id="search-bar" placeholder="Search for...">
-          </div>
-          <div class="form-group">
-            <select id="search-collection" class="form-control">
-              <option value="" selected disabled>Choose Collection</option>
-              <option value="b">Books</option>
-              <option value="m">Magazines</option>
-              <option value="j">Journals</option>
-              <option value="t">Thesis</option>    
-            </select>
-          </div>
-          <div class="form-group">
-          <button type="submit" id="submit-search" class="btn btn-default"><i class="flaticon-loupe"></i></button>
-          </div>
-        </form>
+      <!-- SEARCH BAR -->
+      <jsp:include page="reusable/search-bar-toggable.jsp"/>    
+      <!-- END OF SEARCH BAR -->  
 
-        <br>
-        <div class="divider-dark"></div>
-        <br>
+	  <div id="content-edit-book" class="lesser-padding-content" style="display: none;">
+        <h3 align="center">Edit Reading Material</h3>
+        <div class="content" style="margin: 0 10%">
+          <label for="author-name">Location <i>(Dewey Decimal System)</i></label>
+          <input type="text" class="form-control form-components-rd" id="location-id" placeholder="Location" style="width:100%" required>
+
+          <label for="author-name">Author/s <i>(If more then 2 authors, please separated with & (ampersand) )</i></label>
+          <input type="text" class="form-control form-components-rd" id="author-name" placeholder="Author/s" style="width:100%" required>
+
+          <label for="author-name">Publisher</label>
+          <input type="text" class="form-control form-components-rd" id="publisher" placeholder="Publisher" style="width:100%" required>
+
+          <label for="year-published">Year Published</label>
+          <input type="number" class="form-control form-components-rd" id="year-published" placeholder="Year Published" style="width:100%" required>
+
+          <label for="year-published">Tags</label>
+          <input type="number" class="form-control form-components-rd" id="year-published" placeholder="Year Published" style="width:100%" required>
+          <br>
+          <button type="submit" id="submit-edit-rm" class="btn btn-default submit-btn form-components-rd auto-width erase-margin">Edit Reading Material</button>
+        </div>
       </div>
 
+
       <div class="row rm-gen-details">
+      	<div style="position: relative;">
+          <div id="edit-rm-btn" style="display: none;">
+            <a href="">
+              <button class="btn btn-default">
+                <i class="flaticon-paint-brush"></i>
+              </button>
+            </a>
+          </div>
+        </div>
         <div class="col-md-2">
         <img src="img/book_placeholder.jpg" class="rm-img" width="100%" style="margin: auto 0;"></div>
         <div class="col-md-10 rm-information">
@@ -181,19 +127,15 @@
         </div>
         
         <c:forEach items="${reviewList}" var = "i" >
-      		<div class="review divider">Reviewed on <i>${i.date_reviewed}</i>
-          <br>
-
-          ${i.review}
-
+      	<div class="review divider">Reviewed on <i>${i.date_reviewed}</i>
+          <br>${i.review}
         </div>
         </c:forEach>
 
+		<!-- Sample Data -->
         <div class="review divider">Reviewed on <i>6 / 30 / 2017</i>
           <br>
-
           • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
-
         </div>
 
         <div class="review divider">Reviewed on  <i>6 / 30 / 2017</i>
@@ -202,14 +144,55 @@
           • Library Manager - can only edit book information, add new book, delete book and override reservations. In addition, the manager can export to an excel sheet/XML of the status of all books and meeting rooms. • Library Staff - can only edit book information, add new book, delete book and availability of meeting rooms. • Administrator – can create new Library Manager, Library Staff, Library Student Assistant and accounts and assign temporary passwords, which if not changed within 24 hours, will render the account expired. Also, the administrator can export to an excel sheet/XML file of the status of all books and meeting rooms.
 
         </div>
+        <!-- End of Sample Data -->
 
-      </div>
+      </div> <!--  END OF RM-REVIEWS -->
 
-    </div>
-  </div>
-</div>
+    	<!-- don't go beyond this point -->
+    </div> <!-- end of content -->
+  </div> <!-- end of row -->
+</div> <!-- end of container-fluid -->
 
+<form id="meetingRoomForm" action="MeetingRoomPageServlet" method="post"></form>
+<form id="servicesForm" action="CalendarOrgRepServlet" method="post"></form>
+<form id="homeForm" action="HomePageServlet" method="post"></form>
+<form id="yourReservationsForm" action="CalendarOrgRepServlet" method="post"></form>
+<!--  INSERT SCRIPT TAGS HERE -->
+<!-- must be in every page -->
+<script src="js/jquery-3.0.0.min.js"></script>
+<script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+<script src="js/menu-links.js"></script>
+<script src="js/app.js"></script>			
+<!-- //////////////////// -->
+<script> 
+function passReview(id){
+	//so para san to :o -Dyan
+	console.log("Pass Review");
+}
+$(".btn btn-default").click(function() {
+	$("#reviewForm").submit();
+});
 
+var userType = "admin";
+if(userType == "admin"){
+  $("#edit-rm-btn").css('display', 'block');
+}
 
+$("#edit-rm-btn").click(function(e){
+  e.preventDefault();
+  $("#content-edit-book").fadeIn("fast", function(){});
+  $(".rm-gen-details").fadeOut("fast", function(){});
+  $(".rm-reviews").fadeOut("fast", function(){});
+  
+
+})
+
+$("#submit-edit-rm").click(function(e){
+  //temporary
+  location.reload();
+
+});
+
+</script>
 </body>
 </html>
