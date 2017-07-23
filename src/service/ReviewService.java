@@ -37,6 +37,7 @@ public class ReviewService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();

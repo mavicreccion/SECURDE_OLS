@@ -102,6 +102,7 @@ public class RoomService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -123,8 +124,9 @@ public class RoomService {
 		input.add(idNumber);
 		
 		Query q = Query.getInstance();
+		ResultSet r = null;
 		try {
-			ResultSet r = q.runQuery(query, input);
+			r = q.runQuery(query, input);
 			
 			while(r.next()) {
 				rm = new ReservedRoom();
@@ -135,6 +137,7 @@ public class RoomService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -167,14 +170,16 @@ public class RoomService {
 			input.add(10);
 		
 		Query q = Query.getInstance();
+		ResultSet r = null;
 		
 		try {
-			ResultSet r = q.runQuery(query, input);
+			r = q.runQuery(query, input);
 			result = r.next();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -199,9 +204,10 @@ public class RoomService {
 		input.add(Utils.convertDateJavaToStringDB(date));
 		
 		Query q = Query.getInstance();
+		ResultSet r = null;
 		
 		try {
-			ResultSet r = q.runQuery(query, input);
+			r = q.runQuery(query, input);
 			
 			while(r.next()) {
 				rm = new ReservedRoom();
@@ -216,6 +222,7 @@ public class RoomService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -251,9 +258,10 @@ public class RoomService {
 		input.add(Utils.convertDateJavaToStringDB(date));
 		
 		Query q = Query.getInstance();
+		ResultSet r = null;
 		
 		try {
-			ResultSet r = q.runQuery(query, input);
+			r = q.runQuery(query, input);
 			
 			while(r.next()) {
 				rm = new ReservedRoom();
@@ -274,6 +282,7 @@ public class RoomService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -338,6 +347,7 @@ public class RoomService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();

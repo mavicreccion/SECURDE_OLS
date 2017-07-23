@@ -34,6 +34,7 @@ public class SecretQuestionService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -70,6 +71,7 @@ public class SecretQuestionService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -103,6 +105,7 @@ public class SecretQuestionService {
 			e.printStackTrace();
 		} finally {
 			try {
+				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
