@@ -476,6 +476,7 @@ public class ReadingMaterialService {
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
 				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
+				rm.setTags(r.getString(ReadingMaterial.COL_TAG));
 
 				rmList.add(rm);
 			}
@@ -710,6 +711,7 @@ public class ReadingMaterialService {
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
 				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
+				rm.setTags(r.getString(ReadingMaterial.COL_TAG));
 
 				rmList.add(rm);
 			}
@@ -799,6 +801,7 @@ public class ReadingMaterialService {
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
 				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
+				rm.setTags(r.getString(ReadingMaterial.COL_TAG));
 				rm.setNumTimesBorrowed(r.getInt("NUMBORROWED"));
 
 				rmList.add(rm);
@@ -882,6 +885,7 @@ public class ReadingMaterialService {
 				rm.setPublisher(r.getString(ReadingMaterial.COL_PUBLISHER));
 				rm.setYear(r.getInt(ReadingMaterial.COL_YEAR));
 				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
+				rm.setTags(r.getString(ReadingMaterial.COL_TAG));
 
 				rmList.add(rm);
 			}
@@ -958,6 +962,7 @@ public class ReadingMaterialService {
 				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
 				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
 				rm.setStatus(RMStatus.getStockValue(r.getString(ReadingMaterial.COL_LIBSTATUS)));
+				rm.setTags(r.getString(ReadingMaterial.COL_TAG));
 
 				rmList.add(rm);
 			}
@@ -1008,6 +1013,7 @@ public class ReadingMaterialService {
 				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
 				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
 				rm.setStatus(RMStatus.getStockValue(ReadingMaterial.COL_LIBSTATUS));
+				rm.setTags(r.getString(ReadingMaterial.COL_TAG));
 
 				rmList.add(rm);
 			}
