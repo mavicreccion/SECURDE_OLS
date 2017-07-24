@@ -282,7 +282,7 @@ public class ReadingMaterialService {
 	/////////////////////////// GETTERS ///////////////////////////////////////////
 
 	// get RM by id and user type
-	public static ReadingMaterial getRMByID(String rmID_location) {
+	public static ReadingMaterial getRMByID(String rmID_location, UserType userType) {
 		ReadingMaterial rm = null;
 		Review review = null;
 		User user = null;
