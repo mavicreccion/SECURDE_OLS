@@ -43,7 +43,7 @@
         <h3>Reserving <span id="room-number"></span></h3>
 
         <div style="padding: 0 20%;" align="left">
-          <b>Reserved on</b>: <span id="reserve-date">07 / 09 / 2017</span> by <span id="reserve-time">0930</span>
+          <b>Reserved on</b>: <span id="reserve-date"></span> by <span id="reserve-time"></span>
           <b>Duration</b>: 30 Mins<br>
         </div>
 
@@ -73,15 +73,32 @@
         <div class="openCell legends">Open</div>
         <div class="closedCell legends">Closed</div>
       </div>
-
-
+		
       <div id="table-of-rooms" align="center">
         <table id="table-of-rooms" class = "reserveSlots">
           <tr>
             <th>Time</th>
-           </tr>
-          <tr>
+            <c:forEach items="${timeSlots}" var ="time">
+          		<th style="border-left: 1px dashed #c9c7c7;">${time} </th>
+          	</c:forEach>
           </tr>
+          <c:set var = "rMR" scope = "session" value = "0"/>
+          <c:forEach items="${meeting_room}" var="mr"> <!--  ROOMS: g201, g202, etc -->
+          	<tr id="${mr.mr_name}">
+          	<td class="colHeader">${mr.mr_name}</td>
+          	<c:forEach items="${timeStart}" var ="time">
+          		<c:choose>
+          			<c:when test="${reserved_mr[rMR].mrID == mr.mrID and reserved_mr[rMR].timeStart == time}">
+          				<td id="${time}" class="otherCells closedCell"></td>
+          				<c:set var = "rMR" scope = "session" value = "${rMR + 1}"/>
+          			</c:when>
+          			<c:otherwise>
+          				<td id="${time}" class="otherCells openCell"></td>
+          			</c:otherwise>
+          		</c:choose>
+          	</c:forEach>
+          	</tr>
+          </c:forEach>
         </table>
       </div>
 
