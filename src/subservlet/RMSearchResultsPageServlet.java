@@ -49,12 +49,11 @@ public class RMSearchResultsPageServlet{
     	for(int i = 0; i < readingMaterials.size(); i++){
     		System.out.println(i + " : " + readingMaterials.get(i).getTitle());
     		System.out.println("	 : " + readingMaterials.get(i).getStatus());
-    		/*
     		for(int j = 0; i < readingMaterials.get(i).getTags().size(); j++)
     		{
     			System.out.println("	" + j + " Tag : " + 
     					readingMaterials.get(i).getTags().get(j).getTag());
-    		}*/
+    		}
     	}
     	
     	request.getSession().setAttribute("numOfRM", readingMaterials.size());

@@ -12,5 +12,4 @@ public enum UserStatus {
 		default: return null;
 		}
 	}
-	
 }

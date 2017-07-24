@@ -3,7 +3,6 @@ package service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
 import db.Query;
@@ -282,7 +281,7 @@ public class ReadingMaterialService {
 	/////////////////////////// GETTERS ///////////////////////////////////////////
 
 	// get RM by id and user type
-	public static ReadingMaterial getRMByID(String rmID_location, UserType userType) {
+	public static ReadingMaterial getRMByID(String rmID_location) {
 		ReadingMaterial rm = null;
 		Review review = null;
 		User user = null;
@@ -376,17 +375,6 @@ public class ReadingMaterialService {
 
 						///// available
 						rm.setStatus(RMStatus.AVAILABLE);
-
-						// set "reservation date"
-						rm.setDateReserved(Calendar.getInstance().getTime());
-
-						// set anticipated return date
-						if(userType == UserType.STUDENT) {
-							rm.setDateReturned(Utils.addDays(rm.getDateReserved(), 8));
-						} else if(userType == UserType.FACULTY) {
-							rm.setDateReturned(Utils.addMonth(rm.getDateReserved(), 1));
-							rm.setDateReturned(Utils.addDays(rm.getDateReturned(), 1));
-						}
 					}
 				}
 
