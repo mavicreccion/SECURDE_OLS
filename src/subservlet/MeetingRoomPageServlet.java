@@ -1,17 +1,18 @@
 package subservlet;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.User;
-import service.UserService;
+import model.ReservedRoom;
+import model.Room;
+import service.RoomService;
 import servlet.MasterServlet;
+import utils.Utils;
 
 /**
  * Servlet implementation class MeetingRoomPage
@@ -37,7 +38,39 @@ public class MeetingRoomPageServlet {
 	private static void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("MEETING ROOM PAGE POST");
-		User user = null;
+		//User user = null;
+		
+		ArrayList<ReservedRoom> roomList = RoomService.getReservedRoomsAtThisDateUSER(new Date());
+		
+		int[] timeSlots = Utils.getTimeSlots();
+		ArrayList<String> timeID = new ArrayList<String>();
+		ArrayList<String> timeString = new ArrayList<String>();
+		for(int i=0; i<timeSlots.length; i++){
+			if(i < timeSlots.length - 1){
+				if(timeSlots[i] < 1000){
+					System.out.println("0" + timeSlots[i] + " - " + timeSlots[i+1]);
+					timeString.add("0" + timeSlots[i] + " - " + timeSlots[i+1]);
+				}
+				else{
+					System.out.println(timeSlots[i] + " - " + timeSlots[i+1]);
+					timeString.add(timeSlots[i] + " - " + timeSlots[i+1]);
+				}
+				timeID.add(timeSlots[i] + "");
+			}
+			
+		}
+		
+		for(int i=0; i<roomList.size(); i++){
+			System.out.println(roomList.get(i).getMrID());
+		}
+		
+		request.setAttribute(Room.TABLE_NAME, RoomService.getALLRooms());
+		request.setAttribute(ReservedRoom.TABLE_NAME, roomList);
+		request.setAttribute("timeStart", timeID);
+		request.setAttribute("timeSlots", timeString);
+		
+		
+		/*
     	
     	//Check if a user is logged in
 		Cookie[] cookies = request.getCookies();
@@ -60,7 +93,7 @@ public class MeetingRoomPageServlet {
 		else
 			request.getSession().setAttribute(User.COL_FIRSTNAME+User.COL_LASTNAME,
 					"Sign In");
-		
+		*/
 		request.getRequestDispatcher("meeting-rooms.jsp").forward(request, response);
 	}
 
