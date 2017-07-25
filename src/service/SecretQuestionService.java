@@ -18,9 +18,10 @@ public class SecretQuestionService {
 		String query = "\nSELECT * FROM " + SecretQuestion.TABLE_NAME;
 		
 		Query q = Query.getInstance();
+		ResultSet r = null;
 		
 		try {
-			ResultSet r = q.runQuery(query);
+			r = q.runQuery(query);
 			
 			while(r.next()) {
 				sq = new SecretQuestion();
@@ -57,9 +58,10 @@ public class SecretQuestionService {
 		input.add(idnumber);
 		
 		Query q = Query.getInstance();
+		ResultSet r = null;
 		
 		try {
-			ResultSet r = q.runQuery(query, input);
+			r = q.runQuery(query, input);
 			
 			if(r.next()) {
 				sq = new SecretQuestion();
@@ -91,9 +93,10 @@ public class SecretQuestionService {
 		input.add(sqID);
 		
 		Query q = Query.getInstance();
+		ResultSet r = null;
 		
 		try {
-			ResultSet r = q.runQuery(query, input);
+			r = q.runQuery(query, input);
 			
 			if(r.next()) {
 				sq = new SecretQuestion();

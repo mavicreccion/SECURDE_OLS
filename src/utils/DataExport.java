@@ -6,12 +6,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.FillPatternType;
+import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import model.ReadingMaterial;
 import model.Room;
+import model.RoomStatus;
 import service.ReadingMaterialService;
 import service.RoomService;
 
@@ -86,6 +90,14 @@ public class DataExport {
 		int ctr = 0;
 		int col = 0;
 		
+		XSSFCellStyle style_red = workbook.createCellStyle();
+		style_red.setFillForegroundColor(IndexedColors.RED.getIndex());
+		style_red.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		
+		XSSFCellStyle style_green = workbook.createCellStyle();
+		style_green.setFillForegroundColor(IndexedColors.GREEN.getIndex());
+		style_green.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+		
 		// data
 		for(int i = 0; i < all_rooms.size(); i ++) {
 			row = mr_sheet.createRow(i+1);
@@ -94,7 +106,13 @@ public class DataExport {
 			
 			for(int j = 1; j < timeSlots.length; j ++) {
 				cell = row.createCell(col++);
-				cell.setCellValue(mrList.get(ctr++).getRoomStatus() + "");
+//				cell.setCellValue(mrList.get(ctr++).getRoomStatus() + "");
+				
+				if(mrList.get(ctr++).getRoomStatus().equals(RoomStatus.AVAILABLE)) {
+					cell.setCellStyle(style_green);
+				} else {
+					cell.setCellStyle(style_red);
+				}
 			}
 			
 			col = 0;

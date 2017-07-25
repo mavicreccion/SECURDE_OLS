@@ -280,7 +280,7 @@ public class ReadingMaterialService {
 	}
 	/////////////////////////// GETTERS ///////////////////////////////////////////
 
-	// get RM by id and user type
+	// get RM by id
 	public static ReadingMaterial getRMByID(String rmID_location) {
 		ReadingMaterial rm = null;
 		Review review = null;
@@ -433,10 +433,11 @@ public class ReadingMaterialService {
 	public static ArrayList<ReadingMaterial> getRMByType(RMType rmType) {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();
 		ReadingMaterial rm = null;
-		
+
 		String query = "\nSELECT * "
 				+ " FROM " + ReadingMaterial.TABLE_RM
-				+ " WHERE " + ReadingMaterial.COL_RMTYPE + " = ?";
+				+ " WHERE " + ReadingMaterial.COL_RMTYPE + " = ?"
+				+ " ORDER BY " + ReadingMaterial.COL_TITLE;
 
 		// for status
 		String query_reserved = "\nSELECT " + ReadingMaterial.COL_DATERETURNED + "\n"
@@ -449,10 +450,10 @@ public class ReadingMaterialService {
 				+ " WHERE " + ReadingMaterial.COL_RMID + " = ?"
 				+ " AND (CURDATE() >= " + ReadingMaterial.COL_DATEBORROWED
 				+ " AND CURDATE() < " + ReadingMaterial.COL_DATERETURNED + "); ";
-		
+
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rmType + "");
-		
+
 		Query q = Query.getInstance();
 		ResultSet r = null;
 		ResultSet r2 = null;
@@ -508,8 +509,82 @@ public class ReadingMaterialService {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return rmList;
+	}
+
+	// get all authors
+	public static ArrayList<String> getAllAuthors() {
+		ArrayList<String> authors = new ArrayList<>();
+
+		String query = "\nSELECT DISTINCT(" + ReadingMaterial.COL_AUTHOR + ")\n"
+				+ " FROM " + ReadingMaterial.TABLE_RM
+				+ " ORDER BY " + ReadingMaterial.COL_AUTHOR + " ASC;";
+
+		Query q = Query.getInstance();
+		ResultSet r = null;
+
+		try {
+			r = q.runQuery(query);
+
+			while(r.next()) {
+				authors.add(r.getString(ReadingMaterial.COL_AUTHOR));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				r.close();
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return authors;
+	}
+
+	// get all publishers
+	public static ArrayList<String> getAllPublishers() {
+		ArrayList<String> publishers = new ArrayList<>();
+
+		String query = "\nSELECT DISTINCT(" + ReadingMaterial.COL_PUBLISHER + ")\n"
+				+ " FROM " + ReadingMaterial.TABLE_RM
+				+ " ORDER BY " + ReadingMaterial.COL_PUBLISHER + " ASC;";
+
+		Query q = Query.getInstance();
+		ResultSet r = null;
+
+		try {
+			r = q.runQuery(query);
+
+			while(r.next()) {
+				publishers.add(r.getString(ReadingMaterial.COL_PUBLISHER));
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				r.close();
+				q.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return publishers;
+	}
+
+	// get all RM of this author
+	public static ArrayList<ReadingMaterial> getAllRMofThisAuthor(String author) {
+		return searchRM(RMFilter.AUTHOR, RMType.ALL, author);
+	}
+
+	// get all RM of this publisher
+	public static ArrayList<ReadingMaterial> getAllRMofThisPublisher(String publisher) {
+		return searchRM(RMFilter.PUBLISHER, RMType.ALL, publisher);
 	}
 
 	// get list of user who borrowed rm
@@ -544,6 +619,7 @@ public class ReadingMaterialService {
 				rm.setReservedRMID(r.getInt(ReadingMaterial.COL_RESERVEDRMID));
 				rm.setDateBorrowed(r.getDate(ReadingMaterial.COL_DATEBORROWED));
 				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
+				rm.setDateAvailable(rm.getDateReturned());
 
 				user = new User();
 				user.setIDNumber(r.getString(User.COL_IDNUMBER));
@@ -642,7 +718,7 @@ public class ReadingMaterialService {
 		} else if(rmFilter == RMFilter.PUBLISHER){
 			column = ReadingMaterial.COL_PUBLISHER;
 		}
-		
+
 		if(rmFilter == RMFilter.KEYWORDS && rmType == RMType.ALL) {
 			query = "\nSELECT * "
 					+ " FROM " + ReadingMaterial.TABLE_RM
@@ -650,8 +726,8 @@ public class ReadingMaterialService {
 					+ ReadingMaterial.COL_TITLE + ", "
 					+ ReadingMaterial.COL_AUTHOR + ", "
 					+ ReadingMaterial.COL_PUBLISHER + ", "
-					+ ReadingMaterial.COL_TAG + ") AGAINST(?);";
-			
+					+ ReadingMaterial.COL_TAG + ") AGAINST(?)";
+
 		} else if(rmFilter == RMFilter.KEYWORDS) {
 			query = "\nSELECT * "
 					+ " FROM " + ReadingMaterial.TABLE_RM
@@ -660,24 +736,26 @@ public class ReadingMaterialService {
 					+ ReadingMaterial.COL_AUTHOR + ", "
 					+ ReadingMaterial.COL_PUBLISHER + ", "
 					+ ReadingMaterial.COL_TAG + ") AGAINST(?) "
-					+ " AND " + ReadingMaterial.COL_RMTYPE + " = ?;";
+					+ " AND " + ReadingMaterial.COL_RMTYPE + " = ?";
 			input.add(rmType + "");
-			
+
 		} else if(rmType == RMType.ALL) {
 			// search in READING MATERIAL table without type
 			query = "\nSELECT * "
 					+ " FROM " + ReadingMaterial.TABLE_RM
-					+ " WHERE MATCH(" + column + ") AGAINST(?);";
+					+ " WHERE MATCH(" + column + ") AGAINST(?)";
 
 		} else {
 			// search in READING MATERIAL table with type
 			query = "\nSELECT * "
 					+ " FROM " + ReadingMaterial.TABLE_RM
 					+ " WHERE MATCH(" + column + ") AGAINST(?)"
-					+ " AND " + ReadingMaterial.COL_RMTYPE + " = ?;";
+					+ " AND " + ReadingMaterial.COL_RMTYPE + " = ?";
 
 			input.add(rmType + "");
 		}
+		
+		query = query + "\nORDER BY " + ReadingMaterial.COL_TITLE + ";";
 
 		// for status
 		String query_reserved = "\nSELECT *" + "\n"
@@ -1081,10 +1159,12 @@ public class ReadingMaterialService {
 	public static ArrayList<ReadingMaterial> getAllCurrentReservedRM() {
 		ArrayList<ReadingMaterial> rmList = new ArrayList<>();	
 		ReadingMaterial rm = null;
+		User user = null;
 
 		String query = "\nSELECT "
 				+ ReadingMaterial.COL_RESERVEDRMID + ", "
 				+ ReadingMaterial.COL_RMID + ", "
+				+ ReadingMaterial.COL_IDNUMBER + ", "
 				+ ReadingMaterial.COL_TITLE + ", "
 				+ ReadingMaterial.COL_DATERESERVED + ", "
 				+ ReadingMaterial.COL_DATERETURNED + "\n"
@@ -1106,6 +1186,10 @@ public class ReadingMaterialService {
 				rm.setTitle(r.getString(ReadingMaterial.COL_TITLE));
 				rm.setDateReserved(r.getDate(ReadingMaterial.COL_DATERESERVED));
 				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
+
+				user = new User();
+				user.setIDNumber(r.getString(ReadingMaterial.COL_IDNUMBER));
+				rm.setUserReserved(user);
 
 				rmList.add(rm);
 			}
