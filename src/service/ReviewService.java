@@ -37,7 +37,6 @@ public class ReviewService {
 			e.printStackTrace();
 		} finally {
 			try {
-				r.close();
 				q.close();
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -60,7 +59,7 @@ public class ReviewService {
 				+ " VALUES (?, ?, ?, ?);";
 
 		ArrayList<Object> input = new ArrayList<>();
-		input.add(review.getUser().getIDNumber());
+		input.add(review.getUser().getIdnumber());
 		input.add(review.getRMID());
 		input.add(Utils.convertDateJavaToStringDB(Calendar.getInstance().getTime()));
 		input.add(review.getReview());
@@ -95,7 +94,7 @@ public class ReviewService {
 				+ " WHERE " + Review.COL_REVIEWID + " = ?;";
 
 		ArrayList<Object> input = new ArrayList<>();
-		input.add(review.getUser().getIDNumber());
+		input.add(review.getUser().getIdnumber());
 		input.add(review.getRMID());
 		input.add(review.getReview());
 		input.add(Utils.convertDateJavaToStringDB(Calendar.getInstance().getTime()));

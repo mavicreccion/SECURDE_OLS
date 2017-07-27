@@ -38,8 +38,11 @@ public class ExportServlet{
     	System.out.println("ExportServlet POST");
     	
     	String filename = request.getParameter("filename");
-    	boolean result = DataExport.exportAll(filename);
+    	filename = "C:\\Users\\Ronnie Nieva\\Documents\\Dydy\\output.xlsx";
     	
+    	boolean result = DataExport.exportAll(filename);
+    	//boolean result = DataExport.exportAll();
+    	//boolean result = true;
     	if(result) {
     		// redirect to success page
     	} else {

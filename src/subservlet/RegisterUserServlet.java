@@ -50,7 +50,7 @@ public class RegisterUserServlet {
     	
     	
     	User user = new User();
-    	user.setIDNumber(idNumber);
+    	user.setIdnumber(idNumber);
     	user.setFirstName(firstname);
     	user.setMiddleInitial(middleInitial);
     	user.setLastName(lastname);

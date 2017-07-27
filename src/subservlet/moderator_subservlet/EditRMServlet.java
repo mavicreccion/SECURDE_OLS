@@ -36,24 +36,25 @@ public class EditRMServlet{
     	System.out.println("EDIT POST");
     	
     	System.out.println("RM- " + request.getParameter("newRMType").toUpperCase());
-    	System.out.println("Title " + request.getParameter("title"));
-    	System.out.println("Loc " + request.getParameter("location-id"));
-    	System.out.println("Author " + request.getParameter("author-name"));
-    	System.out.println("Publisher " + request.getParameter("publisher"));
-    	System.out.println("Year " + request.getParameter("year-published"));
-    	System.out.println("Tags " + request.getParameter("tags"));
+    	System.out.println("Title " + request.getParameter(ReadingMaterial.COL_TITLE));
+    	System.out.println("Loc " + request.getParameter(ReadingMaterial.COL_RMID));
+    	System.out.println("Author " + request.getParameter(ReadingMaterial.COL_AUTHOR));
+    	System.out.println("Publisher " + request.getParameter(ReadingMaterial.COL_PUBLISHER));
+    	System.out.println("Year " + request.getParameter(ReadingMaterial.COL_YEAR));
+    	System.out.println("Tags " + request.getParameter(ReadingMaterial.COL_TAG));
     	
     	ReadingMaterial rm = new ReadingMaterial();
-    	rm.setTitle(request.getParameter("title"));
     	rm.setRMType(RMType.getValue(request.getParameter("newRMType").toUpperCase()));
-    	rm.setRMID_Location(request.getParameter("location-id"));
-    	rm.setAuthor(request.getParameter("author-name"));
-    	rm.setPublisher(request.getParameter("publisher"));
-    	rm.setYear(Integer.parseInt(request.getParameter("year-published")));
-    	Date today = new Date();
-    	rm.setDateArrived(new Date());
+    	rm.setTitle(request.getParameter(ReadingMaterial.COL_TITLE));
+    	rm.setRMID_Location(request.getParameter(ReadingMaterial.COL_RMID));
+    	rm.setAuthor(request.getParameter(ReadingMaterial.COL_AUTHOR));
+    	rm.setPublisher(request.getParameter(ReadingMaterial.COL_PUBLISHER));
+    	rm.setYear(Integer.parseInt(request.getParameter(ReadingMaterial.COL_YEAR)));
+    	rm.setTags(request.getParameter(ReadingMaterial.COL_TAG));
     	
     	boolean result = ReadingMaterialService.editRM(rm);
+    	
+    	System.out.println("EDITTING BOOK : " + result);
     	
     	if(result) {
     		// redirect to success page

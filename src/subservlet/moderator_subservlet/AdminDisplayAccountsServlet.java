@@ -32,7 +32,7 @@ public class AdminDisplayAccountsServlet {
     	
     	System.out.println("[RESULTS] : ");
     	for(int i = 0; i < users.size(); i++){
-    		System.out.println(i + " : " + users.get(i).getIDNumber());
+    		System.out.println(i + " : " + users.get(i).getIdnumber());
     	}
     	Gson gson = null;
 		gson = new Gson();

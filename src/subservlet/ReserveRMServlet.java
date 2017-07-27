@@ -61,7 +61,7 @@ public class ReserveRMServlet{
 			System.out.println("USER IS NOT NULLLLLLL");
 			System.out.println("ID NUM   " + location);
 			
-			ReadingMaterial rm = ReadingMaterialService.getRMByID(location, user.getUserType());
+			ReadingMaterial rm = ReadingMaterialService.getRMByID(location);
 			rm.setUserReserved(user);
 			rm.setDateReserved(Calendar.getInstance().getTime());			// NOW LANG EH
 			ReadingMaterialService.reserveRM(rm);

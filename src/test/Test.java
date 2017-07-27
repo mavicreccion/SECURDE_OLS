@@ -11,7 +11,7 @@ public class Test {
 	
 	public static void main(String[] args) {
 		User user = new User();
-		user.setIDNumber("11427493");
+		user.setIdnumber("11427493");
 		user.setUserType(UserType.LIBMNGR);
 		user.setFirstName("Mavic");
 		user.setMiddleInitial("B");

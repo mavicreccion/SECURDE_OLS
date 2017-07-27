@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.User;
+import model.UserType;
 import service.UserService;
 import servlet.MasterServlet;
 
@@ -34,36 +35,12 @@ public class AdminAreaServlet{
 		// TODO Auto-generated method stub
     	System.out.println("ADMIN AREA POST");
     	
-    	User user = null;
+    	UserType userType = UserType.ADMIN;
     	
-    	//Check if a user is logged in
-		Cookie[] cookies = request.getCookies();
-
-		System.out.println("[Cookies]: " + cookies.length);
-		//Search specific cookie
-		for(int i = 0; i < cookies.length; i ++) {
-			System.out.println(cookies[i].getName());
-			if(cookies[i].getName().equals(User.COL_IDNUMBER)) {
-				user = UserService.viewProfileUser(cookies[i].getValue());
-			}
-		}
-		String userName = null;
-		//If user is logged in
-		if(user!=null)
-		{
-			userName = (String) user.getFirstName() + " " + user.getLastName();
-		}else if(request.getAttribute(User.COL_FIRSTNAME)  != null)
-		{
-			userName = (String) request.getAttribute(User.COL_FIRSTNAME)  
-					+ " " + request.getAttribute(User.COL_LASTNAME);
-			request.getSession().setAttribute(User.COL_FIRSTNAME + User.COL_LASTNAME,
-											userName);
-		}
-		else 
-			request.getSession().setAttribute(User.COL_FIRSTNAME+User.COL_LASTNAME,
-					"Sign In");
+    	String url = request.getParameter("destination");
     	
-    	request.getRequestDispatcher("admin_area.jsp").forward(request, response);
+    	request.getRequestDispatcher("/" + url).forward(request, response);
+    	
 	}
     
     public static void process(HttpServletRequest request, HttpServletResponse response, int type) throws ServletException, IOException{

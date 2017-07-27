@@ -52,7 +52,6 @@ public class AdminReservationsServlet {
     	request.getSession().setAttribute(ReadingMaterial.TABLE_RM, reservedRM);
     	request.getSession().setAttribute(Room.TABLE_NAME, reservedMR);
     	
-    	
     	request.getRequestDispatcher("admin_reservations.jsp").forward(request, response);
     	
     	

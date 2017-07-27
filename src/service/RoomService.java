@@ -29,7 +29,7 @@ public class RoomService {
 		
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(reserved_room.getMrID());
-		input.add(reserved_room.getUser().getIDNumber());
+		input.add(reserved_room.getUser().getIdnumber());
 		input.add(Utils.convertDateJavaToStringDB(reserved_room.getReservedDate()));
 		input.add(reserved_room.getTimeStart());
 		input.add(reserved_room.getTimeEnd());
@@ -163,7 +163,7 @@ public class RoomService {
 				+ " HAVING COUNT(*) < ?;";
 		
 		ArrayList<Object> input = new ArrayList<>();
-		input.add(user.getIDNumber());
+		input.add(user.getIdnumber());
 		input.add(Utils.convertDateJavaToStringDB(date));
 		
 		if(user.getUserType() == UserType.STUDENT) 
@@ -246,14 +246,15 @@ public class RoomService {
 		// reservation id
 		
 		String query = "\nSELECT " 
-				+ ReservedRoom.COL_RESERVEDMRID
+				+ ReservedRoom.COL_RESERVEDMRID + ", "
 				+ ReservedRoom.COL_MRID + ", "
+				+ Room.COL_MRNAME + ", "
 				+ ReservedRoom.COL_TIMESTART + ", "
 				+ ReservedRoom.COL_TIMEEND + ", "
 				+ User.COL_IDNUMBER + ", "
 				+ User.COL_FIRSTNAME + ", "
-				+ User.COL_LASTNAME + ", "
-				+ " FROM " + ReservedRoom.TABLE_NAME + " NATURAL JOIN " + User.TABLE_USER
+				+ User.COL_LASTNAME
+				+ " FROM " + ReservedRoom.TABLE_NAME + " NATURAL JOIN " + User.TABLE_USER + " NATURAL JOIN " + Room.TABLE_NAME
 				+ " WHERE " + ReservedRoom.COL_DATERESERVED + " = DATE(?)"; 
 		
 		ArrayList<Object> input = new ArrayList<>();
@@ -269,11 +270,12 @@ public class RoomService {
 				rm = new ReservedRoom();
 				rm.setReservedMRID(r.getInt(ReservedRoom.COL_RESERVEDMRID));
 				rm.setMrID(r.getInt(ReservedRoom.COL_MRID));
+				rm.setMr_name(r.getString(Room.COL_MRNAME));
 				rm.setTimeStart(r.getInt(ReservedRoom.COL_TIMESTART));
 				rm.setTimeEnd(r.getInt(ReservedRoom.COL_TIMEEND));
 				
 				user = new User();
-				user.setIDNumber(r.getString(User.COL_IDNUMBER));
+				user.setIdnumber(r.getString(User.COL_IDNUMBER));
 				user.setFirstName(r.getString(User.COL_FIRSTNAME));
 				user.setLastName(r.getString(User.COL_LASTNAME));
 				

@@ -1,6 +1,7 @@
 package subservlet.moderator_subservlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -8,8 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.ReadingMaterial;
+import model.ReservedRoom;
 import model.User;
 import service.ReadingMaterialService;
+import service.RoomService;
 import service.UserService;
 import servlet.MasterServlet;
 
@@ -36,6 +39,11 @@ public class OverrideReservationRoomServlet{
 		// TODO Auto-generated method stub
     	System.out.println("OverrideReservationRoomServlet POST");
     	
+    	int rmrID = Integer.parseInt(request.getParameter(ReservedRoom.COL_RESERVEDMRID));
+    	boolean result = RoomService.cancelReserveMR(rmrID);
+    	System.out.println("Canceled Reservation for " + rmrID + " : " + result);
+    	PrintWriter pw = response.getWriter();
+    	pw.write(result + "");
     	
 	}
     

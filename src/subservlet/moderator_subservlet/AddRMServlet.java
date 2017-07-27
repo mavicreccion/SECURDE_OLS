@@ -50,12 +50,20 @@ public class AddRMServlet {
     	rm.setAuthor(request.getParameter("author-name"));
     	rm.setPublisher(request.getParameter("publisher"));
     	rm.setYear(Integer.parseInt(request.getParameter("year-published")));
+    	rm.setTags(request.getParameter("tags"));
     	Date today = new Date();
     	rm.setDateArrived(new Date());
+
+    
+    	boolean result = ReadingMaterialService.addRM(rm);
     	
-    	//rm.setRMID_Location(RMID_Location);
+    	System.out.println("ADDING BOOK : " + result);
     	
-    	ReadingMaterialService.addRM(rm);
+    	if(result) {
+    		// redirect to success page
+    	} else {
+    		// redirect to fail page
+    	}
 	}
     
     public static void process(HttpServletRequest request, HttpServletResponse response, int type) throws ServletException, IOException{

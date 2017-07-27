@@ -145,7 +145,7 @@ public class ReadingMaterialService {
 				+ " HAVING COUNT(*) < ?;";
 
 		ArrayList<Object> input = new ArrayList<>();
-		input.add(user.getIDNumber());
+		input.add(user.getIdnumber());
 		if(user.getUserType() == UserType.STUDENT)
 			input.add(5);
 		else if(user.getUserType() == UserType.FACULTY) 
@@ -186,7 +186,7 @@ public class ReadingMaterialService {
 
 		ArrayList<Object> input = new ArrayList<>();
 		input.add(rm.getRMID_Location());
-		input.add(rm.getUserReserved().getIDNumber());
+		input.add(rm.getUserReserved().getIdnumber());
 
 		Date date_reserved = rm.getDateReserved();
 		Date date_borrowed = Utils.addDays(date_reserved, 1);
@@ -622,7 +622,7 @@ public class ReadingMaterialService {
 				rm.setDateAvailable(rm.getDateReturned());
 
 				user = new User();
-				user.setIDNumber(r.getString(User.COL_IDNUMBER));
+				user.setIdnumber(r.getString(User.COL_IDNUMBER));
 				user.setFirstName(r.getString(User.COL_FIRSTNAME));
 				user.setLastName(r.getString(User.COL_LASTNAME));
 
@@ -678,7 +678,7 @@ public class ReadingMaterialService {
 				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERESERVED));
 
 				user = new User();
-				user.setIDNumber(r.getString(User.COL_IDNUMBER));
+				user.setIdnumber(r.getString(User.COL_IDNUMBER));
 				user.setFirstName(r.getString(User.COL_FIRSTNAME));
 				user.setLastName(r.getString(User.COL_LASTNAME));
 
@@ -1188,7 +1188,7 @@ public class ReadingMaterialService {
 				rm.setDateReturned(r.getDate(ReadingMaterial.COL_DATERETURNED));
 
 				user = new User();
-				user.setIDNumber(r.getString(ReadingMaterial.COL_IDNUMBER));
+				user.setIdnumber(r.getString(ReadingMaterial.COL_IDNUMBER));
 				rm.setUserReserved(user);
 
 				rmList.add(rm);

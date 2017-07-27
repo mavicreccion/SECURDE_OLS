@@ -45,7 +45,7 @@ public class RMDetailsServlet{
     	
     	//TODO: THIS IS FOR DEBUGGING. PLEASE ERASE THIS!!
     	user = new User();
-    	user.setIDNumber("11400366");
+    	user.setIdnumber("11400366");
     	user.setUserType(UserType.LIBMNGR);
     	
     	HttpSession session = request.getSession();
@@ -53,7 +53,7 @@ public class RMDetailsServlet{
     	String rmID = request.getParameter(ReadingMaterial.COL_RMID); 
     	System.out.println("rmID : " + rmID);
 		
-		ReadingMaterial rm = ReadingMaterialService.getRMByID(rmID, UserType.FACULTY);
+		ReadingMaterial rm = ReadingMaterialService.getRMByID(rmID);
 		
 		System.out.println("Date Returned .. " + rm.getDateAvailable());
 		
@@ -61,7 +61,7 @@ public class RMDetailsServlet{
 		session.setAttribute(Review.TABLE_NAME, rm.getReviews());
 		
 		if(user != null){
-			boolean hasBorrowed = ReviewService.checkIfBorrowed(user.getIDNumber(), rmID);
+			boolean hasBorrowed = ReviewService.checkIfBorrowed(user.getIdnumber(), rmID);
 			session.setAttribute("hasBorrowed", hasBorrowed);
 			
 			boolean canEdit = false;
@@ -88,7 +88,8 @@ public class RMDetailsServlet{
     public static void process(HttpServletRequest request, HttpServletResponse response, int type) throws ServletException, IOException{
 		if(type == MasterServlet.TYPE_GET)
 			doGet(request, response);
-		doPost(request, response);
+		else
+			doPost(request, response);
 	}
 
 

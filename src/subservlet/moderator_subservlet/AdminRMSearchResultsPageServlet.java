@@ -1,6 +1,7 @@
 package subservlet.moderator_subservlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import javax.servlet.ServletException;
@@ -9,11 +10,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
+
 import model.RMFilter;
 import model.RMType;
 import model.ReadingMaterial;
+import model.SecretQuestion;
 import model.User;
 import service.ReadingMaterialService;
+import service.SecretQuestionService;
 import servlet.MasterServlet;
 
 /**
@@ -38,7 +43,8 @@ public class AdminRMSearchResultsPageServlet{
     private static void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
     	System.out.println("RM SEARCH RESULTS PAGE POST");
-    	String searchString = (String) request.getParameter("search-bar");
+    	PrintWriter pw = response.getWriter();
+    	String searchString = (String) request.getParameter("stringToSearch");
     	RMFilter rmFilter = RMFilter.getValue((String) request.getParameter(RMFilter.ENUM_RMFilter));
     	RMType rmType = RMType.getValue((String) request.getParameter(RMType.ENUM_RMType));
     	System.out.println(rmType);
@@ -48,18 +54,20 @@ public class AdminRMSearchResultsPageServlet{
     	System.out.println("[RESULTS] : ");
     	for(int i = 0; i < readingMaterials.size(); i++){
     		System.out.println(i + " : " + readingMaterials.get(i).getTitle());
-    		System.out.println("	 : " + readingMaterials.get(i).getStatus());
-    		for(int j = 0; i < readingMaterials.get(i).getTags().size(); j++)
-    		{
-    			System.out.println("	" + j + " Tag : " + 
-    					readingMaterials.get(i).getTags().get(j).getTag());
-    		}
     	}
     	
-    	request.getSession().setAttribute("numOfRM", readingMaterials.size());
-    	request.getSession().setAttribute(ReadingMaterial.TABLE_RM, readingMaterials);
+    	//request.getSession().setAttribute("numOfRM", readingMaterials.size());
+    	//request.getSession().setAttribute(ReadingMaterial.TABLE_RM, readingMaterials);
     	
-    	request.getRequestDispatcher("admin_area_search_results.jsp").forward(request, response);
+    	Gson gson = null;
+		gson = new Gson();
+		String results = gson.toJson(readingMaterials);
+		System.out.println(results);
+		pw.write(results);
+		
+		//pw.write(String.valueOf(readingMaterials.size()));
+    	
+    	
 	}
     
     public static void process(HttpServletRequest request, HttpServletResponse response, int type) throws ServletException, IOException{
@@ -67,6 +75,10 @@ public class AdminRMSearchResultsPageServlet{
 			doGet(request, response);
 		doPost(request, response);
 	}
-
+    
+    
+    
+    
+    
 
 }

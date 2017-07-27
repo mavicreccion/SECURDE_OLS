@@ -41,7 +41,7 @@ public class SignInServlet {
 		if(user!=null){
 			System.out.println("USER NOT NULL ");
 			// Create cookie
-			Cookie idNumURLcookie = new Cookie(User.COL_IDNUMBER, user.getIDNumber());
+			Cookie idNumURLcookie = new Cookie(User.COL_IDNUMBER, user.getIdnumber());
 			// Add cookie to list of cookies
 			response.addCookie(idNumURLcookie);		
 			
@@ -49,10 +49,10 @@ public class SignInServlet {
 			request.setAttribute(User.COL_FIRSTNAME, user.getFirstName());
 			request.setAttribute(User.COL_LASTNAME, user.getLastName());
 			
-			System.out.println(UserService.getUserType(user.getIDNumber()));
+			System.out.println(UserService.getUserType(user.getIdnumber()));
 			
-			if(UserService.getUserType(user.getIDNumber()) == UserType.STUDENT || 
-					UserService.getUserType(user.getIDNumber()) == UserType.FACULTY) {
+			if(UserService.getUserType(user.getIdnumber()) == UserType.STUDENT || 
+					UserService.getUserType(user.getIdnumber()) == UserType.FACULTY) {
 				request.getRequestDispatcher("/HomePageServlet").forward(request, response);
 			} else {
 				request.getRequestDispatcher("/AdminAreaServlet").forward(request, response);

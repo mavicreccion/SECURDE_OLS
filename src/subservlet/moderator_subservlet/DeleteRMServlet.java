@@ -1,12 +1,14 @@
 package subservlet.moderator_subservlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.ReadingMaterial;
+import model.UserType;
 import service.ReadingMaterialService;
 import servlet.MasterServlet;
 
@@ -34,14 +36,18 @@ public class DeleteRMServlet{
     	System.out.println("DELETE POST");
     	
     	String rmID = request.getParameter(ReadingMaterial.COL_RMID);
-    	
     	boolean result = ReadingMaterialService.deleteRM(rmID);
+    	System.out.println("Removing RM " + rmID + " : " + result);
+    	PrintWriter pw = response.getWriter();
+    	pw.write(result + "");
     	
+    	
+    	/*
     	if(result) {
     		// redirect to success page
     	} else {
     		// redirect to fail page
-    	}
+    	}*/
     	
 	}
     

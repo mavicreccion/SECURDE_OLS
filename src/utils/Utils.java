@@ -3,8 +3,6 @@ package utils;
 import java.util.Calendar;
 import java.util.Date;
 
-import model.UserType;
-
 public class Utils {
 	
 	public static Date addDays(Date date, int days) {
@@ -72,22 +70,6 @@ public class Utils {
 		
 		return timeSlots;
 		
-	}
-	
-	public static Date getAnticipatedReturnDate(UserType userType) {
-		// set "reservation date"
-		Date date_reserved = Calendar.getInstance().getTime();
-		Date date_anticipated = null;
-
-		// set anticipated return date
-		if(userType == UserType.STUDENT) {
-			date_anticipated = addDays(date_reserved, 8);
-		} else if(userType == UserType.FACULTY) {
-			date_anticipated = addMonth(date_reserved, 1);
-			date_anticipated = addDays(date_anticipated, 1);
-		}
-		
-		return date_anticipated;
 	}
 
 }
