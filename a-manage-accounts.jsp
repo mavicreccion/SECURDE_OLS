@@ -24,7 +24,7 @@
 <body>
 <div class="container-fluid">
   <div class="row">
-    <jsp:include page="reusable/admin-navbar.jsp"/>   
+    <jsp:include page="reusable/navbar.jsp"/>   
     <div class="col-sm-9 col-lg-10 content admin-area">
     	<div class="header">
 	       <h1>SHS Online Library System</h1>
@@ -33,26 +33,30 @@
 	    
 	    <div class="btn-group btn-group-justified" role="group" aria-label="...">
           <div class="btn-group"  role="group">
-            <button type="button" id="add-acc-tab" class="btn btn-default">Add an Account</button>
+            <button type="button" id="unlock-acc-tab" class="btn btn-default">Unlock an Account</button>
           </div>
           <div class="btn-group"  role="group">
-            <button type="button" id="unlock-acc-tab" class="btn btn-default">Unlock an Account</button>
+            <button type="button" id="add-acc-tab" class="btn btn-default">Add an Account</button>
           </div>
         </div>
       	<br><br><br>
-	      
+      	
+	   	<!--  TODO: please make this default visible, and add account default unseen -->
         <div class="content-unlock-account">
           <div class="rm-results" style="margin: 0px !important;">
-          <table class="table table-striped locked-accounts"> 
-			 <!-- insert ajax here -->
-		  </table>
+          	  <h3 class="no-results">No Locked Accounts Returned...</h3>
+	          <table class="table table-striped row-container">
+          		<thead><tr> <th>#</th> <th>Name</th> <th>ID Number</th> <th>UserType</th> <th>Status</th> <th></th> </tr></thead>
+          		<tbody>
+          		</tbody>
+          		<!--  insert content here -->
+          	  </table>	
          
 	      </div>
         </div>
           
         <div class="content-add-account" style="display: none;">
-          <form id = "register-details" style="margin-right: 300px;" action="RegisterUserServlet" method="POST">
-	      	<input type="hidden" id="isModAdding" name="isModAdding" value="MOD"/>
+          <form id = "register-details" style="margin-right: 300px;" action="RegisterModeratorServlet" method="POST">
 	        
 	        <label for="user_type">User Type</label>
 	        <select id = "user_type" name="user_type" class="form-control form-components-rd"
@@ -84,9 +88,20 @@
 	          </div>
 	        </div>
 	
+			<label class="text-muted">Automated Password</label>
+		    <div class="input-group">
+		      <input type="text" class="form-control form-components-rd" id="auto-pass" name="passwordHash"
+		      rel="gp" data-size="6" data-character-set="a-z,A-Z,0-9,#" style="width:70%">
+		      <button type="button" class="btn btn-default getNewPass button-w-icon-wo-bg">
+		      	<i class="flaticon-reload"></i>
+		      </button>
+		    </div>
+	
+			<!-- 
 	        <label for="password">Password</label>
 	        <input type="password" class="form-control form-components-rd" name="passwordHash" id="password" placeholder="Password" style="width:70%" required>
-	          
+	         -->
+	        
 	        <label for="email-address">Email Address</label>
 	        <input type="email" class="form-control form-components-rd" name="email_address" id="email-address" placeholder="Email" style="width:70%" required>
 	    
@@ -120,21 +135,18 @@
     </div> <!-- end of content -->
   </div> <!-- end of row -->
 </div> <!-- end of container-fluid -->
-<form id="ManageBooks" action="AdminRMServlet" method="post"></form>
-<form id="ManageRMReserve" action="AdminRMReserveServlet" method="post"></form>
-<form id="ManageMRReserve" action="AdminMRReserveServlet" method="post"></form>
-<form id="ManageAccounts" action="AdminAccountsServlet" method="post"></form>
-<form id="ExportLog" action="AdminLogServlet" method="post"></form>
 
 <!--  INSERT SCRIPT TAGS HERE -->
 <!-- must be in every page -->
 <script src="js/jquery-3.0.0.min.js"></script>
 <script src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
-<script src="js/admin-menu-links.js"></script>
 <script src="js/app.js"></script>				
 <!-- //////////////////// -->
+<script src="vitalets-bootstrap-datepicker-c7af15b/js/bootstrap-datepicker.js"></script>
 <script src="js/register.js"></script>
 <script src="js/manage-accounts.js"></script>
+<script src="js/bootbox.min.js"></script>
+<script src="js/PasswordGenerator.js"></script>
 
 
 

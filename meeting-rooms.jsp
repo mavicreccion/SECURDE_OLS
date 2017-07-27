@@ -104,7 +104,7 @@
 
 	<!-- don't go beyond this point -->
     </div> <!-- end of content -->
-  </div> <!-- end of row -->
+  </div> <!-- end of row --> 
 </div> <!-- end of container-fluid -->
 
 <form id="meetingRoomForm" action="MeetingRoomPageServlet" method="post"></form>
